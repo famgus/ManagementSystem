@@ -1,0 +1,53 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+
+
+        <!-- Default screen margins, per the Android Design guidelines. -->
+        <dimen name="activity_horizontal_margin">8dp</dimen>
+        <dimen name="activity_vertical_margin">8dp</dimen>
+        <dimen name="fab_margin">16dp</dimen>
+        <dimen name="app_margin_default">40dp</dimen>
+        <dimen name="app_margin_small">8dp</dimen>
+
+        <dimen name="app_padding_default">16dp</dimen>
+        <dimen name="app_padding_small">8dp</dimen>
+
+        <dimen name="app_spacing_default">8dp</dimen>
+        <dimen name="app_spacing_micro">4dp</dimen>
+        <dimen name="app_card_elevation_default">4dp</dimen>
+        <dimen name="app_card_elevation_small">2dp</dimen>
+        <dimen name="app_card_corner_radius">2dp</dimen>
+        <dimen name="app_text_size_small">12sp</dimen>
+        <dimen name="app_card_header_height">48dp</dimen>
+
+
+        <!-- Login -->
+        <dimen name="app_padding_card_login">2dp</dimen>
+        <dimen name="app_login_margin_bottom">40dp</dimen>
+        <dimen name="gridview_column_width">120dp</dimen>
+        <dimen name="gridview_vertical_spacing">10dp</dimen>
+        <dimen name="gridview_horizontal_spacing">10dp</dimen>
+
+        <!-- PicturesActivity -->
+        <dimen name="app_picture_gridview_height">150dp</dimen>
+        <dimen name="app_counter_margin_top">6dp</dimen>
+        <dimen name="app_counter_margin_right">4dp</dimen>
+        <dimen name="app_counter_text_size">10sp</dimen>
+        <dimen name="app_pictures_padding_default">16dp</dimen>
+        <dimen name="app_pictures_margin_bottom_default">48dp</dimen>
+        <dimen name="app_new_inspection_text_size_title">10sp</dimen>
+
+
+        <!-- FAB -->
+        <dimen name="fab_size_normal">56dp</dimen>
+        <dimen name="fab_size_mini">40dp</dimen>
+        <dimen name="labels_text_size">14sp</dimen>
+
+        <dimen name="progress_margin">22dp</dimen>
+        <dimen name="logo_width">200dp</dimen>
+        <dimen name="logo_height">35dp</dimen>
+
+</resources>

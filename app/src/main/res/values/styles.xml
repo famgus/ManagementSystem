@@ -1,0 +1,80 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="android:actionModeSplitBackground">@color/colorPrimary</item>
+        <item name="android:itemBackground">@color/popup_background</item>
+        <item name="android:itemTextAppearance">@style/TextAppearance</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Widget.TextView.Header" parent="android:Widget">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+    </style>
+
+    <style name="Widget.TextView.Header.Main" parent="Widget.TextView.Header">
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="Widget.TextView.Header.Main.Subtitle" parent="Widget.TextView.Header">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextAppearance.Title" parent="TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.EditText" parent="">
+        <item name="android:layout_marginTop">@dimen/app_margin_default</item>
+    </style>
+
+
+
+    <style name="Widget.RecyclerView.Item" parent="android:Widget">
+        <item name="selectableItemBackground">@color/colorAccent</item>
+    </style>
+
+
+    <style name="MoreButton">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Button</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/app_text_size_small</item>
+        <!--<item name="android:background">@drawable/more_button_background</item>-->
+    </style>
+
+    <style name="MoreButtonDisabled">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Button</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/app_text_size_small</item>
+        <!--<item name="android:background">@drawable/more_button_disabled_background</item>-->
+    </style>
+
+    <style name="TextAppearance">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="ToolbarTitleAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">20sp</item>
+        <!-- include other attributes you want to change: textColor, textStyle, etc -->
+    </style>
+    <style name="ToolbarSubtitleAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+
+</resources>

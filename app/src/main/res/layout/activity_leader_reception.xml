@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:fitsSystemWindows="true"
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_rl"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:subtitleTextAppearance="@style/ToolbarSubtitleAppearance"
+            app:titleTextAppearance="@style/ToolbarTitleAppearance" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/item_draft_instance_layout_rl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardUseCompatPadding="true"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:id="@+id/item_container_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="6dp">
+
+                    <LinearLayout
+                        android:id="@+id/status_container_rl"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:background="@color/status_sent_recent">
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:layout_weight="8"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="5dp">
+
+                        <LinearLayout
+                            android:id="@+id/format_rl"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@mipmap/ic_description_white_48dp"
+                                android:tint="@color/colorPrimary"
+                                android:layout_gravity="center_vertical"/>
+
+                            <TextView
+                                android:id="@+id/txtNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="2dp"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginTop="2dp"
+                                android:text="Número de Orden de Compra:"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/txtNumberValue_rl"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="2dp"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginTop="2dp"
+                                android:text="476532"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/baseline_account_circle_white_24"
+                                android:tint="@color/colorPrimary"/>
+
+                            <TextView
+                                android:id="@+id/txtProvider_rl"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/format"
+                                android:layout_marginStart="5dp"
+                                android:lines="1"
+                                android:text="Nombre provedor:"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textSize="12sp"/>
+
+                            <TextView
+                                android:id="@+id/txtProviderValue_rl"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/format"
+                                android:layout_marginStart="5dp"
+                                android:lines="1"
+                                android:text="Jose Delgado Perez"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textSize="12sp"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/baseline_today_white_18"
+                                android:tint="@color/colorPrimary"/>
+
+                            <TextView
+                                android:id="@+id/txtDateOrder_rl"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/format"
+                                android:layout_marginStart="5dp"
+                                android:lines="1"
+                                android:text="Fecha del Pedido:"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textSize="12sp"/>
+
+                            <TextView
+                                android:id="@+id/txtDateOrderValue_rl"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/format"
+                                android:layout_marginStart="5dp"
+                                android:lines="1"
+                                android:text="08/14/2020"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textSize="12sp"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/baseline_today_white_18"
+                                android:tint="@color/colorPrimary"
+                                android:scaleType="fitXY"/>
+
+                            <TextView
+                                android:id="@+id/txtDateReception_rl"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/format"
+                                android:layout_marginStart="5dp"
+                                android:lines="1"
+                                android:text="Fecha de Recepción:"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textSize="12sp"/>
+
+                            <TextView
+                                android:id="@+id/txtDateReceptionValue_rl"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/format"
+                                android:layout_marginStart="5dp"
+                                android:lines="1"
+                                android:text="08/23/2020"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textSize="12sp"/>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="4dp"
+                            android:layout_marginTop="4dp"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/edit_log"
+                            android:tint="@color/colorPrimary"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="10dp">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Detalles de la orden de compra:"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TableLayout
+                    android:id="@+id/tlTable01_rl"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="#CCC"
+                    android:paddingTop="1dp"
+                    android:stretchColumns="0">
+
+                    <TableRow
+                        android:id="@+id/trHeader_rl"
+                        android:background="#CCC"
+                        android:paddingBottom="1dp"
+                        android:paddingRight="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="33dp"
+                            android:layout_weight="1"
+                            android:background="#FFF"
+                            android:padding="2dp"
+                            android:text="No."
+                            android:textColor="@color/color_text_blue"
+                            android:textStyle="bold"
+                            android:gravity="center"/>
+
+                        <TextView
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="2"
+                            android:background="#FFF"
+                            android:padding="7dp"
+                            android:text="Detalle"
+                            android:textColor="@color/color_text_blue"
+                            android:textStyle="bold"
+                            android:gravity="center"/>
+
+                        <TextView
+                            android:layout_marginLeft="1dp"
+                            android:background="#FFF"
+                            android:padding="7dp"
+                            android:text="Cantidad"
+                            android:textColor="@color/color_text_blue"
+                            android:textStyle="bold"
+                            android:gravity="center"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/trItem1_rl"
+                        android:background="#CCC"
+                        android:paddingBottom="1dp"
+                        android:paddingRight="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="33dp"
+                            android:layout_weight="1"
+                            android:background="#FFF"
+                            android:padding="2dp"
+                            android:text="1"
+                            android:gravity="center"
+                            />
+
+                        <TextView
+                            android:id="@+id/detailitem1_rl"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="2"
+                            android:background="#FFF"
+                            android:padding="7dp"
+                            android:text="Articulo 7A Zaptos 10" />
+
+                        <EditText
+                            android:id="@+id/etcant_item1_rl"
+                            android:layout_marginLeft="1dp"
+                            android:background="#FFF"
+                            android:gravity="center"
+                            android:hint="0"
+                            android:padding="7dp"
+                            android:textSize="14sp"
+                            android:inputType="number"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/trItem2_rl"
+                        android:background="#CCC"
+                        android:paddingBottom="1dp"
+                        android:paddingRight="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="33dp"
+                            android:layout_weight="1"
+                            android:background="#FFF"
+                            android:padding="2dp"
+                            android:text="2"
+                            android:gravity="center"/>
+
+                        <TextView
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="2"
+                            android:background="#FFF"
+                            android:padding="7dp"
+                            android:text="Articulo Zapatos 9M"
+                            android:id="@+id/detailitem2_rl"/>
+
+                        <EditText
+                            android:id="@+id/etcant_item2_rl"
+                            android:layout_marginLeft="1dp"
+                            android:background="#FFF"
+                            android:gravity="center"
+                            android:hint="0"
+                            android:padding="7dp"
+                            android:textSize="14sp"
+                            android:inputType="number"/>
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/trItem3"
+                        android:background="#CCC"
+                        android:paddingBottom="1dp"
+                        android:paddingRight="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="33dp"
+                            android:layout_weight="1"
+                            android:background="#FFF"
+                            android:padding="2dp"
+                            android:text="3"
+                            android:gravity="center"/>
+
+                        <TextView
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="2"
+                            android:background="#FFF"
+                            android:padding="7dp"
+                            android:text="Zapatilla Azul Gray 8M"
+                            android:id="@+id/detailitem3_rl"/>
+
+                        <EditText
+                            android:id="@+id/etcant_item3_rl"
+                            android:layout_marginLeft="1dp"
+                            android:background="#FFF"
+                            android:gravity="center"
+                            android:hint="0"
+                            android:inputType="number"
+                            android:padding="7dp"
+                            android:textSize="14sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/trItem4"
+                        android:background="#CCC"
+                        android:paddingBottom="1dp"
+                        android:paddingRight="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="33dp"
+                            android:layout_weight="1"
+                            android:background="#FFF"
+                            android:padding="2dp"
+                            android:text="4"
+                            android:gravity="center"/>
+
+                        <TextView
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="2"
+                            android:background="#FFF"
+                            android:padding="7dp"
+                            android:text="Articulo 6A Zaptillas 7-12"
+                            android:id="@+id/detailitem4_rl"/>
+
+                        <EditText
+                            android:id="@+id/etcant_item4_rl"
+                            android:layout_marginLeft="1dp"
+                            android:background="#FFF"
+                            android:gravity="center"
+                            android:hint="0"
+                            android:inputType="number"
+                            android:padding="7dp"
+                            android:textSize="14sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/trItem5"
+                        android:background="#CCC"
+                        android:paddingBottom="1dp"
+                        android:paddingRight="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="33dp"
+                            android:layout_weight="1"
+                            android:background="#FFF"
+                            android:padding="2dp"
+                            android:text="5"
+                            android:gravity="center"/>
+
+                        <TextView
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="2"
+                            android:background="#FFF"
+                            android:padding="7dp"
+                            android:text="Articulo 9A Zaptillas 10-13"
+                            android:id="@+id/detailitem5_rl"/>
+
+                        <EditText
+                            android:id="@+id/etcant_item5_rl"
+                            android:layout_marginLeft="1dp"
+                            android:background="#FFF"
+                            android:gravity="center"
+                            android:hint="0"
+                            android:inputType="number"
+                            android:padding="7dp"
+                            android:textSize="14sp" />
+                    </TableRow>
+
+                </TableLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/btn_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="10dp"
+        android:paddingBottom="18dp"
+        android:paddingLeft="10dp"
+
+        fab:menu_labels_ellipsize="end"
+        fab:menu_icon="@drawable/float_bottom_vino"
+        fab:menu_colorNormal="@color/status_white"
+        fab:menu_colorPressed="@color/status_white"
+        fab:menu_colorRipple="@color/status_white"
+        fab:menu_labels_singleLine="true"
+        fab:menu_backgroundColor="@android:color/transparent">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/option_recibir"
+            app:fab_size="mini"
+            app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorAccent"
+            app:fab_colorRipple="@color/colorAccent"
+            app:fab_label="Empezar Recepcion" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fabByLot"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ingreso_lote"
+            app:fab_size="mini"
+            app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorAccent"
+            app:fab_colorRipple="@color/colorAccent"
+            app:fab_label="Ingreso por lote" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_fractionar"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/option_desfragmentar"
+            app:fab_size="mini"
+            app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorAccent"
+            app:fab_colorRipple="@color/colorAccent"
+            app:fab_label="Fraccionar" />
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

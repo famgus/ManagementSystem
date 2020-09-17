@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FB6131</color>
+    <color name="colorPrimaryDark">#E65629</color>
+    <color name="primary_light">#FFCCBC</color>
+    <color name="colorAccent">#FF9800</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
+    <color name="transparencia">#41FFFFFF</color>
+    <color name="colorPrimarytransparente">#99FF5722</color>
+    <color name="listDivider">#cccccc</color>
+    <color name="gray">#f1f1f1</color>
+
+    <!--start status button color-->
+    <color name="statusStrokeColor">#FFFFFF</color>
+    <color name="statusSelectedColorCenter">#183466</color>
+    <color name="statusSelectedColorStart">#183466</color>
+    <color name="statusSelectedColorEnd">#183466</color>
+    <color name="statusUnselectedColorCenter">#6cc128</color>
+    <color name="statusUnselectedColorStart">#53ab0c</color>
+    <color name="statusUnselectedColorEnd">#53ab0c</color>
+    <color name="statusDisabledColorCenter">#d3d3d3</color>
+    <color name="statusDisabledColorStart">#bdbdbd</color>
+    <color name="statusDisabledColorEnd">#bdbdbd</color>
+    <!--end status button color-->
+
+    <!--start pie colors-->
+    <color name="donutOk">#1fed2c</color>
+    <color name="donutFirstWarning">#FFFFFF00</color>
+    <color name="donutSecondWarning">#FFFF0000</color>
+    <color name="donutBackground">#d3d3d3</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <!--end pie colors-->
+    <color name="more_button_background">#ffcfd8dc</color>
+    <color name="text_duty_status_button_color">@color/black</color>
+    <color name="checkBoxColorTint">#726E6E</color>
+
+    <color name="dot_inspection_mode_color">@color/colorAccent</color>
+    <color name="button_bar_color">@color/colorPrimary</color>
+
+    <color name="white_text_button">#FFFFFF</color>
+    <color name="colorWidget">#8D383737</color>
+
+
+
+    <!--Events Status colors-->
+    <color name="add_event_background">#9FDD6D</color>
+    <color name="edit_event_background">#00AFFF</color>
+    <color name="delete_event_background">#E18888</color>
+
+    <color name="cyan_a700_plus">#ff006574</color>
+    <color name="colorBackground">#D2FFFFFF</color>
+
+    <color name="colorTransparentPrimary">#3F51B5</color>
+    <color name="colorPrimaryLight">#FFCDD2</color>
+    <color name="colorAccentTransparent">#B3FF5252</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#727272</color>
+    <color name="green_complete">#ff99cc00</color>
+
+    <color name="dark_gray">#dddddd</color>
+    <color name="darker_gray">#989898</color>
+
+    <color name="status_white">#EBE9E9</color>
+    <color name="status_green">#B3FFB3</color>
+    <color name="start_gold">#ffaf00</color>
+    <color name="status_red">#FF796A</color>
+    <color name="status_light_red">#FFD1A8</color>
+    <color name="status_sky_blue">#CEE7FF</color>
+    <color name="status_brown">#BF6000</color>
+    <color name="status_purple">#C6BBD7</color>
+    <color name="status_dark_pruple">#AC9CC5</color>
+    <color name="popup_background">#555555</color>
+    <color name="status_yellow">#FFFFA8</color>
+    <color name="darkest_gray">#555</color>
+
+    <color name="success">#ee27B830</color>
+
+    <color name="drawer_icons">#6a6a6a</color>
+
+    <!--Colores Sent -->
+    <color name="status_sent_today">#c8e6c9</color>
+    <color name="status_sent_recent">#a5d6a7</color>
+    <color name="status_sent_last">#81c784</color>
+    <!--Colores Draft -->
+    <color name="status_draft_today">#bbdefb</color>
+    <color name="status_draft_recent">#90c4f9</color>
+    <color name="status_draft_last">#64b5f6</color>
+    <!--Colores para carpetas-->
+    <color name="folder_white">#dddddd</color>
+    <color name="folder_back">#ff000000</color>
+    <color name="folder_blue">#ff3845ff</color>
+    <color name="folder_red">#d44336</color>
+    <color name="folder_green">#ff06c620</color>
+    <color name="folder_yellow">#ffe3ca4f</color>
+    <!--Colores Rank-->
+    <color name="star_gold">#ffaf00</color>
+
+    <color name="blackTransparent">#B3000000</color>
+    <color name="blackTransparent2">#CC000000</color>
+    <color name="blackTransparent3">#CC000000</color>
+
+    <color name="status_white_transparent">#B3FFFFFF</color>
+    <color name="status_white_transparent2">#D9FFFFFF</color>
+    <color name="white_transparent">#D9FFFFFF</color>
+    <color name="color_text_blue">#00538d</color>
+    <color name="color_background_card">#daf6fa</color>
+    <color name="color_background_card_transparent">#D9daf6fa</color>
+    <color name="text_color_grey">#CCCCCC</color>
+    <color name="text_color_black">#000000</color>
+    <color name="text_color_white">#FFFFFF</color>
+    <color name="tabTextColor">#FFFFFF</color>
+
+    <color name="green">#ff06c620</color>
+    <color name="green2">#E176E986</color>
+
+    <color name="colorVisited">#81c784</color>
+    <color name="colorNext">#a5d6a7</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorPrimaryTransparent">#B30288d1</color>
+    <color name="fondotable">#CCC</color>
+</resources>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:minWidth="25px"
+android:minHeight="25px"
+android:background="@android:color/transparent">
+
+<RelativeLayout
+    android:id="@+id/rlLocation"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="@color/colorAccent">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:paddingTop="4dp"
+        android:text="@string/text_toolbar_location"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <ImageView
+        android:id="@+id/ivCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="3dp"
+        android:background="@drawable/circlebtn"
+        android:clickable="true"
+        android:foregroundGravity="center_vertical|center_horizontal"
+        app:srcCompat="@drawable/baseline_clear_white_24" />
+</RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/tiLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_below="@+id/rlLocation"
+        android:layout_marginTop="50dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/etLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:hint="@string/text_hint_location"
+                android:inputType="number"
+                android:singleLine="true"
+                android:drawableStart="@android:drawable/ic_dialog_map"
+                android:drawableTintMode="src_in"
+                android:drawableTint="@color/darkest_gray"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/ivScanBarCode"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/bar_code"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+<LinearLayout
+    android:id="@+id/llScan"
+    android:layout_width="200dp"
+    android:layout_height="45dp"
+    android:layout_below="@+id/tiLocation"
+    android:layout_centerHorizontal="true"
+    android:layout_gravity="center_horizontal|center"
+    android:layout_marginTop="30dp"
+    android:layout_marginBottom="20dp"
+    android:background="@drawable/btnripple">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/text_button_location"
+        android:textColor="@color/white"
+        android:gravity="center_horizontal|center"
+        android:textSize="22sp"
+        android:drawableLeft="@drawable/baseline_check_circle_outline_white_24"
+        android:padding="2dp"/>
+</LinearLayout>
+</RelativeLayout>
+

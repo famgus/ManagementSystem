@@ -1,0 +1,77 @@
+<resources>
+    <string name="app_name">Tracking Management System</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_create_bar_codes">Generar códigos de barras</string>
+
+    <string name="menu_home">Gestión de Inventarios</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="home_second">Home Second</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="prompt_email">Usuario</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Ingresar</string>
+    <string name="action_sign_in_short">Sign in </string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+    <string name="forgetpass">Did you forget your password?</string>
+    <string name="action_register">Register</string>
+    <string name="name_register">First Name</string>
+    <string name="last_name_register">Last Name</string>
+    <string name="email_register">Email</string>
+    <string name="password_email">Contraseña</string>
+    <string name="create_account_register">Create Account</string>
+
+    <string name="email_forget_password">Email</string>
+    <string name="send_forget_password">Send</string>
+    <string name="splash">Fondo Splash</string>
+    <string name="logo">Logo Join</string>
+    <string name="App_Name">Gestión \n de  \n  Inventarios</string>
+    <string name="App_Name2">Gestión de Inventarios</string>
+    <string name="App_version"><u>1.0</u></string>
+
+
+    <string name="numero_de_compra">Orden de Compra No:</string>
+    <string name="hintnumerodecompra">12345</string>
+    <string name="buscarnumero">Buscar</string>
+    <string name="text_toolbar_purchaseorder">Ordenes de Compra</string>
+    <string name="text_toolbar_reception">Recepción de Mercaderia</string>
+    <string name="button_scanner">Escanear</string>
+    <string name="text_toolbar_numerofrag">Fraccionar Compra</string>
+    <string name="numero_de_contribuyentes_fraccionar">Colaboradores Requeridos:</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="default_notification_channel_id" translatable="false">channel_01</string>
+    <string name="no_internet">No acceso a internet</string>
+    <string name="text_wrong_authentication">Credenciales incorrectas</string>
+    <string name="text_error_authentication">Error en el proceso de autenticación</string>
+
+    <string name="headder1"><b>No.</b></string>
+    <string name="headder2"><b>Código de Barras</b></string>
+    <string name="headder3"><b>Cantidad</b></string>
+    <string name="headder4"><b>Acción</b></string>
+    <string name="headder5"><b>Eliminar</b></string>
+
+    <string name="text_hint_location">Ubicación caja master</string>
+    <string name="text_button_location">Finalizar</string>
+    <string name="text_toolbar_location">Ubicación de Caja Master</string>
+    <string name="text_button_register">Registrar</string>
+    <string name="text_hint_bar_code">Código de Barras</string>
+
+    <string name="text_generate_bar_code">Generar</string>
+    <string name="text_toolbar_bar_codes">Generar códigos de barra</string>
+    <string name="text_hint_number_of_codes">Cantidad de códigos</string>
+
+</resources>
+

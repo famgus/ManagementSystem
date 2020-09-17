@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:color="#DAB8BEBB"
+    tools:targetApi="lollipop">
+
+
+    <item >
+        <shape android:shape="rectangle">
+            <size android:width="60dp" android:height="20dp"/>
+            <corners android:radius="2dp"/>
+            <solid android:color="@color/colorAccent" />
+            <stroke android:width="0.2dp"
+                android:color="@color/white"/>
+        </shape>
+    </item>
+    <item android:drawable="@drawable/mnp_picking">
+    </item>
+</ripple>
