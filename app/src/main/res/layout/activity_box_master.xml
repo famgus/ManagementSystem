@@ -146,7 +146,7 @@
                     android:layout_height="100dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
-                    android:background="@drawable/traslados"
+                    android:background="@drawable/reubicacion"
                     android:paddingLeft="8dp"
                     android:layout_marginLeft="4dp"/>
 

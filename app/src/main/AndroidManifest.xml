@@ -82,7 +82,7 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".moduleView.boxMaster.TrasladosActivity"
+            android:name=".moduleView.boxMaster.ReubicacionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />

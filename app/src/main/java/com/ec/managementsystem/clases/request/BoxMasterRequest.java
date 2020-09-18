@@ -7,6 +7,8 @@ public class BoxMasterRequest {
     private String barCodeBoxMasterDestiny;
     private Integer quantityArticle;
     private String codeStorage;
+    private String ubicacionOrigen;
+    private String ubicacionDestiny;
 
     public BoxMasterRequest() {
     }
@@ -57,5 +59,21 @@ public class BoxMasterRequest {
 
     public void setActionPath(int actionPath) {
         this.actionPath = actionPath;
+    }
+
+    public String getUbicacionOrigen() {
+        return ubicacionOrigen;
+    }
+
+    public void setUbicacionOrigen(String ubicacionOrigen) {
+        this.ubicacionOrigen = ubicacionOrigen;
+    }
+
+    public String getUbicacionDestiny() {
+        return ubicacionDestiny;
+    }
+
+    public void setUbicacionDestiny(String ubicacionDestiny) {
+        this.ubicacionDestiny = ubicacionDestiny;
     }
 }
