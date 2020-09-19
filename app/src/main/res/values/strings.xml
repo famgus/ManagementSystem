@@ -73,5 +73,9 @@
     <string name="text_toolbar_bar_codes">Generar códigos de barra</string>
     <string name="text_hint_number_of_codes">Cantidad de códigos</string>
 
+
+    <string name="text_toolbar_return_product">Orden de Devolución</string>
+    <string name="purchase_order">Orden de Devolución</string>
+
 </resources>
 
