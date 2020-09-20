@@ -36,15 +36,18 @@ import java.util.List;
 public class ReturnProductSelectChangeActivity extends BaseActivity implements
         IDelegateReturnProductControl, ReturnProductDialogScanner.DialogScanerFinished, IDelegateUpdatePickingControl {
 
-    private static final int CODIGO_PERMISOS_CAMARA = 1, CODIGO_INTENT = 2;
-    ImageView imageCodeBar;
+    private static final int CODIGO_PERMISOS_CAMARA = 1, CODE_INDENT = 2;
+    private static final int CODE_FLOW_MASTER_BOX = 99, CODE_FLOW_QUANTITY = 100;
+    ImageView imageCodeBar, quantityCodeBar;
     List<String> codes;
+    private int lastCode = 1;
     private TextView textDescription, textItemCode, textSize, textColor, textApplicationDate, textPreparationDate, textQuantity;
     private Toolbar toolbar;
     private TableLayout tableUbications;
     private ReturnProductDetail product;
     private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
-    private TextView txtCodeBar;
+    private TextView txtCodeBar, txtQuantityCodeBar;
+    private int quantitySelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +105,7 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
             quantity = product.getQuantity();
         }
 
-        tableUbications= findViewById(R.id.tableUbications);
+        tableUbications = findViewById(R.id.tableUbications);
         this.mapperBoxMasterUbication();
 
         textDescription.setText(description);
@@ -115,15 +118,28 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         //end set data to view
 
         //prepare codebar
+        quantitySelected = 0;
         codes = new ArrayList<>();
         imageCodeBar = findViewById(R.id.imageCodeBar);
+        quantityCodeBar = findViewById(R.id.quantityCodeBar);
         imageCodeBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialogScanner(false, CODIGO_INTENT);
+                lastCode = CODE_FLOW_MASTER_BOX;
+                Log.i("Click Code", String.valueOf(lastCode));
+                showDialogScanner(false, CODE_INDENT);
+            }
+        });
+        quantityCodeBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lastCode = CODE_FLOW_QUANTITY;
+                Log.i("Click Code", String.valueOf(lastCode));
+                showDialogScanner(false, CODE_INDENT);
             }
         });
         txtCodeBar = findViewById(R.id.txtCodeBar);
+        txtQuantityCodeBar = findViewById(R.id.txtQuantityCodeBar);
         //end prepare codebar
 
         //Set Toolbar
@@ -187,8 +203,8 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         layoutItemUbication.setMarginStart(1);
         layoutItemMasterBox.setMarginStart(1);
 
-        for (int i = 0; i <= product.getUbication().size()-1; i++) {
-            Log.i("Loading Ubication",String.valueOf(i));
+        for (int i = 0; i <= product.getUbication().size() - 1; i++) {
+            Log.i("Loading Ubication", String.valueOf(i));
             TableRow row = new TableRow(this);
             row.setLayoutParams(layoutItemUbication);
             row.setBackgroundColor(getResources().getColor(R.color.white));
@@ -221,6 +237,7 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
+        Log.i("showDialogScanner", String.valueOf(codeIntent));
         ReturnProductDialogScanner returnProductDialogScanner = new ReturnProductDialogScanner();
         returnProductDialogScanner.setScanMultiple(scanMultiple);
         returnProductDialogScanner.setCode_intent(codeIntent);
@@ -241,7 +258,8 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
 
     @Override
     public void onScannerBarCode(BundleResponse bundleResponse, int action) {
-        if (action == CODIGO_INTENT) {
+        Log.i("onScannerBarCode", String.valueOf(action));
+        if (lastCode == CODE_FLOW_MASTER_BOX) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
                 Log.i("Code Read", codeBar);
@@ -249,13 +267,22 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
                 txtCodeBar.setText(codeBar);
             }
         }
+        if (lastCode == CODE_FLOW_QUANTITY) {
+            if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+                String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
+                Log.i("Code Read", codeBar);
+                this.addQuantity();
+            }
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.i("onActivityResult", String.valueOf(resultCode));
+        Log.i("Last Code", String.valueOf(lastCode));
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (data != null && data.getAction().equals(String.valueOf(CODIGO_INTENT))) {
+            if (data != null && data.getAction().equals(String.valueOf(CODE_INDENT)) && lastCode == CODE_FLOW_MASTER_BOX) {
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                     String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
@@ -264,17 +291,37 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
                     txtCodeBar.setText(codeBar);
                 }
             }
+            if (data != null && data.getAction().equals(String.valueOf(CODE_INDENT)) && lastCode == CODE_FLOW_QUANTITY) {
+                BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
+                if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+                    String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
+                    Log.i("Code Read", codeBar);
+                    this.addQuantity();
+                }
+            }
         }
+    }
+
+    public void addQuantity() {
+        int maxQuality = Integer.parseInt(product.getQuantity());
+        Log.i("addQuantity",  quantitySelected + "/" + maxQuality);
+        if (quantitySelected  >= maxQuality) {
+            Toast.makeText(ReturnProductSelectChangeActivity.this, "Se alcanzo la cantidad maxima", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(ReturnProductSelectChangeActivity.this, "Producto agregado", Toast.LENGTH_LONG).show();
+            quantitySelected = quantitySelected + 1;
+        }
+        txtQuantityCodeBar.setText(String.valueOf(quantitySelected));
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.i("onRequestPermissionsR", String.valueOf(requestCode));
         switch (requestCode) {
             case CODIGO_PERMISOS_CAMARA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Escanear directamten solo si fue pedido desde el botón
                     if (permisoSolicitadoDesdeBoton) {
-                        showDialogScanner(false, CODIGO_INTENT);
+                        showDialogScanner(false, CODE_FLOW_MASTER_BOX);
                     }
                     permisoCamaraConcedido = true;
                 } else {
@@ -285,8 +332,6 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
     }
 
     private void permisoDeCamaraDenegado() {
-        // Esto se llama cuando el usuario hace click en "Denegar" o
-        // cuando lo denegó anteriormente
         Toast.makeText(ReturnProductSelectChangeActivity.this, "No puedes escanear si no das permiso", Toast.LENGTH_LONG).show();
     }
 }
