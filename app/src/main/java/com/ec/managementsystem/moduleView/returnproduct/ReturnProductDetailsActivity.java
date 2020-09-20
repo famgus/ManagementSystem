@@ -1,28 +1,34 @@
 package com.ec.managementsystem.moduleView.returnproduct;
 
-import android.graphics.Color;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.ec.managementsystem.R;
+import com.ec.managementsystem.clases.responses.BundleResponse;
+import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductListResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductResponse;
 import com.ec.managementsystem.interfaces.IDelegateReturnProductControl;
+import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
-import com.ec.managementsystem.util.MySingleton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -30,12 +36,19 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReturnProductDetailsActivity extends BaseActivity implements IDelegateReturnProductControl {
+public class ReturnProductDetailsActivity extends BaseActivity implements
+        IDelegateReturnProductControl, ReturnProductDialogScanner.DialogScanerFinished, IDelegateUpdatePickingControl {
 
+    private static final int CODIGO_PERMISOS_CAMARA = 1, CODIGO_INTENT = 2;
+    ImageView imageCodeBar;
+    List<String> codes;
     private TextView txtSerialNumberValue, txtOrderNumberValue, txtProviderCodeValue, txtPreparationDateValue;
     private Toolbar toolbar;
     private List<ReturnProductResponse> products;
     private TableLayout tableReturnProducts;
+    private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
+    private TextView txtCodeBar;
+    private LinearLayout rowBoxMaster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +98,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
                 preparationDate = product.getFechaPedido();
             }
 
-            this.mapperRow();
+            this.mapperProductsOrder();
         }
 
         txtSerialNumberValue.setText(serialNumber);
@@ -94,7 +107,19 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
         txtPreparationDateValue.setText(preparationDate);
         //end set data to view
 
-        // Set Toolbar
+        //prepare codebar
+        codes = new ArrayList<>();
+        imageCodeBar = findViewById(R.id.imageCodeBar);
+        imageCodeBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialogScanner(false, CODIGO_INTENT);
+            }
+        });
+        txtCodeBar=findViewById(R.id.txtCodeBar);
+        //end prepare codebar
+
+        //Set Toolbar
         this.toolbar.setTitle(R.string.text_toolbar_return_product);
         this.setupToolBar(toolbar);
         this.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -115,44 +140,18 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
 
     @Override
     public void onReturnProduct(ReturnProductListResponse response) {
-        int code = response.getCode();
-        switch (code) {
-            case 200:
-                Log.i("onReturnProduct", "Loading Product");
-                if (response.getPedidoList() == null || response.getPedidoList().size() == 0) {
-                    Toast.makeText(ReturnProductDetailsActivity.this, "La orden no tiene productos", Toast.LENGTH_LONG).show();
-                } else {
-                    Log.i("onReturnProduct", "Loading Products");
-                    //todo: load other screen
-                }
-                break;
-            case 401:
-                Log.i("onReturnProduct", "Ocurrio un problema 401");
-                Toast.makeText(ReturnProductDetailsActivity.this, "Ocurrio un problema 401", Toast.LENGTH_LONG).show();
-            case 400:
-                Log.i("onReturnProduct", "La orden no fue encontrada");
-                Toast.makeText(ReturnProductDetailsActivity.this, "La orden no fue encontrada", Toast.LENGTH_LONG).show();
-            default:
-                Log.i("onReturnProduct", "Ocurrio un problema intente mas tarde");
-                Toast.makeText(ReturnProductDetailsActivity.this, "Ocurrio un problema intente mas tarde", Toast.LENGTH_LONG).show();
-                break;
-
-        }
-
         Log.i("onReturnProduct", response.getMessage());
-        Log.i("onReturnProduct", String.valueOf(response.getPedidoList().size()));
-        Log.i("onReturnProduct", String.valueOf(code));
     }
 
-    private void mapperRow() {
+    private void mapperProductsOrder() {
         tableReturnProducts.removeAllViews();
-        TableRow headder = new TableRow(this);
+        TableRow header = new TableRow(this);
         TableRow.LayoutParams layoutFila1 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
-        headder.setLayoutParams(layoutFila1);
-        headder.setBackgroundColor(getResources().getColor(R.color.star_gold));
-        tableReturnProducts.addView(headder);
+        header.setLayoutParams(layoutFila1);
+        header.setBackgroundColor(getResources().getColor(R.color.star_gold));
+        tableReturnProducts.addView(header);
 
-        TableRow.LayoutParams layoutNumber = new TableRow.LayoutParams(0, 30, (float) 0.4);
+        TableRow.LayoutParams layoutNumber = new TableRow.LayoutParams(0, 60, (float) 0.4);
         layoutNumber.setMargins(4, 1, 3, 3);
         TableRow.LayoutParams layoutItemCode = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1);
         layoutItemCode.setMargins(1, 1, 3, 3);
@@ -178,7 +177,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
         headerNumber.setText("No.");
         headerNumber.setTextColor(getResources().getColor(R.color.white));
         headerNumber.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        headder.addView(headerNumber);
+        header.addView(headerNumber);
 
         headerItemCode.setLayoutParams(layoutItemCode);
         headerItemCode.setBackgroundColor(getResources().getColor(R.color.star_gold));
@@ -186,7 +185,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
         headerItemCode.setText("Codigo Articulo");
         headerItemCode.setTextColor(getResources().getColor(R.color.white));
         headerItemCode.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        headder.addView(headerItemCode);
+        header.addView(headerItemCode);
 
         headerSize.setLayoutParams(layoutSize);
         headerSize.setBackgroundColor(getResources().getColor(R.color.star_gold));
@@ -194,7 +193,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
         headerSize.setText("Talla");
         headerSize.setTextColor(getResources().getColor(R.color.white));
         headerSize.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        headder.addView(headerSize);
+        header.addView(headerSize);
 
         headerColor.setLayoutParams(layoutColor);
         headerColor.setBackgroundColor(getResources().getColor(R.color.star_gold));
@@ -202,7 +201,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
         headerColor.setText("Color");
         headerColor.setTextColor(getResources().getColor(R.color.white));
         headerColor.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        headder.addView(headerColor);
+        header.addView(headerColor);
 
         headerQuantity.setLayoutParams(layoutQuantity);
         headerQuantity.setBackgroundColor(getResources().getColor(R.color.star_gold));
@@ -210,7 +209,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
         headerQuantity.setText("Cant");
         headerQuantity.setTextColor(getResources().getColor(R.color.white));
         headerQuantity.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        headder.addView(headerQuantity);
+        header.addView(headerQuantity);
 
         headerSelect.setLayoutParams(layoutSelect);
         headerSelect.setBackgroundColor(getResources().getColor(R.color.star_gold));
@@ -218,7 +217,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
         headerSelect.setText("---");
         headerSelect.setTextColor(getResources().getColor(R.color.white));
         headerSelect.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        headder.addView(headerSelect);
+        header.addView(headerSelect);
 
         TableRow.LayoutParams layoutItemRow = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
         TableRow.LayoutParams layoutnumero = new TableRow.LayoutParams(0, 50, (float) 0.4);
@@ -308,5 +307,75 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
             row.addView(iconUnselect);
         }
 
+    }
+
+    private void showDialogScanner(boolean scanMultiple, int codeIntent) {
+        ReturnProductDialogScanner returnProductDialogScanner = new ReturnProductDialogScanner();
+        returnProductDialogScanner.setScanMultiple(scanMultiple);
+        returnProductDialogScanner.setCode_intent(codeIntent);
+        returnProductDialogScanner.setPermisoCamaraConcedido(permisoCamaraConcedido);
+        returnProductDialogScanner.setPermisoSolicitadoDesdeBoton(permisoSolicitadoDesdeBoton);
+        returnProductDialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+    }
+
+    @Override
+    public void onSuccessUpdate(GenericResponse response) {
+        if (response != null && response.getCode() == 200) {
+            Toast.makeText(ReturnProductDetailsActivity.this, "Packing registrado correctamente", Toast.LENGTH_LONG).show();
+            onBackPressed();
+        } else {
+            Toast.makeText(ReturnProductDetailsActivity.this, "Error registrando el packing", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onScannerBarCode(BundleResponse bundleResponse, int action) {
+        if (action == CODIGO_INTENT) {
+            if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+                String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
+                Log.i("Code Read", codeBar);
+                codes.add(codeBar);
+                txtCodeBar.setText(codeBar);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (data != null && data.getAction().equals(String.valueOf(CODIGO_INTENT))) {
+                BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
+                if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+                    String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
+                    Log.i("Code Read", codeBar);
+                    codes.add(codeBar);
+                    txtCodeBar.setText(codeBar);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case CODIGO_PERMISOS_CAMARA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Escanear directamten solo si fue pedido desde el botón
+                    if (permisoSolicitadoDesdeBoton) {
+                        showDialogScanner(false, CODIGO_INTENT);
+                    }
+                    permisoCamaraConcedido = true;
+                } else {
+                    permisoDeCamaraDenegado();
+                }
+                break;
+        }
+    }
+
+    private void permisoDeCamaraDenegado() {
+        // Esto se llama cuando el usuario hace click en "Denegar" o
+        // cuando lo denegó anteriormente
+        Toast.makeText(ReturnProductDetailsActivity.this, "No puedes escanear si no das permiso", Toast.LENGTH_LONG).show();
     }
 }
