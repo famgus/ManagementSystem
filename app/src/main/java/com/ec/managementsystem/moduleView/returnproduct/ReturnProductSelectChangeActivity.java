@@ -41,7 +41,7 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
     List<String> codes;
     private TextView textDescription, textItemCode, textSize, textColor, textApplicationDate, textPreparationDate, textQuantity;
     private Toolbar toolbar;
-    private TableLayout tableReturnProducts;
+    private TableLayout tableUbications;
     private ReturnProductDetail product;
     private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
     private TextView txtCodeBar;
@@ -102,7 +102,8 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
             quantity = product.getQuantity();
         }
 
-//        this.mapperProductsOrder();
+        tableUbications= findViewById(R.id.tableUbications);
+        this.mapperBoxMasterUbication();
 
         textDescription.setText(description);
         textItemCode.setText(itemCode);
@@ -149,169 +150,73 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         Log.i("onReturnProduct", response.getMessage());
     }
 
-    private void mapperProductsOrder() {
-        tableReturnProducts.removeAllViews();
+    private void mapperBoxMasterUbication() {
+        tableUbications.removeAllViews();
         TableRow header = new TableRow(this);
         TableRow.LayoutParams layoutFila1 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
         header.setLayoutParams(layoutFila1);
         header.setBackgroundColor(getResources().getColor(R.color.star_gold));
-        tableReturnProducts.addView(header);
+        tableUbications.addView(header);
 
-        TableRow.LayoutParams layoutNumber = new TableRow.LayoutParams(0, 60, (float) 0.4);
-        layoutNumber.setMargins(4, 1, 3, 3);
-        TableRow.LayoutParams layoutItemCode = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1);
-        layoutItemCode.setMargins(1, 1, 3, 3);
-        TableRow.LayoutParams layoutSize = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, (float) 0.6);
-        layoutSize.setMargins(1, 1, 4, 3);
-        TableRow.LayoutParams layoutColor = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, (float) 0.6);
-        layoutColor.setMargins(1, 1, 4, 3);
-        TableRow.LayoutParams layoutQuantity = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, (float) 0.6);
-        layoutQuantity.setMargins(1, 1, 4, 3);
-        TableRow.LayoutParams layoutSelect = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, (float) 0.5);
-        layoutSelect.setMargins(0, 1, 4, 3);
+        TableRow.LayoutParams layoutUbication = new TableRow.LayoutParams(0, 60, (float) 0.4);
+        layoutUbication.setMargins(4, 1, 3, 3);
+        TableRow.LayoutParams layoutMasterBox = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1);
+        layoutMasterBox.setMargins(1, 1, 3, 3);
 
-        TextView headerNumber = new TextView(this);
-        TextView headerItemCode = new TextView(this);
-        TextView headerSize = new TextView(this);
-        TextView headerColor = new TextView(this);
-        TextView headerQuantity = new TextView(this);
-        final TextView headerSelect = new TextView(this);
+        TextView headerUbication = new TextView(this);
+        TextView headerMasterBox = new TextView(this);
+        headerUbication.setLayoutParams(layoutUbication);
+        headerUbication.setBackgroundColor(getResources().getColor(R.color.star_gold));
+        headerUbication.setPadding(0, 0, 0, 0);
+        headerUbication.setText("Código Ubicación");
+        headerUbication.setTextColor(getResources().getColor(R.color.white));
+        headerUbication.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+        header.addView(headerUbication);
 
-        headerNumber.setLayoutParams(layoutNumber);
-        headerNumber.setBackgroundColor(getResources().getColor(R.color.star_gold));
-        headerNumber.setPadding(0, 0, 0, 0);
-        headerNumber.setText("No.");
-        headerNumber.setTextColor(getResources().getColor(R.color.white));
-        headerNumber.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        header.addView(headerNumber);
+        headerMasterBox.setLayoutParams(layoutMasterBox);
+        headerMasterBox.setBackgroundColor(getResources().getColor(R.color.star_gold));
+        headerMasterBox.setPadding(0, 0, 0, 0);
+        headerMasterBox.setText("Código Caja Master");
+        headerMasterBox.setTextColor(getResources().getColor(R.color.white));
+        headerMasterBox.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+        header.addView(headerMasterBox);
 
-        headerItemCode.setLayoutParams(layoutItemCode);
-        headerItemCode.setBackgroundColor(getResources().getColor(R.color.star_gold));
-        headerItemCode.setPadding(0, 0, 0, 0);
-        headerItemCode.setText("Codigo Articulo");
-        headerItemCode.setTextColor(getResources().getColor(R.color.white));
-        headerItemCode.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        header.addView(headerItemCode);
+        TableRow.LayoutParams layoutItemUbication = new TableRow.LayoutParams(0, 50, (float) 0.5);
+        TableRow.LayoutParams layoutItemMasterBox = new TableRow.LayoutParams(0, 50, (float) 0.5);
 
-        headerSize.setLayoutParams(layoutSize);
-        headerSize.setBackgroundColor(getResources().getColor(R.color.star_gold));
-        headerSize.setPadding(0, 0, 0, 0);
-        headerSize.setText("Talla");
-        headerSize.setTextColor(getResources().getColor(R.color.white));
-        headerSize.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        header.addView(headerSize);
+        layoutItemUbication.setMarginStart(1);
+        layoutItemMasterBox.setMarginStart(1);
 
-        headerColor.setLayoutParams(layoutColor);
-        headerColor.setBackgroundColor(getResources().getColor(R.color.star_gold));
-        headerColor.setPadding(0, 0, 0, 0);
-        headerColor.setText("Color");
-        headerColor.setTextColor(getResources().getColor(R.color.white));
-        headerColor.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        header.addView(headerColor);
+        for (int i = 0; i <= product.getUbication().size()-1; i++) {
+            Log.i("Loading Ubication",String.valueOf(i));
+            TableRow row = new TableRow(this);
+            row.setLayoutParams(layoutItemUbication);
+            row.setBackgroundColor(getResources().getColor(R.color.white));
+            row.setPadding(0, 0, 1, 1);
 
-        headerQuantity.setLayoutParams(layoutQuantity);
-        headerQuantity.setBackgroundColor(getResources().getColor(R.color.star_gold));
-        headerQuantity.setPadding(0, 0, 0, 0);
-        headerQuantity.setText("Cant");
-        headerQuantity.setTextColor(getResources().getColor(R.color.white));
-        headerQuantity.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        header.addView(headerQuantity);
+            TextView textUbication = new TextView(this);
+            TextView textMasterBox = new TextView(this);
 
-        headerSelect.setLayoutParams(layoutSelect);
-        headerSelect.setBackgroundColor(getResources().getColor(R.color.star_gold));
-        headerSelect.setPadding(0, 0, 0, 0);
-        headerSelect.setText("---");
-        headerSelect.setTextColor(getResources().getColor(R.color.white));
-        headerSelect.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-        header.addView(headerSelect);
+            textUbication.setLayoutParams(layoutItemUbication);
+            textUbication.setGravity(Gravity.CENTER);
+            textUbication.setPadding(2, 2, 2, 2);
+            textUbication.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            textUbication.setTextSize(12);
+            textUbication.setBackgroundResource(R.color.white);
+            textUbication.setText(product.getUbication().get(i).getUbicationCode());
 
-        TableRow.LayoutParams layoutItemRow = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
-        TableRow.LayoutParams layoutnumero = new TableRow.LayoutParams(0, 50, (float) 0.4);
-        TableRow.LayoutParams layoutdetalle = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1);
-        TableRow.LayoutParams layoutcantidad = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, (float) 0.6);
-        TableRow.LayoutParams layoutbotoniniciar = new TableRow.LayoutParams(0, 50, (float) 0.5);
-        TableRow.LayoutParams layoutbotondelete = new TableRow.LayoutParams(0, 50, (float) 0.5);
+            textMasterBox.setLayoutParams(layoutItemMasterBox);
+            textMasterBox.setGravity(Gravity.CENTER);
+            textMasterBox.setBackgroundResource(R.color.white);
+            textMasterBox.setPadding(2, 2, 2, 2);
+            textMasterBox.setGravity(Gravity.CENTER);
+            textMasterBox.setTextSize(12);
+            textMasterBox.setText(product.getUbication().get(i).getBarCodeMasterBox());
 
-        layoutItemRow.setMarginStart(1);
-        layoutdetalle.setMarginStart(1);
-        layoutcantidad.setMarginStart(1);
-        layoutbotoniniciar.setMarginStart(1);
-        layoutbotondelete.setMarginStart(1);
-
-//        for (int i = 0; i < products.size(); i++) {
-//            TableRow row = new TableRow(this);
-//            row.setLayoutParams(layoutItemRow);
-//            row.setBackgroundColor(getResources().getColor(R.color.white));
-//            row.setPadding(0, 0, 1, 1);
-//            tableReturnProducts.addView(row);
-//
-//            TextView textNumber = new TextView(this);
-//            TextView textItemCode = new TextView(this);
-//            TextView textSize = new TextView(this);
-//            TextView textColor = new TextView(this);
-//            TextView textQuantity = new TextView(this);
-//            final ImageView iconSelect = new ImageView(this);
-//            final ImageView iconUnselect = new ImageView(this);
-//
-//            textNumber.setLayoutParams(layoutnumero);
-//            textNumber.setGravity(Gravity.CENTER);
-//            textNumber.setPadding(2, 2, 2, 2);
-//            textNumber.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//            textNumber.setBackgroundResource(R.color.white);
-//            textNumber.setText(String.valueOf(i + 1));
-//
-//            textItemCode.setLayoutParams(layoutdetalle);
-//            textItemCode.setBackgroundResource(R.color.white);
-//            textItemCode.setPadding(2, 2, 2, 2);
-//            textItemCode.setGravity(Gravity.CENTER);
-//            textItemCode.setText(products.get(i).getCodArticulo());
-//
-//            textSize.setGravity(Gravity.CENTER);
-//            textSize.setLayoutParams(layoutcantidad);
-//            textSize.setBackgroundResource(R.color.white);
-//            textSize.setPadding(2, 2, 2, 2);
-//            textSize.setText(String.valueOf(products.get(i).getTalla()));
-//
-//            textColor.setGravity(Gravity.CENTER);
-//            textColor.setLayoutParams(layoutcantidad);
-//            textColor.setBackgroundResource(R.color.white);
-//            textColor.setPadding(2, 2, 2, 2);
-//            textColor.setText(String.valueOf(products.get(i).getColor()));
-//
-//            textQuantity.setGravity(Gravity.CENTER);
-//            textQuantity.setLayoutParams(layoutcantidad);
-//            textQuantity.setBackgroundResource(R.color.white);
-//            textQuantity.setPadding(2, 2, 2, 2);
-//            textQuantity.setText(String.valueOf(products.get(i).getUnidadesTotales()));
-//
-//            iconSelect.setLayoutParams(layoutbotoniniciar);
-//            iconSelect.setBackgroundColor(getResources().getColor(R.color.white));
-//            iconSelect.setImageResource(R.drawable.icon_return_product_unselect);
-//            iconSelect.setPadding(2, 2, 2, 2);
-//            iconSelect.setId(i + 100);
-//            iconSelect.setVisibility(View.GONE);
-//            iconSelect.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                }
-//            });
-//
-//            iconUnselect.setLayoutParams(layoutbotondelete);
-//            iconUnselect.setBackgroundColor(getResources().getColor(R.color.white));
-//            iconUnselect.setPadding(2, 2, 6, 2);
-//            iconUnselect.setId(i + 1000);
-//            iconUnselect.setVisibility(View.VISIBLE);
-//            iconUnselect.setImageResource(R.drawable.icon_return_product_unselect);
-//
-//            row.addView(textNumber);
-//            row.addView(textItemCode);
-//            row.addView(textSize);
-//            row.addView(textColor);
-//            row.addView(textQuantity);
-//            row.addView(iconSelect);
-//            row.addView(iconUnselect);
-//        }
+            row.addView(textUbication);
+            row.addView(textMasterBox);
+            tableUbications.addView(row);
+        }
 
     }
 

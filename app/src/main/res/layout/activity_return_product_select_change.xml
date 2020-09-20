@@ -347,7 +347,7 @@
                     android:textStyle="bold" />
 
                 <TableLayout
-                    android:id="@+id/tableReturnProducts"
+                    android:id="@+id/tableUbications"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -584,30 +584,41 @@
                     android:layout_marginBottom="2dp"
                     android:text="Origen del articulo"
                     android:textSize="12sp" />
-
-                <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/rbBoxmaster"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:checked="true"
-                        android:text="Caja Master" />
-
-                    <RadioButton
-                        android:id="@+id/rbUbicacion"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Ubicación" />
-
-                </RadioGroup>
-
             </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbBoxmaster"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:textSize="14sp"
+                    android:text="Caja Master" />
+
+                <RadioButton
+                    android:id="@+id/rbUbicacion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="14sp"
+                    android:text="Ubicación" />
+
+            </RadioGroup>
+        </LinearLayout>
             <!-- end article orign -->
 
             <!-- code bar-->
@@ -625,7 +636,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Codigo de Barras"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -634,7 +645,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:hint="001md2333"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -665,7 +676,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Codigo de Barras"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -674,7 +685,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
                     android:hint="001md2333"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -697,7 +708,7 @@
                 android:layout_width="150dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal|center"
-                android:layout_marginTop="150dp"
+                android:layout_marginTop="50dp"
                 android:background="@color/colorAccent">
 
                 <TextView
@@ -708,7 +719,7 @@
                     android:text="Registrar"
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="28sp" />
+                    android:textSize="16sp" />
             </LinearLayout>
             <!-- end button search-->
 

@@ -83,6 +83,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
             }
             if (product.getFechaPedido() != null) { //todo: change this field to fechaPreparation
                 preparationDate = product.getFechaPedido();
+                products.get(i).setFechaPreparacion(preparationDate);
             }
 
             this.mapperProductsOrder();
@@ -320,7 +321,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
                     ReturnProductResponse product = this.findProduct(response.getProductDetail().getBarCode());
 
                     response.getProductDetail().setApplicationDate(product.getFechaPedido());
-                    response.getProductDetail().setPreparationDate(product.getFechaPedido());//todo: cambiar por fecha preparacion
+                    response.getProductDetail().setPreparationDate(product.getFechaPreparacion());
                     response.getProductDetail().setQuantity(product.getUnidadesTotales());
 
                     Gson gson = new Gson();

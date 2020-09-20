@@ -15,6 +15,9 @@ public class ReturnProductResponse {
     @SerializedName("fechaPedido")
     private String fechaPedido;
 
+    @SerializedName("fechaPreparacion")
+    private String fechaPreparacion;
+
     @SerializedName("codArticulo")
     private String codArticulo;
 
@@ -29,8 +32,17 @@ public class ReturnProductResponse {
 
     @SerializedName("descricion")
     private String description;
+
     @SerializedName("unidadesTotales")
     private String unidadesTotales;
+
+    public String getFechaPreparacion() {
+        return fechaPreparacion;
+    }
+
+    public void setFechaPreparacion(String fechaPreparacion) {
+        this.fechaPreparacion = fechaPreparacion;
+    }
 
     public String getBarCode() {
         return barCode;
