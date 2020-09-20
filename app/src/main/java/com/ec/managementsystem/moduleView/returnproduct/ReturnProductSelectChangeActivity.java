@@ -23,15 +23,14 @@ import androidx.core.content.ContextCompat;
 import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
+import com.ec.managementsystem.clases.responses.ReturnProductDetail;
+import com.ec.managementsystem.clases.responses.ReturnProductDetailsResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductListResponse;
-import com.ec.managementsystem.clases.responses.ReturnProductResponse;
 import com.ec.managementsystem.interfaces.IDelegateReturnProductControl;
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,10 +40,10 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
     private static final int CODIGO_PERMISOS_CAMARA = 1, CODIGO_INTENT = 2;
     ImageView imageCodeBar;
     List<String> codes;
-    private TextView txtSerialNumberValue, txtOrderNumberValue, txtProviderCodeValue, txtPreparationDateValue;
+    private TextView textDescription, textItemCode, textSize, textColor, textApplicationDate, textPreparationDate, textQuantity;
     private Toolbar toolbar;
-    private List<ReturnProductResponse> products;
     private TableLayout tableReturnProducts;
+    private ReturnProductDetail product;
     private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
     private TextView txtCodeBar;
 
@@ -55,11 +54,13 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         //set title and activity
         setContentView(R.layout.activity_return_product_select_change);
         toolbar = findViewById(R.id.toolbar_rl);
-        txtSerialNumberValue = findViewById(R.id.txtSerialNumberValue);
-        txtOrderNumberValue = findViewById(R.id.txtOrderNumberValue);
-        txtProviderCodeValue = findViewById(R.id.txtProviderCodeValue);
-        txtPreparationDateValue = findViewById(R.id.txtPreparationDateValue);
-        tableReturnProducts = findViewById(R.id.tableReturnProducts);
+        textDescription = findViewById(R.id.textDescription);
+        textItemCode = findViewById(R.id.textItemCode);
+        textSize = findViewById(R.id.textSize);
+        textColor = findViewById(R.id.textColor);
+        textApplicationDate = findViewById(R.id.textApplicationDate);
+        textPreparationDate = findViewById(R.id.textPreparationDate);
+        textQuantity = findViewById(R.id.textQuantity);
         //end set title and activity
 
         //load arg
@@ -67,42 +68,41 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         String arg = bundle.getString("arg");
         Log.i("onCreate", arg);
         Gson gson = new Gson();
-
-        Type listType = new TypeToken<ArrayList<ReturnProductResponse>>() {
-        }.getType();
-        products = new Gson().fromJson(arg, listType);
-        Log.i("Loaded products", String.valueOf(products.size()));
+        product = new Gson().fromJson(arg, ReturnProductDetail.class);
+        Log.i("Loaded product", String.valueOf(product));
         //end load arg
 
         //set data to view
-        String providerCode = "Not Found";
-        String serialNumber = "Not Found";
-        String orderNumber = "Not Found";
-        String preparationDate = "Not Found";
+        String description = "Not Found";
+        String itemCode = "Not Found";
+        String size = "Not Found";
+        String color = "Not Found";
+        String applicationDate = "Not Found";
+        String PreparationDate = "Not Found";
+        String quantity = "Not Found";
 
-        for (int i = 0; i <= products.size() - 1; i++) {
-            Log.i("Loading Product", String.valueOf(i));
-            ReturnProductResponse product = products.get(i);
-            if (product.getCodProvedor() != null) {
-                providerCode = product.getCodProvedor();
-            }
-            if (product.getNumSerie() != null) {
-                serialNumber = product.getNumSerie();
-            }
-            if (product.getNumPedido() != null) {
-                orderNumber = product.getNumPedido();
-            }
-            if (product.getFechaPedido() != null) { //todo: change this field to fechaPreparation
-                preparationDate = product.getFechaPedido();
-            }
-
-            this.mapperProductsOrder();
+        if (product.getDescription() != null) {
+            description = product.getDescription();
+        }
+        if (product.getItemCode() != null) {
+            itemCode = product.getItemCode();
+        }
+        if (product.getSize()!= null) {
+            size = product.getSize();
+        }
+        if (product.getColor()!= null) {
+            color = product.getColor();
         }
 
-        txtSerialNumberValue.setText(serialNumber);
-        txtOrderNumberValue.setText(orderNumber);
-        txtProviderCodeValue.setText(providerCode);
-        txtPreparationDateValue.setText(preparationDate);
+//        this.mapperProductsOrder();
+
+        textDescription.setText(description);
+        textItemCode.setText(itemCode);
+        textSize.setText(size);
+        textColor.setText(color);
+        textApplicationDate.setText(applicationDate);
+        textPreparationDate.setText(PreparationDate);
+        textQuantity.setText(quantity);
         //end set data to view
 
         //prepare codebar
@@ -114,7 +114,7 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
                 showDialogScanner(false, CODIGO_INTENT);
             }
         });
-        txtCodeBar=findViewById(R.id.txtCodeBar);
+        txtCodeBar = findViewById(R.id.txtCodeBar);
         //end prepare codebar
 
         //Set Toolbar
@@ -230,80 +230,80 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         layoutbotoniniciar.setMarginStart(1);
         layoutbotondelete.setMarginStart(1);
 
-        for (int i = 0; i < products.size(); i++) {
-            TableRow row = new TableRow(this);
-            row.setLayoutParams(layoutItemRow);
-            row.setBackgroundColor(getResources().getColor(R.color.white));
-            row.setPadding(0, 0, 1, 1);
-            tableReturnProducts.addView(row);
-
-            TextView textNumber = new TextView(this);
-            TextView textItemCode = new TextView(this);
-            TextView textSize = new TextView(this);
-            TextView textColor = new TextView(this);
-            TextView textQuantity = new TextView(this);
-            final ImageView iconSelect = new ImageView(this);
-            final ImageView iconUnselect = new ImageView(this);
-
-            textNumber.setLayoutParams(layoutnumero);
-            textNumber.setGravity(Gravity.CENTER);
-            textNumber.setPadding(2, 2, 2, 2);
-            textNumber.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            textNumber.setBackgroundResource(R.color.white);
-            textNumber.setText(String.valueOf(i + 1));
-
-            textItemCode.setLayoutParams(layoutdetalle);
-            textItemCode.setBackgroundResource(R.color.white);
-            textItemCode.setPadding(2, 2, 2, 2);
-            textItemCode.setGravity(Gravity.CENTER);
-            textItemCode.setText(products.get(i).getCodArticulo());
-
-            textSize.setGravity(Gravity.CENTER);
-            textSize.setLayoutParams(layoutcantidad);
-            textSize.setBackgroundResource(R.color.white);
-            textSize.setPadding(2, 2, 2, 2);
-            textSize.setText(String.valueOf(products.get(i).getTalla()));
-
-            textColor.setGravity(Gravity.CENTER);
-            textColor.setLayoutParams(layoutcantidad);
-            textColor.setBackgroundResource(R.color.white);
-            textColor.setPadding(2, 2, 2, 2);
-            textColor.setText(String.valueOf(products.get(i).getColor()));
-
-            textQuantity.setGravity(Gravity.CENTER);
-            textQuantity.setLayoutParams(layoutcantidad);
-            textQuantity.setBackgroundResource(R.color.white);
-            textQuantity.setPadding(2, 2, 2, 2);
-            textQuantity.setText(String.valueOf(products.get(i).getUnidadesTotales()));
-
-            iconSelect.setLayoutParams(layoutbotoniniciar);
-            iconSelect.setBackgroundColor(getResources().getColor(R.color.white));
-            iconSelect.setImageResource(R.drawable.icon_return_product_unselect);
-            iconSelect.setPadding(2, 2, 2, 2);
-            iconSelect.setId(i + 100);
-            iconSelect.setVisibility(View.GONE);
-            iconSelect.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
-            iconUnselect.setLayoutParams(layoutbotondelete);
-            iconUnselect.setBackgroundColor(getResources().getColor(R.color.white));
-            iconUnselect.setPadding(2, 2, 6, 2);
-            iconUnselect.setId(i + 1000);
-            iconUnselect.setVisibility(View.VISIBLE);
-            iconUnselect.setImageResource(R.drawable.icon_return_product_unselect);
-
-            row.addView(textNumber);
-            row.addView(textItemCode);
-            row.addView(textSize);
-            row.addView(textColor);
-            row.addView(textQuantity);
-            row.addView(iconSelect);
-            row.addView(iconUnselect);
-        }
+//        for (int i = 0; i < products.size(); i++) {
+//            TableRow row = new TableRow(this);
+//            row.setLayoutParams(layoutItemRow);
+//            row.setBackgroundColor(getResources().getColor(R.color.white));
+//            row.setPadding(0, 0, 1, 1);
+//            tableReturnProducts.addView(row);
+//
+//            TextView textNumber = new TextView(this);
+//            TextView textItemCode = new TextView(this);
+//            TextView textSize = new TextView(this);
+//            TextView textColor = new TextView(this);
+//            TextView textQuantity = new TextView(this);
+//            final ImageView iconSelect = new ImageView(this);
+//            final ImageView iconUnselect = new ImageView(this);
+//
+//            textNumber.setLayoutParams(layoutnumero);
+//            textNumber.setGravity(Gravity.CENTER);
+//            textNumber.setPadding(2, 2, 2, 2);
+//            textNumber.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//            textNumber.setBackgroundResource(R.color.white);
+//            textNumber.setText(String.valueOf(i + 1));
+//
+//            textItemCode.setLayoutParams(layoutdetalle);
+//            textItemCode.setBackgroundResource(R.color.white);
+//            textItemCode.setPadding(2, 2, 2, 2);
+//            textItemCode.setGravity(Gravity.CENTER);
+//            textItemCode.setText(products.get(i).getCodArticulo());
+//
+//            textSize.setGravity(Gravity.CENTER);
+//            textSize.setLayoutParams(layoutcantidad);
+//            textSize.setBackgroundResource(R.color.white);
+//            textSize.setPadding(2, 2, 2, 2);
+//            textSize.setText(String.valueOf(products.get(i).getTalla()));
+//
+//            textColor.setGravity(Gravity.CENTER);
+//            textColor.setLayoutParams(layoutcantidad);
+//            textColor.setBackgroundResource(R.color.white);
+//            textColor.setPadding(2, 2, 2, 2);
+//            textColor.setText(String.valueOf(products.get(i).getColor()));
+//
+//            textQuantity.setGravity(Gravity.CENTER);
+//            textQuantity.setLayoutParams(layoutcantidad);
+//            textQuantity.setBackgroundResource(R.color.white);
+//            textQuantity.setPadding(2, 2, 2, 2);
+//            textQuantity.setText(String.valueOf(products.get(i).getUnidadesTotales()));
+//
+//            iconSelect.setLayoutParams(layoutbotoniniciar);
+//            iconSelect.setBackgroundColor(getResources().getColor(R.color.white));
+//            iconSelect.setImageResource(R.drawable.icon_return_product_unselect);
+//            iconSelect.setPadding(2, 2, 2, 2);
+//            iconSelect.setId(i + 100);
+//            iconSelect.setVisibility(View.GONE);
+//            iconSelect.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//            });
+//
+//            iconUnselect.setLayoutParams(layoutbotondelete);
+//            iconUnselect.setBackgroundColor(getResources().getColor(R.color.white));
+//            iconUnselect.setPadding(2, 2, 6, 2);
+//            iconUnselect.setId(i + 1000);
+//            iconUnselect.setVisibility(View.VISIBLE);
+//            iconUnselect.setImageResource(R.drawable.icon_return_product_unselect);
+//
+//            row.addView(textNumber);
+//            row.addView(textItemCode);
+//            row.addView(textSize);
+//            row.addView(textColor);
+//            row.addView(textQuantity);
+//            row.addView(iconSelect);
+//            row.addView(iconUnselect);
+//        }
 
     }
 
