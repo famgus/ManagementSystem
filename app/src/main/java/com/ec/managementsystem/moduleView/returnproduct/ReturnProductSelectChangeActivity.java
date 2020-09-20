@@ -24,7 +24,6 @@ import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductDetail;
-import com.ec.managementsystem.clases.responses.ReturnProductDetailsResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductListResponse;
 import com.ec.managementsystem.interfaces.IDelegateReturnProductControl;
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
@@ -78,7 +77,7 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         String size = "Not Found";
         String color = "Not Found";
         String applicationDate = "Not Found";
-        String PreparationDate = "Not Found";
+        String preparationDate = "Not Found";
         String quantity = "Not Found";
 
         if (product.getDescription() != null) {
@@ -87,11 +86,20 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         if (product.getItemCode() != null) {
             itemCode = product.getItemCode();
         }
-        if (product.getSize()!= null) {
+        if (product.getSize() != null) {
             size = product.getSize();
         }
-        if (product.getColor()!= null) {
+        if (product.getColor() != null) {
             color = product.getColor();
+        }
+        if (product.getApplicationDate() != null) {
+            applicationDate = product.getApplicationDate();
+        }
+        if (product.getPreparationDate() != null) {
+            preparationDate = product.getPreparationDate();
+        }
+        if (product.getQuantity() != null) {
+            quantity = product.getQuantity();
         }
 
 //        this.mapperProductsOrder();
@@ -101,7 +109,7 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         textSize.setText(size);
         textColor.setText(color);
         textApplicationDate.setText(applicationDate);
-        textPreparationDate.setText(PreparationDate);
+        textPreparationDate.setText(preparationDate);
         textQuantity.setText(quantity);
         //end set data to view
 

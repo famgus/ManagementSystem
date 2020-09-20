@@ -293,6 +293,19 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
 
     }
 
+    public ReturnProductResponse findProduct(String barCode) {
+        ReturnProductResponse response = new ReturnProductResponse();
+        for (int i = 0; i <= products.size() - 1; i++) {
+            ReturnProductResponse product = products.get(i);
+            if (product.getBarCode().equals(barCode)) {
+                response = product;
+                break;
+            }
+        }
+
+        return response;
+    }
+
     @Override
     public void onReturnProduct(ReturnProductDetailsResponse response) {
         int code = response.getCode();
@@ -303,6 +316,13 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
                     Toast.makeText(ReturnProductDetailsActivity.this, "Ocurrio un problema con el producto", Toast.LENGTH_LONG).show();
                 } else {
                     Log.i("onReturnProduct", "Loading Products Details");
+
+                    ReturnProductResponse product = this.findProduct(response.getProductDetail().getBarCode());
+
+                    response.getProductDetail().setApplicationDate(product.getFechaPedido());
+                    response.getProductDetail().setPreparationDate(product.getFechaPedido());//todo: cambiar por fecha preparacion
+                    response.getProductDetail().setQuantity(product.getUnidadesTotales());
+
                     Gson gson = new Gson();
                     String json = gson.toJson(response.getProductDetail());
                     Log.i("Product", json);

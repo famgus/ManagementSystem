@@ -27,12 +27,45 @@ public class ReturnProductDetail {
     @SerializedName("ubicaciones")
     private List<ReturnProductDetailUbication> ubication;
 
+    @SerializedName("fechaaplicacion")
+    private String applicationDate;
+
+    @SerializedName("fechapreparacion")
+    private String preparationDate;
+
+    @SerializedName("cantidad")
+    private String quantity;
+
     public String getItemCode() {
         return itemCode;
     }
 
     public void setItemCode(String itemCode) {
         this.itemCode = itemCode;
+    }
+
+    public String getApplicationDate() {
+        return applicationDate;
+    }
+
+    public void setApplicationDate(String applicationDate) {
+        this.applicationDate = applicationDate;
+    }
+
+    public String getPreparationDate() {
+        return preparationDate;
+    }
+
+    public void setPreparationDate(String preparationDate) {
+        this.preparationDate = preparationDate;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
     }
 
     public String getProviderCode() {
