@@ -269,9 +269,9 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         }
         if (lastCode == CODE_FLOW_QUANTITY) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
-                String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                Log.i("Code Read", codeBar);
-                this.addQuantity();
+                String barCode = bundleResponse.getMapCodes().keySet().iterator().next();
+                Log.i("Code Read", barCode);
+                this.addQuantity(barCode);
             }
         }
     }
@@ -294,24 +294,30 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
             if (data != null && data.getAction().equals(String.valueOf(CODE_INDENT)) && lastCode == CODE_FLOW_QUANTITY) {
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
-                    String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                    Log.i("Code Read", codeBar);
-                    this.addQuantity();
+                    String barCode = bundleResponse.getMapCodes().keySet().iterator().next();
+                    Log.i("Code Read", barCode);
+                    this.addQuantity(barCode);
                 }
             }
         }
     }
 
-    public void addQuantity() {
+    public void addQuantity(String barcode) {
         int maxQuality = Integer.parseInt(product.getQuantity());
-        Log.i("addQuantity",  quantitySelected + "/" + maxQuality);
-        if (quantitySelected  >= maxQuality) {
-            Toast.makeText(ReturnProductSelectChangeActivity.this, "Se alcanzo la cantidad maxima", Toast.LENGTH_LONG).show();
+        Log.i("addQuantity", quantitySelected + "/" + maxQuality);
+
+        if (barcode != product.getBarCode()) {
+            Toast.makeText(ReturnProductSelectChangeActivity.this, "El producto no coincide", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(ReturnProductSelectChangeActivity.this, "Producto agregado", Toast.LENGTH_LONG).show();
-            quantitySelected = quantitySelected + 1;
+
+            if (quantitySelected >= maxQuality) {
+                Toast.makeText(ReturnProductSelectChangeActivity.this, "Se alcanzo la cantidad maxima", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(ReturnProductSelectChangeActivity.this, "Producto agregado", Toast.LENGTH_LONG).show();
+                quantitySelected = quantitySelected + 1;
+            }
+            txtQuantityCodeBar.setText(String.valueOf(quantitySelected));
         }
-        txtQuantityCodeBar.setText(String.valueOf(quantitySelected));
     }
 
     @Override
