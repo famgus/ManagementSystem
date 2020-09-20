@@ -1,7 +1,7 @@
 package com.ec.managementsystem.moduleView.returnproduct;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -103,7 +103,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
         buttonFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("Return","return");
+                Log.i("Return", "return");
                 onBackPressed();
             }
         });
@@ -118,8 +118,6 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
                 onBackPressed();
             }
         });
-
-        this.finish("123456");
     }
 
     public void setupToolBar(Toolbar toolbar) {
@@ -343,9 +341,9 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
                     Gson gson = new Gson();
                     String json = gson.toJson(response.getProductDetail());
                     Log.i("Product", json);
-                    Intent intent = new Intent(ReturnProductDetailsActivity.this, ReturnProductSelectChangeActivity.class);
+                    Intent intent = new Intent(this, ReturnProductSelectChangeActivity.class);
                     intent.putExtra("arg", json);
-                    startActivity(intent);
+                    startActivityForResult(intent,1);
                 }
                 break;
             case 401:
@@ -370,14 +368,17 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
 
     //receive info of the change
     @Override
-    public void onResume() {
-        super.onResume();
-        SharedPreferences sp = getSharedPreferences("LoginInfos", 0);
-        String barCode = sp.getString("barCode", "");
-        Log.i("Read info", barCode);
-
-        if (!barCode.equals("")) {
-            this.finish(barCode);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("onActivityResult", String.valueOf(requestCode));
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                String barCode = data.getStringExtra("barCode");
+                Log.i("Read info", barCode);
+                if (!barCode.equals("")) {
+                    this.finish(barCode);
+                }
+            }
         }
     }
 

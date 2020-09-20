@@ -227,9 +227,9 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
             Log.i("Sent", String.valueOf(finish));
             Intent data = new Intent();
             data.putExtra("barCode", product.getBarCode());
+            setResult(RESULT_OK, data);
             finish();
-        }
-        else {
+        } else {
             Intent data = new Intent();
             finish();
         }
