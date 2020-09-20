@@ -146,12 +146,12 @@ public class ReturnProductDialogScanner extends AppCompatDialogFragment implemen
         ivCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!permisoCamaraConcedido) {
-                    Toast.makeText(context, "Por favor permite que la app acceda a la cámara", Toast.LENGTH_LONG).show();
-                    permisoSolicitadoDesdeBoton = true;
-                    verificarYPedirPermisosDeCamara();
-                    return;
-                }
+//                if (!permisoCamaraConcedido) {
+//                    Toast.makeText(context, "Por favor permite que la app acceda a la cámara", Toast.LENGTH_LONG).show();
+//                    permisoSolicitadoDesdeBoton = true;
+//                    verificarYPedirPermisosDeCamara();
+//                    return;
+//                }
                 Intent i = new Intent(context, ScannerActivity.class);
                 i.putExtra("scanMultiple", scanMultiple);
                 i.putExtra("path", pathReception);
