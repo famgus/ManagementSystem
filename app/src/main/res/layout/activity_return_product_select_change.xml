@@ -601,7 +601,7 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/rbBoxmaster"
+                    android:id="@+id/radioMasterBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -610,7 +610,7 @@
                     android:text="Caja Master" />
 
                 <RadioButton
-                    android:id="@+id/rbUbicacion"
+                    android:id="@+id/radioUbication"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -704,7 +704,7 @@
 
             <!-- button search-->
             <LinearLayout
-                android:id="@+id/llSearch"
+                android:id="@+id/buttonSave"
                 android:layout_width="150dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center_horizontal|center"

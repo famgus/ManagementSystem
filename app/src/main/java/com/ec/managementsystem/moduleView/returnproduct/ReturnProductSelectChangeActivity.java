@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -21,20 +23,22 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.ec.managementsystem.R;
+import com.ec.managementsystem.clases.request.ReturnProductChangeRequest;
 import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
+import com.ec.managementsystem.clases.responses.ReturnProductChangeResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductDetail;
-import com.ec.managementsystem.clases.responses.ReturnProductListResponse;
-import com.ec.managementsystem.interfaces.IDelegateReturnProductControl;
+import com.ec.managementsystem.interfaces.IDelegateReturnProductChangeControl;
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
+import com.ec.managementsystem.task.ReturnProductChangeTaskController;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReturnProductSelectChangeActivity extends BaseActivity implements
-        IDelegateReturnProductControl, ReturnProductDialogScanner.DialogScanerFinished, IDelegateUpdatePickingControl {
+        IDelegateReturnProductChangeControl, ReturnProductDialogScanner.DialogScanerFinished, IDelegateUpdatePickingControl {
 
     private static final int CODIGO_PERMISOS_CAMARA = 1, CODE_INDENT = 2;
     private static final int CODE_FLOW_MASTER_BOX = 99, CODE_FLOW_QUANTITY = 100;
@@ -48,6 +52,8 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
     private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
     private TextView txtCodeBar, txtQuantityCodeBar;
     private int quantitySelected;
+    private LinearLayout buttonSave;
+    private RadioButton radioMasterBox, radioUbication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +157,58 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
                 onBackPressed();
             }
         });
+        //end set toolbar
+
+        //radiobuttons
+        radioMasterBox = findViewById(R.id.radioMasterBox);
+        radioUbication = findViewById(R.id.radioUbication);
+        //end radiobuttons
+
+        //save button
+        buttonSave = findViewById(R.id.buttonSave);
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int validation = 0;
+
+                if (txtCodeBar.getText() == "") {
+                    validation = 1;
+                }
+                if (txtQuantityCodeBar.getText() == "") {
+                    validation = 2;
+                }
+
+                if (validation == 1) {
+                    Toast.makeText(ReturnProductSelectChangeActivity.this, "Debe escanear Caja Maestra/Ubicación", Toast.LENGTH_LONG).show();
+                }
+                if (validation == 2) {
+                    Toast.makeText(ReturnProductSelectChangeActivity.this, "Debe escanear un producto", Toast.LENGTH_LONG).show();
+                }
+
+                if (validation == 0) {
+
+                    int type = (radioMasterBox.isChecked()) ? 1 : 2;
+
+                    String data = "";
+                    data += product.getItemCode() + ",";
+                    data += product.getSize() + ",";
+                    data += product.getColor() + ",";
+                    data += product.getQuantity() + ",";
+                    data += type + ",";
+                    data += product.getBarCode() + ",";
+                    data += String.valueOf(quantitySelected);
+
+                    Log.i("Send Data", data);
+                    ReturnProductChangeRequest request = new ReturnProductChangeRequest(data);
+                    ReturnProductChangeTaskController task = new ReturnProductChangeTaskController();
+                    task.setListener(ReturnProductSelectChangeActivity.this);
+                    task.execute(request);
+                }
+
+            }
+        });
+        //end save button
     }
 
     public void setupToolBar(Toolbar toolbar) {
@@ -162,8 +220,31 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
     }
 
     @Override
-    public void onReturnProduct(ReturnProductListResponse response) {
+    public void onReturnProduct(ReturnProductChangeResponse response) {
+        int code = response.getCode();
+        switch (code) {
+            case 200:
+                Log.i("onReturnProduct", "Saved");
+                Toast.makeText(ReturnProductSelectChangeActivity.this, "Cambio realizado con exito", Toast.LENGTH_LONG).show();
+                onBackPressed();
+                break;
+            case 401:
+                Log.i("onReturnProduct", "Ocurrio un problema 401");
+                Toast.makeText(ReturnProductSelectChangeActivity.this, "Ocurrio un problema 401", Toast.LENGTH_LONG).show();
+                break;
+            case 400:
+                Log.i("onReturnProduct", "La orden no fue encontrada");
+                Toast.makeText(ReturnProductSelectChangeActivity.this, "Ocurrion un problema 400", Toast.LENGTH_LONG).show();
+                break;
+            default:
+                Log.i("onReturnProduct", "Ocurrio un problema intente mas tarde");
+                Toast.makeText(ReturnProductSelectChangeActivity.this, "Ocurrio un problema intente mas tarde", Toast.LENGTH_LONG).show();
+                break;
+        }
+
         Log.i("onReturnProduct", response.getMessage());
+        Log.i("onReturnProduct", String.valueOf(code));
+
     }
 
     private void mapperBoxMasterUbication() {
@@ -306,7 +387,7 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         int maxQuality = Integer.parseInt(product.getQuantity());
         Log.i("addQuantity", quantitySelected + "/" + maxQuality);
 
-        if (barcode != product.getBarCode()) {
+        if (!barcode.equals(product.getBarCode())) {
             Toast.makeText(ReturnProductSelectChangeActivity.this, "El producto no coincide", Toast.LENGTH_LONG).show();
         } else {
 

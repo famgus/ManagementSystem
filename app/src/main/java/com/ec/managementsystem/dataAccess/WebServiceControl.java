@@ -9,6 +9,7 @@ import com.ec.managementsystem.clases.request.BoxMasterRequest;
 import com.ec.managementsystem.clases.request.PurchaseOrderRequest;
 import com.ec.managementsystem.clases.request.PurchaseParentRequest;
 import com.ec.managementsystem.clases.request.QualityControlRequest;
+import com.ec.managementsystem.clases.request.ReturnProductChangeRequest;
 import com.ec.managementsystem.clases.request.ReturnProductDetailsRequest;
 import com.ec.managementsystem.clases.request.ReturnProductRequest;
 import com.ec.managementsystem.clases.responses.FacturasClientResponse;
@@ -20,9 +21,9 @@ import com.ec.managementsystem.clases.responses.LoginResponse;
 import com.ec.managementsystem.clases.responses.PedidoResponse;
 import com.ec.managementsystem.clases.responses.PickingPedidoUserResponse;
 import com.ec.managementsystem.clases.responses.ProductoResponse;
+import com.ec.managementsystem.clases.responses.ReturnProductChangeResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductDetailsResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductListResponse;
-import com.ec.managementsystem.moduleView.returnproduct.ReturnProductDetailsActivity;
 import com.ec.managementsystem.util.Core;
 import com.ec.managementsystem.util.MyApplication;
 import com.ec.managementsystem.util.Utils;
@@ -875,6 +876,43 @@ public class WebServiceControl {
                 htse.call(SOAP_ACTION, envelope);
 
                 response = gson.fromJson(envelope.getResponse().toString(), ReturnProductListResponse.class);
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.GetReturnOrderDetail: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
+    static public ReturnProductChangeResponse saveReturnProduct(ReturnProductChangeRequest returnProductChangeRequest) {
+        String message = "";
+        ReturnProductChangeResponse response = new ReturnProductChangeResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Log.i("ReturnProductListRes", returnProductChangeRequest.getDetail());
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "SaveReturnDetail";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                request.addProperty("detail", returnProductChangeRequest.getDetail());
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+
+                response = gson.fromJson(envelope.getResponse().toString(), ReturnProductChangeResponse.class);
                 return response;
             } else {
                 message = MyApplication.GetAppContext().getString(R.string.no_internet);
