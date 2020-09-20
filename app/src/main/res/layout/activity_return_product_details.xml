@@ -325,10 +325,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="20dp">
+                android:gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
@@ -341,8 +342,8 @@
                 <EditText
                     android:id="@+id/etQuantityPicking"
                     android:layout_width="0dp"
-                    android:layout_weight="1.5"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
                     android:hint="001md2333"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -355,7 +356,7 @@
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
                     android:src="@drawable/scannerbarcode"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
             </LinearLayout>
             <!-- end code bar-->
@@ -521,6 +522,34 @@
                 </TableLayout>
             </LinearLayout>
             <!-- end table products -->
+
+            <!-- button -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:enabled="false"
+                    android:id="@+id/button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="50dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginTop="56dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@color/colorPrimary"
+                    android:text="Iniciar"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtpassword" />
+            </LinearLayout>
+            <!-- end button -->
+
 
         </LinearLayout>
 
