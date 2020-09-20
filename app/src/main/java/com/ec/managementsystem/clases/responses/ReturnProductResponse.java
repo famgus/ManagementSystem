@@ -26,4 +26,68 @@ public class ReturnProductResponse {
 
     @SerializedName("unidadesTotales")
     private String unidadesTotales;
+
+    public String getNumSerie() {
+        return numSerie;
+    }
+
+    public void setNumSerie(String numSerie) {
+        this.numSerie = numSerie;
+    }
+
+    public String getNumPedido() {
+        return numPedido;
+    }
+
+    public void setNumPedido(String numPedido) {
+        this.numPedido = numPedido;
+    }
+
+    public String getCodProvedor() {
+        return codProvedor;
+    }
+
+    public void setCodProvedor(String codProvedor) {
+        this.codProvedor = codProvedor;
+    }
+
+    public String getFechaPedido() {
+        return fechaPedido;
+    }
+
+    public void setFechaPedido(String fechaPedido) {
+        this.fechaPedido = fechaPedido;
+    }
+
+    public String getCodArticulo() {
+        return codArticulo;
+    }
+
+    public void setCodArticulo(String codArticulo) {
+        this.codArticulo = codArticulo;
+    }
+
+    public String getTalla() {
+        return talla;
+    }
+
+    public void setTalla(String talla) {
+        this.talla = talla;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getUnidadesTotales() {
+        return unidadesTotales;
+    }
+
+    public void setUnidadesTotales(String unidadesTotales) {
+        this.unidadesTotales = unidadesTotales;
+    }
 }
