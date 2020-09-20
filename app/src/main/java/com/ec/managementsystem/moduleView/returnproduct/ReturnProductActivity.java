@@ -91,9 +91,11 @@ public class ReturnProductActivity extends BaseActivity implements IDelegateRetu
             case 401:
                 Log.i("onReturnProduct", "Ocurrio un problema 401");
                 Toast.makeText(ReturnProductActivity.this, "Ocurrio un problema 401", Toast.LENGTH_LONG).show();
+                break;
             case 400:
                 Log.i("onReturnProduct", "La orden no fue encontrada");
                 Toast.makeText(ReturnProductActivity.this, "La orden no fue encontrada", Toast.LENGTH_LONG).show();
+                break;
             default:
                 Log.i("onReturnProduct", "Ocurrio un problema intente mas tarde");
                 Toast.makeText(ReturnProductActivity.this, "Ocurrio un problema intente mas tarde", Toast.LENGTH_LONG).show();

@@ -24,8 +24,29 @@ public class ReturnProductResponse {
     @SerializedName("color")
     private String color;
 
+    @SerializedName("codigoBarras")
+    private String barCode;
+
+    @SerializedName("descricion")
+    private String description;
     @SerializedName("unidadesTotales")
     private String unidadesTotales;
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getNumSerie() {
         return numSerie;
