@@ -1,5 +1,6 @@
 package com.ec.managementsystem.moduleView.returnproduct;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.ec.managementsystem.clases.responses.ReturnProductListResponse;
 import com.ec.managementsystem.interfaces.IDelegateReturnProductControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
 import com.ec.managementsystem.task.ReturnProductTaskController;
+import com.google.gson.Gson;
 
 public class ReturnProductActivity extends BaseActivity implements IDelegateReturnProductControl {
 
@@ -78,7 +80,12 @@ public class ReturnProductActivity extends BaseActivity implements IDelegateRetu
                 if (response.getPedidoList() == null || response.getPedidoList().size() == 0) {
                     Toast.makeText(ReturnProductActivity.this, "La orden no tiene productos", Toast.LENGTH_LONG).show();
                 } else {
-                    Log.i("onReturnProduct", "Loading Products");
+                    Log.i("onReturnProduct", "Loading Products Details");
+                    Intent intent = new Intent(ReturnProductActivity.this, ReturnProductDetailsActivity.class);
+                    Gson gson = new Gson();
+                    String json = gson.toJson(response.getPedidoList());
+                    intent.putExtra("arg", json);
+                    startActivity(intent);
                 }
                 break;
             case 401:
