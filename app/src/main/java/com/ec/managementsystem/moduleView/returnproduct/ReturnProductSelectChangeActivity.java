@@ -54,6 +54,7 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
     private int quantitySelected;
     private LinearLayout buttonSave;
     private RadioButton radioMasterBox, radioUbication;
+    private boolean finish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,12 +221,28 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
     }
 
     @Override
+    public void onBackPressed() {
+        Log.i("onBackPressed", String.valueOf(finish));
+        if (finish) {
+            Log.i("Sent", String.valueOf(finish));
+            Intent data = new Intent();
+            data.putExtra("barCode", product.getBarCode());
+            finish();
+        }
+        else {
+            Intent data = new Intent();
+            finish();
+        }
+    }
+
+    @Override
     public void onReturnProduct(ReturnProductChangeResponse response) {
         int code = response.getCode();
         switch (code) {
             case 200:
                 Log.i("onReturnProduct", "Saved");
                 Toast.makeText(ReturnProductSelectChangeActivity.this, "Cambio realizado con exito", Toast.LENGTH_LONG).show();
+                finish = true;
                 onBackPressed();
                 break;
             case 401:

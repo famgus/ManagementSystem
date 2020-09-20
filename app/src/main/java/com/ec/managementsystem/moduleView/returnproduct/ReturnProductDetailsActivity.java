@@ -1,12 +1,14 @@
 package com.ec.managementsystem.moduleView.returnproduct;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -36,6 +38,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
     private Toolbar toolbar;
     private List<ReturnProductResponse> products;
     private TableLayout tableReturnProducts;
+    private Button buttonFinish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,17 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
         txtPreparationDateValue.setText(preparationDate);
         //end set data to view
 
+        //return other view
+        buttonFinish = findViewById(R.id.buttonFinish);
+        buttonFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("Return","return");
+                onBackPressed();
+            }
+        });
+        //end return other view
+
         //Set Toolbar
         this.toolbar.setTitle(R.string.text_toolbar_return_product);
         this.setupToolBar(toolbar);
@@ -104,6 +118,8 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
                 onBackPressed();
             }
         });
+
+        this.finish("123456");
     }
 
     public void setupToolBar(Toolbar toolbar) {
@@ -251,7 +267,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
 
             iconSelect.setLayoutParams(layoutbotoniniciar);
             iconSelect.setBackgroundColor(getResources().getColor(R.color.white));
-            iconSelect.setImageResource(R.drawable.icon_return_product_unselect);
+            iconSelect.setImageResource(R.drawable.icon_return_product_select);
             iconSelect.setPadding(2, 2, 2, 2);
             iconSelect.setId(i + 100);
             iconSelect.setVisibility(View.GONE);
@@ -351,4 +367,36 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
         Log.i("onReturnProduct", String.valueOf(response.getProductDetail()));
         Log.i("onReturnProduct", String.valueOf(code));
     }
+
+    //receive info of the change
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences sp = getSharedPreferences("LoginInfos", 0);
+        String barCode = sp.getString("barCode", "");
+        Log.i("Read info", barCode);
+
+        if (!barCode.equals("")) {
+            this.finish(barCode);
+        }
+    }
+
+    public void finish(String barCode) {
+        Log.i("finish", barCode);
+
+        for (int i = 0; i <= products.size() - 1; i++) {
+            Log.i("Finding", String.valueOf(i));
+            ReturnProductResponse product = products.get(i);
+            if (barCode.equals(product.getBarCode())) {
+                Log.i("Product Found", product.toString());
+                buttonFinish.setVisibility(View.VISIBLE);
+                buttonFinish.setEnabled(true);
+                final ImageView iconSelect = findViewById(i + 100);
+                final ImageView iconUnselect = findViewById(i + 1000);
+                iconUnselect.setVisibility(View.GONE);
+                iconSelect.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+    //end receive info of the change
 }

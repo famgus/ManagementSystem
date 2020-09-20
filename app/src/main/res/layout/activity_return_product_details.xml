@@ -493,7 +493,7 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/buttonFinish"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="50dp"
@@ -502,7 +502,7 @@
                     android:layout_marginEnd="24dp"
                     android:background="@color/colorPrimary"
                     android:enabled="false"
-                    android:text="Iniciar"
+                    android:text="Finalizar"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:visibility="gone"
