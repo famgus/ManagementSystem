@@ -422,11 +422,11 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
 
     public void addQuantity(String barcode) {
         int maxQuality = Integer.parseInt(product.getQuantity());
-        int quantity=0;
+        int quantity = 0;
+        String valueTxtQuantity = txtQuantityCodeBar.getText().toString();
 
-        if (!txtQuantityCodeBar.getText().equals(""))
-        {
-            quantity=Integer.parseInt(txtQuantityCodeBar.getText().toString());
+        if (!valueTxtQuantity.trim().equals("")) {
+            quantity = Integer.parseInt(txtQuantityCodeBar.getText().toString());
         }
 
         Log.i("addQuantity", quantity + "/" + maxQuality);
@@ -446,7 +446,8 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         Log.i("onRequestPermissionsR", String.valueOf(requestCode));
         switch (requestCode) {
             case CODIGO_PERMISOS_CAMARA:
@@ -506,7 +507,8 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
     }
 
     @Override
-    public void onValidationMasterBoxUbication(ReturnProductValidationResponse returnProductValidationResponse) {
+    public void onValidationMasterBoxUbication(ReturnProductValidationResponse
+                                                       returnProductValidationResponse) {
         Log.i("ReadResponseActivity", returnProductValidationResponse.getMessage());
         Log.i("ReadResponseActivity", String.valueOf(returnProductValidationResponse.getCode()));
         this.readValidation(
