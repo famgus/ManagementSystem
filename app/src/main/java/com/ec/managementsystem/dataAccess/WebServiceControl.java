@@ -936,8 +936,8 @@ public class WebServiceControl {
         ReturnProductValidationResponse response = new ReturnProductValidationResponse();
         try {
             if (Utils.IsOnline()) {
-                Log.i("validationMasterBoxUbic", returnProductValidationRequest.getData());
-                Log.i("validationMasterBoxUbic", String.valueOf(returnProductValidationRequest.getTypeValidation()));
+                Log.i("validation Service", returnProductValidationRequest.getData());
+                Log.i("validation Service", String.valueOf(returnProductValidationRequest.getTypeValidation()));
                 Gson gson = new Gson();
                 final String NAMESPACE = "http://tempuri.org/";
                 final String METHOD_NAME = (returnProductValidationRequest.getTypeValidation() == CODE_FLOW_MASTER_BOX)
@@ -947,9 +947,11 @@ public class WebServiceControl {
                 SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
 
                 if (returnProductValidationRequest.getTypeValidation() == CODE_FLOW_MASTER_BOX) {
-                    request.addProperty("codigoBarras", returnProductValidationRequest.getData());
+                    request.addProperty("codigoBrras", returnProductValidationRequest.getData());
+                    Log.i("Put parameter Box", request.getProperty("codigoBrras").toString());
                 } else {
                     request.addProperty("barCode", returnProductValidationRequest.getData());
+                    Log.i("Put parameter Other", request.getProperty("barCode").toString());
                 }
 
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
@@ -962,8 +964,12 @@ public class WebServiceControl {
                 htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
                 htse.call(SOAP_ACTION, envelope);
 
-                response.setTypeValidation(returnProductValidationRequest.getTypeValidation());
                 response = gson.fromJson(envelope.getResponse().toString(), ReturnProductValidationResponse.class);
+                response.setTypeValidation(returnProductValidationRequest.getTypeValidation());
+                response.setBarCode(returnProductValidationRequest.getData());
+
+                Log.i("Response", response.toString());
+
                 return response;
             } else {
                 message = MyApplication.GetAppContext().getString(R.string.no_internet);

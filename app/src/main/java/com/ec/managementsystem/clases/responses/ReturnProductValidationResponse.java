@@ -7,6 +7,9 @@ public class ReturnProductValidationResponse {
     @SerializedName("code")
     private int code;
 
+    @SerializedName("barCode")
+    private String barCode;
+
     @SerializedName("message")
     private String message;
 
@@ -36,5 +39,13 @@ public class ReturnProductValidationResponse {
 
     public void setTypeValidation(int typeValidation) {
         this.typeValidation = typeValidation;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
     }
 }
