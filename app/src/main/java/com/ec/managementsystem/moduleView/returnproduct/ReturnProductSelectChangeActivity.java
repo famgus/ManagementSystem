@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -56,8 +57,7 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
     private TableLayout tableUbications;
     private ReturnProductDetail product;
     private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
-    private TextView txtCodeBar, txtQuantityCodeBar;
-    private int quantitySelected;
+    private EditText txtCodeBar, txtQuantityCodeBar;
     private LinearLayout buttonSave;
     private RadioButton radioMasterBox, radioUbication;
     private boolean finish = false;
@@ -131,14 +131,13 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         //end set data to view
 
         //prepare codebar
-        quantitySelected = 0;
         codes = new ArrayList<>();
         imageCodeBar = findViewById(R.id.imageCodeBar);
         quantityCodeBar = findViewById(R.id.quantityCodeBar);
         imageCodeBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                lastCode = CODE_FLOW_MASTER_BOX;
+                lastCode = (radioMasterBox.isChecked()) ? CODE_FLOW_MASTER_BOX : CODE_FLOW_UBICATION;
                 Log.i("Click Code", String.valueOf(lastCode));
                 showDialogScanner(false, CODE_INDENT);
             }
@@ -178,19 +177,34 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
             public void onClick(View v) {
 
                 int validation = 0;
+                String valueTxtCodeBar = txtCodeBar.getText().toString();
+                String valueTxtQuantity = txtQuantityCodeBar.getText().toString();
+                int maxQuantity = Integer.parseInt(product.getQuantity());
+                int quantity = 0;
 
-                if (txtCodeBar.getText() == "") {
+                Log.i("Validation", quantity + "/" + maxQuantity);
+
+                if (valueTxtCodeBar.trim().equals("")) {
                     validation = 1;
                 }
-                if (txtQuantityCodeBar.getText() == "") {
+                if (valueTxtQuantity.trim().equals("") || valueTxtQuantity.equals("0")) {
                     validation = 2;
+                } else {
+                    quantity = Integer.parseInt(txtQuantityCodeBar.getText().toString());
+                    if (quantity > maxQuantity) {
+                        validation = 3;
+                    }
                 }
 
                 if (validation == 1) {
-                    Toast.makeText(ReturnProductSelectChangeActivity.this, "Debe escanear Caja Maestra/Ubicación", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ReturnProductSelectChangeActivity.this, "Debe colocar una Caja Maestra/Ubicación", Toast.LENGTH_LONG).show();
                 }
                 if (validation == 2) {
-                    Toast.makeText(ReturnProductSelectChangeActivity.this, "Debe escanear un producto", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ReturnProductSelectChangeActivity.this, "Debe colocar una cantidad", Toast.LENGTH_LONG).show();
+                }
+                if (validation == 3) {
+                    Toast.makeText(ReturnProductSelectChangeActivity.this, "La cantidad supera al maximo a devolver", Toast.LENGTH_LONG).show();
+
                 }
 
                 if (validation == 0) {
@@ -204,7 +218,7 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
                     data += product.getQuantity() + ",";
                     data += type + ",";
                     data += product.getBarCode() + ",";
-                    data += String.valueOf(quantitySelected);
+                    data += String.valueOf(quantity);
 
                     Log.i("Send Data", data);
                     ReturnProductChangeRequest request = new ReturnProductChangeRequest(data);
@@ -363,18 +377,17 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
     @Override
     public void onScannerBarCode(BundleResponse bundleResponse, int action) {
         Log.i("onScannerBarCode", String.valueOf(action));
-        if (lastCode == CODE_FLOW_MASTER_BOX) {
+        if (lastCode == CODE_FLOW_MASTER_BOX || lastCode == CODE_FLOW_UBICATION) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
-                String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                Log.i("Code Read", codeBar);
-                codes.add(codeBar);
-                txtCodeBar.setText(codeBar);
+                String barCode = bundleResponse.getMapCodes().keySet().iterator().next();
+                Log.i("Barcode Read", barCode);
+                this.sendValidation(barCode, lastCode);
             }
         }
         if (lastCode == CODE_FLOW_QUANTITY) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String barCode = bundleResponse.getMapCodes().keySet().iterator().next();
-                Log.i("Code Read", barCode);
+                Log.i("Barcode Read", barCode);
                 this.addQuantity(barCode);
             }
         }
@@ -386,20 +399,21 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         Log.i("Last Code", String.valueOf(lastCode));
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (data != null && data.getAction().equals(String.valueOf(CODE_INDENT)) && lastCode == CODE_FLOW_MASTER_BOX) {
+            if (data != null && data.getAction().equals(String.valueOf(CODE_INDENT))
+                    && (lastCode == CODE_FLOW_MASTER_BOX || lastCode == CODE_FLOW_UBICATION)
+            ) {
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
-                    String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                    Log.i("Code Read", codeBar);
-                    codes.add(codeBar);
-                    txtCodeBar.setText(codeBar);
+                    String barCode = bundleResponse.getMapCodes().keySet().iterator().next();
+                    Log.i("Barcode Read", barCode);
+                    this.sendValidation(barCode, lastCode);
                 }
             }
             if (data != null && data.getAction().equals(String.valueOf(CODE_INDENT)) && lastCode == CODE_FLOW_QUANTITY) {
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                     String barCode = bundleResponse.getMapCodes().keySet().iterator().next();
-                    Log.i("Code Read", barCode);
+                    Log.i("Barcode Read", barCode);
                     this.addQuantity(barCode);
                 }
             }
@@ -408,30 +422,38 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
 
     public void addQuantity(String barcode) {
         int maxQuality = Integer.parseInt(product.getQuantity());
-        Log.i("addQuantity", quantitySelected + "/" + maxQuality);
+        int quantity = 0;
+        String valueTxtQuantity = txtQuantityCodeBar.getText().toString();
+
+        if (!valueTxtQuantity.trim().equals("")) {
+            quantity = Integer.parseInt(txtQuantityCodeBar.getText().toString());
+        }
+
+        Log.i("addQuantity", quantity + "/" + maxQuality);
 
         if (!barcode.equals(product.getBarCode())) {
             Toast.makeText(ReturnProductSelectChangeActivity.this, "El producto no coincide", Toast.LENGTH_LONG).show();
         } else {
 
-            if (quantitySelected >= maxQuality) {
+            if (quantity >= maxQuality) {
                 Toast.makeText(ReturnProductSelectChangeActivity.this, "Se alcanzo la cantidad maxima", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(ReturnProductSelectChangeActivity.this, "Producto agregado", Toast.LENGTH_LONG).show();
-                quantitySelected = quantitySelected + 1;
+                quantity = quantity + 1;
             }
-            txtQuantityCodeBar.setText(String.valueOf(quantitySelected));
+            txtQuantityCodeBar.setText(String.valueOf(quantity));
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         Log.i("onRequestPermissionsR", String.valueOf(requestCode));
         switch (requestCode) {
             case CODIGO_PERMISOS_CAMARA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (permisoSolicitadoDesdeBoton) {
-                        showDialogScanner(false, CODE_FLOW_MASTER_BOX);
+                        showDialogScanner(false, lastCode);
                     }
                     permisoCamaraConcedido = true;
                 } else {
@@ -454,24 +476,45 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
         task.execute(request);
     }
 
-    private boolean readValidation(int code, int typeValidation) {
+    private boolean readValidation(String barCode, int code, int typeValidation) {
+        Log.i("readValidation", barCode + "," + code + "," + typeValidation);
+
         boolean response = false;
         if (code == 200) {
             response = true;
+
+            if (typeValidation == CODE_FLOW_MASTER_BOX) {
+                Log.i("Assign Barcode", barCode);
+                codes.add(barCode);
+                txtCodeBar.setText(barCode);
+            }
+            if (typeValidation == CODE_FLOW_UBICATION) {
+                Log.i("Assign Barcode", barCode);
+                codes.add(barCode);
+                txtCodeBar.setText(barCode);
+            }
+
         } else {
             Log.i("sendValidation", "Ocurrio un problema");
             if (typeValidation == CODE_FLOW_MASTER_BOX) {
-                Toast.makeText(ReturnProductSelectChangeActivity.this, "Caja maestra invalida", Toast.LENGTH_LONG).show();
+                Toast.makeText(ReturnProductSelectChangeActivity.this, "Caja maestra inválida", Toast.LENGTH_LONG).show();
             }
             if (typeValidation == CODE_FLOW_UBICATION) {
-                Toast.makeText(ReturnProductSelectChangeActivity.this, "Ubicacion invalida", Toast.LENGTH_LONG).show();
+                Toast.makeText(ReturnProductSelectChangeActivity.this, "Ubicación inválida", Toast.LENGTH_LONG).show();
             }
         }
         return response;
     }
 
     @Override
-    public void onValidationMasterBoxUbication(ReturnProductValidationResponse returnProductValidationResponse) {
-        this.readValidation(returnProductValidationResponse.getCode(), returnProductValidationResponse.getTypeValidation());
+    public void onValidationMasterBoxUbication(ReturnProductValidationResponse
+                                                       returnProductValidationResponse) {
+        Log.i("ReadResponseActivity", returnProductValidationResponse.getMessage());
+        Log.i("ReadResponseActivity", String.valueOf(returnProductValidationResponse.getCode()));
+        this.readValidation(
+                returnProductValidationResponse.getBarCode(),
+                returnProductValidationResponse.getCode(),
+                returnProductValidationResponse.getTypeValidation()
+        );
     }
 }

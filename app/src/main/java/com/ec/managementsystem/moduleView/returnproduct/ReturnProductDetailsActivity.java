@@ -39,7 +39,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
     private List<ReturnProductResponse> products;
     private TableLayout tableReturnProducts;
     private Button buttonFinish;
-    private static final int ICON_SIZE =50;
+    private static final int ICON_SIZE =100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

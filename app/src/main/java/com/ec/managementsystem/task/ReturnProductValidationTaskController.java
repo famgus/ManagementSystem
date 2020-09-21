@@ -3,6 +3,7 @@ package com.ec.managementsystem.task;
 import android.os.AsyncTask;
 
 import com.ec.managementsystem.clases.request.ReturnProductValidationRequest;
+import com.ec.managementsystem.clases.responses.ReturnProductChangeResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductValidationResponse;
 import com.ec.managementsystem.dataAccess.WebServiceControl;
 import com.ec.managementsystem.interfaces.IDelegateReturnProductValidationControl;
@@ -23,6 +24,11 @@ public class ReturnProductValidationTaskController extends AsyncTask<ReturnProdu
             response = WebServiceControl.validationMasterBoxUbication(returnProductValidationRequest);
         }
         return response;
+    }
+
+    @Override
+    protected void onPostExecute(ReturnProductValidationResponse response) {
+        if (listener != null) listener.onValidationMasterBoxUbication(response);
     }
 
 }
