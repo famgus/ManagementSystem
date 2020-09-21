@@ -39,6 +39,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
     private List<ReturnProductResponse> products;
     private TableLayout tableReturnProducts;
     private Button buttonFinish;
+    private static final int ICON_SIZE =50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +202,7 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
         headerSelect.setPadding(0, 0, 0, 0);
         headerSelect.setText("---");
         headerSelect.setTextColor(getResources().getColor(R.color.white));
+        headerSelect.getLayoutParams().width=50;
         headerSelect.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
         header.addView(headerSelect);
 
@@ -269,6 +271,8 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
             iconSelect.setPadding(2, 2, 2, 2);
             iconSelect.setId(i + 100);
             iconSelect.setVisibility(View.GONE);
+            iconSelect.getLayoutParams().height= ICON_SIZE;
+            iconSelect.getLayoutParams().width= ICON_SIZE;
             iconSelect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -282,6 +286,8 @@ public class ReturnProductDetailsActivity extends BaseActivity implements IDeleg
             iconUnselect.setId(i + 1000);
             iconUnselect.setVisibility(View.VISIBLE);
             iconUnselect.setImageResource(R.drawable.icon_return_product_unselect);
+            iconUnselect.getLayoutParams().height= ICON_SIZE;
+            iconUnselect.getLayoutParams().width= ICON_SIZE;
             iconUnselect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

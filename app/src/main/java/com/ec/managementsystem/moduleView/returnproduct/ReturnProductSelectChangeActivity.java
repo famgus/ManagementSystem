@@ -24,24 +24,30 @@ import androidx.core.content.ContextCompat;
 
 import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.request.ReturnProductChangeRequest;
+import com.ec.managementsystem.clases.request.ReturnProductValidationRequest;
 import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductChangeResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductDetail;
+import com.ec.managementsystem.clases.responses.ReturnProductValidationResponse;
 import com.ec.managementsystem.interfaces.IDelegateReturnProductChangeControl;
+import com.ec.managementsystem.interfaces.IDelegateReturnProductValidationControl;
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
 import com.ec.managementsystem.task.ReturnProductChangeTaskController;
+import com.ec.managementsystem.task.ReturnProductValidationTaskController;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReturnProductSelectChangeActivity extends BaseActivity implements
-        IDelegateReturnProductChangeControl, ReturnProductDialogScanner.DialogScanerFinished, IDelegateUpdatePickingControl {
+        IDelegateReturnProductChangeControl, ReturnProductDialogScanner.DialogScanerFinished,
+        IDelegateUpdatePickingControl, IDelegateReturnProductValidationControl {
 
+    public static final int CODE_FLOW_MASTER_BOX = 99, CODE_FLOW_QUANTITY = 100;
+    public static final int CODE_FLOW_UBICATION = 101;
     private static final int CODIGO_PERMISOS_CAMARA = 1, CODE_INDENT = 2;
-    private static final int CODE_FLOW_MASTER_BOX = 99, CODE_FLOW_QUANTITY = 100;
     ImageView imageCodeBar, quantityCodeBar;
     List<String> codes;
     private int lastCode = 1;
@@ -437,5 +443,35 @@ public class ReturnProductSelectChangeActivity extends BaseActivity implements
 
     private void permisoDeCamaraDenegado() {
         Toast.makeText(ReturnProductSelectChangeActivity.this, "No puedes escanear si no das permiso", Toast.LENGTH_LONG).show();
+    }
+
+    private void sendValidation(String data, int typeValidation) {
+        Log.i("Send Validation", String.valueOf(typeValidation));
+        Log.i("Send Validation", String.valueOf(data));
+        ReturnProductValidationRequest request = new ReturnProductValidationRequest(data, typeValidation);
+        ReturnProductValidationTaskController task = new ReturnProductValidationTaskController();
+        task.setListener(ReturnProductSelectChangeActivity.this);
+        task.execute(request);
+    }
+
+    private boolean readValidation(int code, int typeValidation) {
+        boolean response = false;
+        if (code == 200) {
+            response = true;
+        } else {
+            Log.i("sendValidation", "Ocurrio un problema");
+            if (typeValidation == CODE_FLOW_MASTER_BOX) {
+                Toast.makeText(ReturnProductSelectChangeActivity.this, "Caja maestra invalida", Toast.LENGTH_LONG).show();
+            }
+            if (typeValidation == CODE_FLOW_UBICATION) {
+                Toast.makeText(ReturnProductSelectChangeActivity.this, "Ubicacion invalida", Toast.LENGTH_LONG).show();
+            }
+        }
+        return response;
+    }
+
+    @Override
+    public void onValidationMasterBoxUbication(ReturnProductValidationResponse returnProductValidationResponse) {
+        this.readValidation(returnProductValidationResponse.getCode(), returnProductValidationResponse.getTypeValidation());
     }
 }
