@@ -35,6 +35,7 @@ import com.ec.managementsystem.moduleView.merchandiseReception.PurchaseOrderDeta
 import com.ec.managementsystem.moduleView.packing.ListPackingActivity;
 import com.ec.managementsystem.moduleView.picking.ListPickingActivity;
 import com.ec.managementsystem.moduleView.qualityControl.QualityControlActivity;
+import com.ec.managementsystem.moduleView.returnproduct.ReturnProductActivity;
 import com.ec.managementsystem.moduleView.send.SendPickingActivity;
 import com.ec.managementsystem.moduleView.ui.DialogOrdenCompra;
 import com.ec.managementsystem.moduleView.ui.DialogPicking;
@@ -107,6 +108,10 @@ public class MainActivity extends BaseActivity implements DialogOrdenCompra.Dial
 
     public void ToBoxMaster(View v) {
         Intent i = new Intent(MainActivity.this, BoxMasterActivity.class);
+        startActivity(i);
+    }
+    public void ToReturnProduct(View v) {
+        Intent i = new Intent(MainActivity.this, ReturnProductActivity.class);
         startActivity(i);
     }
 

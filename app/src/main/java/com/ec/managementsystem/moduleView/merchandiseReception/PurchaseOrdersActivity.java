@@ -40,7 +40,7 @@ public class PurchaseOrdersActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(PurchaseOrdersActivity.this, PurchaseOrderDetailsActivity.class);
-                startActivity(i);
+                startActivity(i);//Todo: example load other view
             }
         });
     }
