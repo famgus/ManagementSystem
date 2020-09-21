@@ -21,25 +21,32 @@ public class BoxMasterTaskController extends AsyncTask<BoxMasterRequest, Void, G
         if (request != null) {
             GenericResponse response = null;
             switch (request.getActionPath()) {
-                case 1:
+                case 1://Create Ingreso
                     response = WebServiceControl.CreateIngreso(request);
                     break;
-                case 2:
-                    response = WebServiceControl.CreateTraslado(request);
+                case 2://Create Reubicacion Article
+                    response = WebServiceControl.CreateReubicacionArticle(request);
                     break;
-                case 3:
+                case 3://Create Despacho
                     response = WebServiceControl.CreateDespacho(request);
                     break;
-                case 4:
+                case 4://With CODBARMAS
                     response = WebServiceControl.ValidateBoxMasterCodeBar(request.getBarCodeBoxMasterOrigin(), 1);
                     response.setPath(request.getActionPath());
                     break;
-                case 5:
+                case 5://With CODBARMAS
                     response = WebServiceControl.ValidateBoxMasterCodeBar(request.getBarCodeBoxMasterOrigin(), 0);
                     response.setPath(request.getActionPath());
                     break;
-                case 6:
+                case 6://With Location
                     response = WebServiceControl.ValidateLocationCodeBar(request.getBarCodeBoxMasterOrigin());
+                    break;
+                case 7://Create Reubicacion Box Master
+                    response = WebServiceControl.CreateReubicacionBoxMaster(request);
+                    break;
+                case 8://With BOXMASTER2
+                    response = WebServiceControl.ValidateExistBoxMaster(request.getBarCodeBoxMasterOrigin());
+                    response.setPath(request.getActionPath());
                     break;
             }
             return response;

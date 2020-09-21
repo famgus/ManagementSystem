@@ -168,7 +168,7 @@ public class BoxMasterActivity extends BaseActivity implements DialogScanner.Dia
 
     public void ValidaBarCode() {
         BoxMasterRequest request = new BoxMasterRequest();
-        request.setActionPath(4);
+        request.setActionPath(8);
         request.setBarCodeBoxMasterOrigin(codeBar);
         BoxMasterTaskController task = new BoxMasterTaskController();
         task.setListener(BoxMasterActivity.this);
@@ -187,7 +187,7 @@ public class BoxMasterActivity extends BaseActivity implements DialogScanner.Dia
                 i.putExtra("codeBarBoxMaster", etBarCode.getText().toString());
                 startActivity(i);
             } else if (pathSelected == 3) {
-                Intent i = new Intent(BoxMasterActivity.this, TrasladosActivity.class);
+                Intent i = new Intent(BoxMasterActivity.this, ReubicacionActivity.class);
                 i.putExtra("codeBarBoxMaster", etBarCode.getText().toString());
                 startActivity(i);
             }

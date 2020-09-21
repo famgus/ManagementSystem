@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.responses.BundleResponse;
-import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.util.Utils;
 import com.google.zxing.Result;
 
@@ -127,26 +126,31 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
         etBarCode.setText(codeReader);
         tvCounter.setText(String.valueOf(++count));
         updateMap();
-        if (!showDialog && totalUnit != -1 && count > totalUnit) {
+        if (!showDialog && totalUnit != -1 && count + 1 >= totalUnit) {
             showDialog = true;
             ShowDialog(ScannerActivity.this, "Alerta", "El total de artículos contados supera el total de unidades de la orden de compra");
         }
 
         Utils.PlaySound(false);
-        if (scanMultiple) {
-            escanerZXing.resumeCameraPreview(ScannerActivity.this);
-            new Thread() {
-                public void run() {
-                    try {
-                        sleep(15000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+        if (!showDialog) {
+            if (scanMultiple) {
+                escanerZXing.resumeCameraPreview(ScannerActivity.this);
+                new Thread() {
+                    public void run() {
+                        try {
+                            sleep(15000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-            }.start();
-        } else {
+                }.start();
+            } else {
+                finishReader(2);
+            }
+        }else {
             finishReader(2);
         }
+
     }
 
     private void finishReader(int path) {
