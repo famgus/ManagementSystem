@@ -639,12 +639,11 @@
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
-                <TextView
+                <EditText
                     android:id="@+id/txtCodeBar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
-                    android:hint="001md2333"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -679,13 +678,13 @@
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
-                <TextView
+                <EditText
                     android:id="@+id/txtQuantityCodeBar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
-                    android:hint="0"
                     android:textSize="14sp"
+                    android:inputType="number"
                     android:textStyle="bold" />
 
                 <ImageView
