@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -182,25 +183,28 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
                 new IDelegateResponseGeneric<GenericResponse>() {
                     @Override
                     public void onResponse(GenericResponse response) {
-                        //if (response.getCode() == 200) {
-                        if (response != null) {
+                        if(response != null){
+                            if (response.getCode() == 200) {
+                                
+                                if (productPreparationViewModel.getRegisteredProducts() == null) {
+                                    productToPrepareAdapter.changeIsEditable();
+                                    productPreparationViewModel.setMutableLiveDataValue(new ArrayList<TransferSubOrder>());
+                                    btnOrderDetailStart.setVisibility(View.GONE);
+                                }
 
-                            // Todo : Validar respuesta, actualmente todo pasa
-                            if (productPreparationViewModel.getRegisteredProducts() == null) {
-                                productToPrepareAdapter.changeIsEditable();
-                                productPreparationViewModel.setMutableLiveDataValue(new ArrayList<TransferSubOrder>());
-                                btnOrderDetailStart.setVisibility(View.GONE);
+                                int index = boxTransferPendingOrders.size();
+                                boxTransferPendingOrders.add(new BoxTransferPendingOrder(codeBar, 0, new ArrayList<TransferSubOrder>()));
+                                boxTransferPendingOrdersAdapter.notifyItemInserted(index);
+                            } else if (response.getCode() == 201) {
+                                Toast.makeText(getContext(), "La caja ingresada no existe o ya fue registrada", Toast.LENGTH_SHORT).show();
                             }
-
-                            int index = boxTransferPendingOrders.size();
-                            boxTransferPendingOrders.add(new BoxTransferPendingOrder(codeBar, 0, new ArrayList<TransferSubOrder>()));
-                            boxTransferPendingOrdersAdapter.notifyItemInserted(index);
-                            //}
-                            changeVisibilityButton(boxTransferPendingOrders.size() >= 2, btnAddBox, View.VISIBLE);
-/*                } else if (response.getCode() == 201) {
-                    Toast.makeText(getContext(), "La caja ingresada no existe o ya fue registrada", Toast.LENGTH_SHORT).show();*/
+                        }else{
+                            Toast.makeText(getContext(), "Error validando la caja", Toast.LENGTH_SHORT).show();
                         }
+                        changeVisibilityButton(boxTransferPendingOrders.size() >= 2, btnAddBox, View.VISIBLE);
                     }
+
+
                 });
         boxMasterCodeBar.execute();
     }

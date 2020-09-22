@@ -1,9 +1,12 @@
 package com.ec.managementsystem.moduleView.transfer;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +42,15 @@ public class PendingTransferOrderActivity extends AppCompatActivity implements V
         btnPendingTransferOrderSearch.setOnClickListener(this);
         btnPendingTransferOrderUpdate.setOnClickListener(this);
         rvPendingTransferOrder = findViewById(R.id.rvPendingTransferOrder);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId()==android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initializeRV() {
@@ -79,7 +91,7 @@ public class PendingTransferOrderActivity extends AppCompatActivity implements V
                     pendingTransferOrders = response.getTrasladoList();
                     initializeRV();
                 } else {
-                    // Todo : no response or error
+                    Toast.makeText(PendingTransferOrderActivity.this, "No se pudo obtener la lista de traslados pendientes", Toast.LENGTH_SHORT).show();
                 }
             }
         };

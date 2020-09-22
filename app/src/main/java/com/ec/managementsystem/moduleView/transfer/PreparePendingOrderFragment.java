@@ -84,7 +84,7 @@ public class PreparePendingOrderFragment extends Fragment implements OnItemClick
                         suborderTransferList.addAll(response.getSuborderTransferList());
                         assignUserPendingOrderAdapter.notifyDataSetChanged();
                     } else {
-                        // Todo: no hay traslados asignados
+                        Toast.makeText(getContext(), "No hay traslados asignados", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getContext(), "No se pudo los traslados asignados", Toast.LENGTH_SHORT).show();
