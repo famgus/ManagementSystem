@@ -127,8 +127,13 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                 @Override
                 public void onClick(View view) {
                     if (etQuantityPicking.getText().length() > 0 && etBarCode.getText().length() > 0) {
-                        Integer quantity = Integer.valueOf(etQuantityPicking.getText().toString());
-                        if (quantity <= pedidoDetailSelected.getUnidadesTotales()) {
+                        int quantity;
+                        try{
+                            quantity = Integer.parseInt(etQuantityPicking.getText().toString().trim());
+                        }catch (Exception e){
+                            quantity = 0;
+                        }
+                        if (quantity <= pedidoDetailSelected.getUnidadesTotales() && quantity> 0) {
                             PickingUpdateTaskController task = new PickingUpdateTaskController();
                             task.setListener(PickingDetailItemActivity.this);
                             PickingRequest request = new PickingRequest();
@@ -146,7 +151,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                             request.setPath(2);
                             task.execute(request);
                         } else {
-                            Toast.makeText(PickingDetailItemActivity.this, "Cantidad ingresada supera la cantidad del pedido", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PickingDetailItemActivity.this, "Cantidad ingresada supera la cantidad del pedido o está en mal formato", Toast.LENGTH_LONG).show();
                         }
 
                     } else {

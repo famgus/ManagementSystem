@@ -68,6 +68,9 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 @SuppressWarnings("deprecation")
 public class Utils {
 
+    public static final int HEADER_TYPE = 0;
+    public static final int ITEM_TYPE = 1;
+
 
     public static void SaveKey(String key, String value) {
         try {

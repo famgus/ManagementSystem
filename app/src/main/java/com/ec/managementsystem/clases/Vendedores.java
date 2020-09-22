@@ -11,8 +11,18 @@ public class Vendedores implements Serializable {
     private String nomvendedor;
     @SerializedName("Codvendedor")
     private Integer codvendedor;
+    private boolean isSelected;
 
     public Vendedores() {
+        this.isSelected = false;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public Integer getTipousuario() {

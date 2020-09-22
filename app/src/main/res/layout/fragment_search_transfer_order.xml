@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tv_searchtransferorder_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_horizontal"
+        android:text="Ingrese el número de orden de compra"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_serachtransferorder"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="@id/tv_searchtransferorder_title"
+        app:layout_constraintStart_toStartOf="@id/tv_searchtransferorder_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_searchtransferorder_title">
+
+
+        <EditText
+            android:id="@+id/etNumberPedido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Número de orden"
+            android:inputType="number"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/btnripple"
+        android:drawableStart="@drawable/baseline_search_white_36"
+        android:drawablePadding="8dp"
+        android:paddingVertical="8dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:text="@string/buscarnumero"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tv_searchtransferorder_title"
+        app:layout_constraintStart_toStartOf="@id/tv_searchtransferorder_title"
+        app:layout_constraintTop_toBottomOf="@id/til_serachtransferorder"
+        app:layout_constraintVertical_bias="0.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

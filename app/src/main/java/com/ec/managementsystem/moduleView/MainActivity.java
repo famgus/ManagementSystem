@@ -37,6 +37,8 @@ import com.ec.managementsystem.moduleView.picking.ListPickingActivity;
 import com.ec.managementsystem.moduleView.qualityControl.QualityControlActivity;
 import com.ec.managementsystem.moduleView.returnproduct.ReturnProductActivity;
 import com.ec.managementsystem.moduleView.send.SendPickingActivity;
+import com.ec.managementsystem.moduleView.transfer.PendingTransferOrderActivity;
+import com.ec.managementsystem.moduleView.transfer.TransferFlowActivity;
 import com.ec.managementsystem.moduleView.ui.DialogOrdenCompra;
 import com.ec.managementsystem.moduleView.ui.DialogPicking;
 import com.ec.managementsystem.task.BoxMasterTaskController;
@@ -50,7 +52,7 @@ import com.google.android.material.snackbar.Snackbar;
 public class MainActivity extends BaseActivity implements DialogOrdenCompra.DialogListener, IDelegatePedidoTaskControl, DialogPicking.DialogListener, IDelegatePickingTaskControl, IDelegatePickingPedidoUserTaskControl, IDelegateBoxMasterTaskControl {
 
     private AppBarConfiguration mAppBarConfiguration;
-    public CardView cvMercaderia, cvBoxMaster, cvQualityControl, cvPicking;
+    public CardView cvMercaderia, cvBoxMaster, cvQualityControl, cvPicking, cvTransfer;
     public User user;
 
     @Override
@@ -63,6 +65,7 @@ public class MainActivity extends BaseActivity implements DialogOrdenCompra.Dial
         cvBoxMaster = (CardView) findViewById(R.id.cvBoxMaster);
         cvQualityControl = (CardView) findViewById(R.id.cvQualityControl);
         cvPicking = (CardView) findViewById(R.id.cvPicking);
+        cvTransfer = findViewById(R.id.cvTransfer);
         user = MySingleton.getUser();
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +121,25 @@ public class MainActivity extends BaseActivity implements DialogOrdenCompra.Dial
     public void ToQualityControl(View v) {
         Intent i = new Intent(MainActivity.this, QualityControlActivity.class);
         startActivity(i);
+    }
+
+    public void toTransferFlow() {
+        Intent i = new Intent(MainActivity.this, TransferFlowActivity.class);
+        startActivity(i);
+    }
+
+    public void toPendingTransferOrder() {
+        Intent i = new Intent(MainActivity.this, PendingTransferOrderActivity.class);
+        startActivity(i);
+    }
+
+    public void toTransferFlow(View v) {
+        // 1 es Jefe
+        if (user.getRol() == 1) {
+            toPendingTransferOrder();
+        } else {
+            toTransferFlow();
+        }
     }
 
     public void ToPicking(View v) {
