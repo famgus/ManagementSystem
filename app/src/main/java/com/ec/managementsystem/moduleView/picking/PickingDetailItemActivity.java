@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -114,7 +115,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
             ivActionQuantityPicking.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDialogScanner(false, CODIGO_INTENT);
+                    showDialogScanner(true, CODIGO_INTENT);
                 }
             });
             ivActionBarCode.setOnClickListener(new View.OnClickListener() {
@@ -221,6 +222,12 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
             if (data != null && data.getAction().equals(String.valueOf(CODIGO_INTENT))) {
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+
+                    for (String name : bundleResponse.getMapCodes().keySet()){
+                        Log.d("onScannerBarCode: ", name);
+                    }
+
+
                     String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
                     codes.add(codeBar);
                     tvQuantityPicking.setText(String.valueOf(codes.size()));
@@ -289,6 +296,10 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     public void onScannerBarCode(BundleResponse bundleResponse, int action) {
         if (action == CODIGO_INTENT) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+                for (String name : bundleResponse.getMapCodes().keySet()){
+                    Log.d("onScannerBarCode: ", name);
+                }
+
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
                 codes.add(codeBar);
                 tvQuantityPicking.setText(String.valueOf(codes.size()));
@@ -306,13 +317,16 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
 
     @Override
     public void onSuccessUpdate(GenericResponse response) {
+        Intent intentResult = new Intent();
         if (response != null && response.getCode() == 200) {
+            intentResult.putExtra("result",1);
             Toast.makeText(PickingDetailItemActivity.this, "Picking registrado correctamente", Toast.LENGTH_LONG).show();
-            onBackPressed();
-
         } else {
+            intentResult.putExtra("result",0);
             Toast.makeText(PickingDetailItemActivity.this, "Error registrando el picking", Toast.LENGTH_LONG).show();
         }
+        setResult(Activity.RESULT_OK, intentResult);
+        finish();
     }
 
     @Override

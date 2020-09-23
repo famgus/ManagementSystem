@@ -37,20 +37,20 @@ import com.ec.managementsystem.util.MySingleton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PickingDetailActivity extends BaseActivity implements IListenerPickingDetail, DialogScanner.DialogScanerFinished, IDelegateUpdatePickingControl {
+public class PickingDetailActivity extends BaseActivity implements IListenerPickingDetail, IDelegateUpdatePickingControl {
     private static final int CODIGO_PERMISOS_CAMARA = 1, CODIGO_INTENT = 2;
+    public static final int REGISTERED_PICKING_INTENT = 10001;
     private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
     Toolbar toolbar;
     RecyclerView rvPedidoList;
-    TextView txtNumberPedidor, tvCodeAgent, txtNameClient, tvDatePedido, tvDatePicking, tvObservation;
-    ImageView ivActionIdPicking;
-    EditText etIdPicking;
+    TextView txtNumberPedidor, tvSeriesOrderNumber, tvCodeAgent, txtNameClient, tvDatePedido, tvDatePicking, tvObservation;
     LinearLayout llRegister;
     List<PickingPedidoDetailResponse> originalList;
     List<PickingPedidoDetailResponse> filterList;
     PickingDetailAdapter pickingAdapter;
     PickingPedidoDetailResponse pedidoDetailSelected;
     PickingPedidoUserResponse header;
+    int totalProducts = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,18 +59,6 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
         setupView();
         initCollection();
         initRecyclerView();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (pedidoDetailSelected != null) {
-            int index = originalList.indexOf(pedidoDetailSelected);
-            pedidoDetailSelected.setFinish(true);
-            originalList.set(index, pedidoDetailSelected);
-            filterList.set(index, pedidoDetailSelected);
-            pickingAdapter.notifyDataSetChanged();
-        }
     }
 
     private void setupView() {
@@ -86,10 +74,9 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
                 }
             });
             rvPedidoList = findViewById(R.id.rvPedidoList);
-            ivActionIdPicking = findViewById(R.id.ivActionIdPicking);
-            etIdPicking = findViewById(R.id.etIdPicking);
+            tvSeriesOrderNumber = findViewById(R.id.tv_id_content);
             llRegister = findViewById(R.id.llRegister);
-            verificarYPedirPermisosDeCamara();
+            //verificarYPedirPermisosDeCamara();
             txtNumberPedidor = findViewById(R.id.txtNumberPedidor);
             tvCodeAgent = findViewById(R.id.tvCodeAgent);
             txtNameClient = findViewById(R.id.txtNameClient);
@@ -99,6 +86,7 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
 
             header = MySingleton.getInstance().getPickingUserResponse();
             if (header != null) {
+                tvSeriesOrderNumber.setText(header.getSupedido());
                 txtNumberPedidor.setText(String.valueOf(header.getNumberPedido()));
                 tvCodeAgent.setText(String.valueOf(header.getNumberSerie()));
                 txtNameClient.setText(String.valueOf(header.getNameClient()));
@@ -106,24 +94,21 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
                 tvDatePicking.setText(String.valueOf(header.getFechaPedido()));
                 tvObservation.setText(String.valueOf(header.getObservation()));
             }
-
-            ivActionIdPicking.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showDialogScanner(false, CODIGO_INTENT);
-                }
-            });
+            llRegister.setVisibility(View.GONE);
             llRegister.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PickingUpdateTaskController task = new PickingUpdateTaskController();
-                    task.setListener(PickingDetailActivity.this);
-                    PickingRequest request = new PickingRequest();
-                    request.setNumberSerie(header.getNumberSerie());
-                    request.setNumberPedido(header.getNumberPedido());
-                    request.setState(3);
-                    request.setPath(1);
-                    task.execute(request);
+
+                    if(totalProducts == (originalList.size()-1)){
+                        PickingUpdateTaskController task = new PickingUpdateTaskController();
+                        task.setListener(PickingDetailActivity.this);
+                        PickingRequest request = new PickingRequest();
+                        request.setNumberSerie(header.getNumberSerie());
+                        request.setNumberPedido(header.getNumberPedido());
+                        request.setState(3);
+                        request.setPath(1);
+                        task.execute(request);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -176,7 +161,7 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
             pedidoDetailSelected = item;
             Intent i = new Intent(this, PickingDetailItemActivity.class);
             i.putExtra("pedidoSelected", item);
-            startActivity(i);
+            startActivityForResult(i, REGISTERED_PICKING_INTENT);
         } else {
             Toast.makeText(this, "Error seleccionando el pedido", Toast.LENGTH_LONG).show();
         }
@@ -227,15 +212,14 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
         }
     }
 
-    @Override
+    /*@Override
     public void onScannerBarCode(BundleResponse bundleResponse, int action) {
         if (action == CODIGO_INTENT) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                etIdPicking.setText(String.valueOf(codeBar));
             }
         }
-    }
+    }*/
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
         DialogScanner dialogScanner = new DialogScanner();
@@ -249,16 +233,37 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REGISTERED_PICKING_INTENT) {
+            if (resultCode == Activity.RESULT_OK) {
+                //filterList
+                if (data != null) {
+                    int result = data.getIntExtra("result", 0);
+                    if (pedidoDetailSelected != null && result == 1) {
+                        totalProducts++;
+                        int index = originalList.indexOf(pedidoDetailSelected);
+                        pedidoDetailSelected.setFinish(true);
+                        originalList.set(index, pedidoDetailSelected);
+                        filterList.set(index, pedidoDetailSelected);
+                        pickingAdapter.notifyItemChanged(index);
+                    }
+                }
+            }
+            llRegister.setVisibility((totalProducts == (originalList.size() - 1)) ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    /*    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (data != null && data.getAction().equals(String.valueOf(CODIGO_INTENT))) {
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                     String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                    etIdPicking.setText(String.valueOf(codeBar));
                 }
             }
         }
-    }
+    }*/
 
     @Override
     public void onSuccessUpdate(GenericResponse response) {
