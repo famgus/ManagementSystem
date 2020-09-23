@@ -33,7 +33,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
@@ -70,6 +70,42 @@
                         android:layout_weight="8"
                         android:orientation="vertical"
                         android:layout_marginLeft="5dp">
+
+                        <LinearLayout
+                            android:id="@+id/ly_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@mipmap/ic_description_white_48dp"
+                                android:tint="@color/colorPrimary"
+                                android:layout_gravity="center_vertical"/>
+
+                            <TextView
+                                android:id="@+id/tv_id"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="2dp"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginTop="2dp"
+                                android:text="Id picking:"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/tv_id_content"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginBottom="2dp"
+                                android:text="476532"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/format"
@@ -280,7 +316,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_margin="10dp"
                 android:visibility="gone">
@@ -363,45 +399,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_margin="10dp"
                 android:visibility="visible">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="10dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Id de Picking:"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                    <EditText
-                        android:id="@+id/etIdPicking"
-                        android:layout_width="0dp"
-                        android:layout_weight="2"
-                        android:layout_height="wrap_content"
-                        android:hint="Código"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:id="@+id/ivActionIdPicking"
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
-                        android:layout_gravity="center_horizontal"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/scannerbarcode"
-                        android:visibility="visible"/>
-
-                </LinearLayout>
 
 
                 <LinearLayout
@@ -434,21 +435,17 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPedidoList"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:orientation="vertical"
-                android:layout_marginTop="20dp"/>
 
             <LinearLayout
                 android:id="@+id/llRegister"
                 android:layout_width="200dp"
                 android:layout_height="45dp"
+                android:layout_marginTop="24dp"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_marginBottom="100dp"
