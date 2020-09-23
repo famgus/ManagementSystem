@@ -148,7 +148,11 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
         btnnextscanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                escanear();
+                if(totalInBoxMaster < totalUnidades){
+                    escanear();
+                }else{
+                    Toast.makeText(ProductDetailsActivity.this, "Ya alcanzó la cantidad máxima de productos a recibir", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -256,7 +260,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
         i.putExtra("codeReader", productDetailSelected.getCodBarras());
         i.putExtra("totalUnit", totalUnidades);
         startActivityForResult(i, CODIGO_INTENT);*/
-        showDialogScanner(true, CODIGO_INTENT, totalUnidades, productDetailSelected.getCodBarras());
+        showDialogScanner(true, CODIGO_INTENT, (totalUnidades - (totalcontados-1)), productDetailSelected.getCodBarras());
     }
 
     private void escanearNewProduct() {
@@ -291,7 +295,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
                         for (Map.Entry<String, Integer> item : bundleResponse.getMapCodes().entrySet()) {
                             if (!item.getKey().equals(productDetailSelected.getCodBarras())) {
                                 Toast.makeText(this, "Nuevo producto encontrado", Toast.LENGTH_LONG).show();
-                                totalcontados = 0;
+                                //totalcontados = 0;
                                 existDifferentProducts = item.getKey();
                             }
                             for (int i = 0; i < item.getValue(); i++) {
@@ -454,7 +458,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
                     for (Map.Entry<String, Integer> item : bundleResponse.getMapCodes().entrySet()) {
                         if (!item.getKey().equals(productDetailSelected.getCodBarras())) {
                             Toast.makeText(this, "Nuevo producto encontrado", Toast.LENGTH_LONG).show();
-                            totalcontados = 0;
+                            //totalcontados = 0;
                             existDifferentProducts = item.getKey();
                         }
                         for (int i = 0; i < item.getValue(); i++) {
