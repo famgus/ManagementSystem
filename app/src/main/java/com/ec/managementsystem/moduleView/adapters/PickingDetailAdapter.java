@@ -137,6 +137,7 @@ public class PickingDetailAdapter extends RecyclerView.Adapter<PickingDetailAdap
             ivAction = itemView.findViewById(R.id.ivAction);
             ivRemove = itemView.findViewById(R.id.ivRemove);
             item_container = itemView.findViewById(R.id.item_container);
+
         }
 
         void bind(final PickingPedidoDetailResponse item, final int position, final PickingDetailViewHolder holder) {
