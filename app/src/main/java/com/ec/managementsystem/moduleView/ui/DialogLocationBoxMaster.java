@@ -20,19 +20,15 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.ec.managementsystem.R;
-import com.ec.managementsystem.clases.BoxMaster;
 import com.ec.managementsystem.clases.request.BoxMasterRequest;
 import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.interfaces.IDelegateBoxMasterTaskControl;
 import com.ec.managementsystem.moduleView.ScannerActivity;
-import com.ec.managementsystem.moduleView.login.User;
-import com.ec.managementsystem.moduleView.merchandiseReception.PurchaseOrderDetailsActivity;
 import com.ec.managementsystem.task.BoxMasterTaskController;
-import com.ec.managementsystem.util.MySingleton;
 
 
-public class  DialogLocationBoxMaster extends AppCompatDialogFragment implements DialogScanner.DialogScanerFinished, IDelegateBoxMasterTaskControl {
+public class DialogLocationBoxMaster extends AppCompatDialogFragment implements DialogScanner.DialogScanerFinished, IDelegateBoxMasterTaskControl {
 
     private static final int CODE_INTENT = 1, CODE_INTENT_LOCATION = 400;
     LinearLayout llSearch;
@@ -71,7 +67,7 @@ public class  DialogLocationBoxMaster extends AppCompatDialogFragment implements
                         // Search
                         location = etLocation.getText().toString();
                         if (!location.equals("")) {
-                           ValidateBarCode(location);
+                            ValidateBarCode(location);
                         } else {
                             Toast ToastGravity = Toast.makeText(alertDialog.getContext(), "Ingrese una ubicación para la caja master", Toast.LENGTH_SHORT);
                             ToastGravity.setGravity(Gravity.CENTER, 0, 0);
@@ -98,7 +94,7 @@ public class  DialogLocationBoxMaster extends AppCompatDialogFragment implements
         return alertDialog;
     }
 
-    private void ValidateBarCode(String bardCode){
+    private void ValidateBarCode(String bardCode) {
         BoxMasterRequest request = new BoxMasterRequest();
         request.setActionPath(6);
         request.setBarCodeBoxMasterOrigin(bardCode);
@@ -141,15 +137,6 @@ public class  DialogLocationBoxMaster extends AppCompatDialogFragment implements
         // showDialogScanner(false, CODE_INTENT_LOCATION);
     }
 
-    private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        DialogScanner dialogScanner = new DialogScanner();
-        dialogScanner.setScanMultiple(scanMultiple);
-        dialogScanner.setCode_intent(codeIntent);
-        dialogScanner.setPermisoCamaraConcedido(true);
-        dialogScanner.setPermisoSolicitadoDesdeBoton(true);
-        dialogScanner.show(fragmentManager, "alert dialog generate codes");
-        dialogScanner.setListener(this);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -166,6 +153,7 @@ public class  DialogLocationBoxMaster extends AppCompatDialogFragment implements
             }
         }
     }
+
     @Override
     public void onBoxMasterResponse(GenericResponse response) {
         if (response != null && response.getCode() == 200) {

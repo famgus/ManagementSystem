@@ -45,6 +45,7 @@ import com.ec.managementsystem.interfaces.IDelegateInsertPurchaseTaskControl;
 import com.ec.managementsystem.interfaces.IDelegateProductTaskControl;
 import com.ec.managementsystem.interfaces.IListenerBoxMaster;
 import com.ec.managementsystem.moduleView.BaseActivity;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.adapters.BoxMasterAdapter;
 import com.ec.managementsystem.moduleView.login.User;
 import com.ec.managementsystem.moduleView.product.ProductDetailsActivity;
@@ -197,7 +198,7 @@ public class PurchaseOrderDetailsActivity extends BaseActivity implements Dialog
                     // purchaseOrderRequest.setBoxMasterList(boxMasterList);
                     List<PedidoDetail> pedidoDetailList = new ArrayList<>();
                     for (Map.Entry<String, Integer> item : mapCode.entrySet()) {
-                        String [] keys = item.getKey().split("-");
+                        String[] keys = item.getKey().split("-");
                         String barCodeProduct = keys[1];
                         PedidoDetail pedido = findProductDetail(barCodeProduct);
                         if (pedido != null) {
@@ -322,13 +323,14 @@ public class PurchaseOrderDetailsActivity extends BaseActivity implements Dialog
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        DialogScanner dialogScanner = new DialogScanner();
-        dialogScanner.setScanMultiple(scanMultiple);
-        dialogScanner.setPathReception(pathReception);
-        dialogScanner.setCode_intent(codeIntent);
-        dialogScanner.setPermisoCamaraConcedido(permisoCamaraConcedido);
-        dialogScanner.setPermisoSolicitadoDesdeBoton(permisoSolicitadoDesdeBoton);
-        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+        Intent i = new Intent(this, SensorActivity.class);
+        i.putExtra("scanMultiple", scanMultiple);
+        i.putExtra("path", pathReception);
+        i.putExtra("totalUnit", -1);
+        i.putExtra("permisoCamaraConcedido", permisoCamaraConcedido);
+        i.putExtra("permisoSolicitadoDesdeBoton", permisoSolicitadoDesdeBoton);
+        i.setAction(String.valueOf(codeIntent));
+        startActivityForResult(i, codeIntent);
     }
 
 

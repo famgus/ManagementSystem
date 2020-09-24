@@ -6,7 +6,10 @@
     android:layout_height="wrap_content"
     android:minWidth="25px"
     android:minHeight="25px"
-    android:background="@drawable/background_scaner">
+    android:background="@drawable/background_scaner"
+    android:layout_gravity="center_vertical"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp">
 
     <RelativeLayout
         android:id="@+id/rlToolbar"
@@ -79,13 +82,12 @@
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp">
 
-            <EditText
+               <EditText
                 android:id="@+id/etBarCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints=""
                 android:hint="@string/text_hint_bar_code"
-                android:inputType="text"
+                android:inputType="textMultiLine"
                 android:singleLine="true" />
 
         </com.google.android.material.textfield.TextInputLayout>

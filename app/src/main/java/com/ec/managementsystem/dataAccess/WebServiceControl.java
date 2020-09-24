@@ -12,6 +12,8 @@ import com.ec.managementsystem.clases.request.QualityControlRequest;
 import com.ec.managementsystem.clases.request.ReturnProductChangeRequest;
 import com.ec.managementsystem.clases.request.ReturnProductDetailsRequest;
 import com.ec.managementsystem.clases.request.ReturnProductRequest;
+import com.ec.managementsystem.clases.request.ReturnProductValidationRequest;
+import com.ec.managementsystem.clases.request.UpdateQuantityPrepareTransferRequest;
 import com.ec.managementsystem.clases.responses.FacturasClientResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.clases.responses.ListFacturasDetasilResponse;
@@ -19,11 +21,17 @@ import com.ec.managementsystem.clases.responses.ListMotivesResponse;
 import com.ec.managementsystem.clases.responses.ListPickingPedidoDetailResponse;
 import com.ec.managementsystem.clases.responses.LoginResponse;
 import com.ec.managementsystem.clases.responses.PedidoResponse;
+import com.ec.managementsystem.clases.responses.PendingTransferOrderResponse;
 import com.ec.managementsystem.clases.responses.PickingPedidoUserResponse;
 import com.ec.managementsystem.clases.responses.ProductoResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductChangeResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductDetailsResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductListResponse;
+import com.ec.managementsystem.clases.responses.ReturnProductValidationResponse;
+import com.ec.managementsystem.clases.responses.TransfersOrderDetailForUserResponse;
+import com.ec.managementsystem.clases.responses.TransfersOrderForUserCodeResponse;
+import com.ec.managementsystem.clases.responses.VendorByUserNameAndPasswordResponse;
+import com.ec.managementsystem.clases.responses.VendorsByTypeResponse;
 import com.ec.managementsystem.util.Core;
 import com.ec.managementsystem.util.MyApplication;
 import com.ec.managementsystem.util.Utils;
@@ -34,7 +42,12 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import static com.ec.managementsystem.moduleView.returnproduct.ReturnProductSelectChangeActivity.CODE_FLOW_MASTER_BOX;
+
 public class WebServiceControl {
+
+    public static final String VALIDATE_BOX_MASTER_CODE_BAR = "ValidateBoxMasterCodeBar";
+    public static final String VALIDATE_EXIST_BOX_MASTER = "ValidateExistBoxMaster";
 
     private static String GetURL() {
         int port = 9298;
@@ -45,7 +58,7 @@ public class WebServiceControl {
             return "http://" + IP_DEBUG + ":" + port + "/Service1.asmx";
         } else {
             String IP_RELEASE = "3.21.12.158";
-            // IP_RELEASE = "10.238.26.69";
+            //IP_RELEASE = "10.238.26.69";
             return "http://" + IP_RELEASE + ":" + port + "/Service1.asmx";
         }
     }
@@ -927,6 +940,59 @@ public class WebServiceControl {
         return response;
     }
 
+    static public ReturnProductValidationResponse validationMasterBoxUbication(ReturnProductValidationRequest returnProductValidationRequest) {
+        String message = "";
+        ReturnProductValidationResponse response = new ReturnProductValidationResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Log.i("validation Service", returnProductValidationRequest.getData());
+                Log.i("validation Service", String.valueOf(returnProductValidationRequest.getTypeValidation()));
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = (returnProductValidationRequest.getTypeValidation() == CODE_FLOW_MASTER_BOX)
+                        ? "ValidateExistBoxMaster" : "ValidateLocationCodeBar";
+                Log.i("validationMasterBoxUbic", METHOD_NAME);
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+
+                if (returnProductValidationRequest.getTypeValidation() == CODE_FLOW_MASTER_BOX) {
+                    request.addProperty("codigoBrras", returnProductValidationRequest.getData());
+                    Log.i("Put parameter Box", request.getProperty("codigoBrras").toString());
+                } else {
+                    request.addProperty("barCode", returnProductValidationRequest.getData());
+                    Log.i("Put parameter Other", request.getProperty("barCode").toString());
+                }
+
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+
+                response = gson.fromJson(envelope.getResponse().toString(), ReturnProductValidationResponse.class);
+                response.setTypeValidation(returnProductValidationRequest.getTypeValidation());
+                response.setBarCode(returnProductValidationRequest.getData());
+
+                Log.i("Response", response.toString());
+
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.GetReturnOrderDetail: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
     static public ReturnProductDetailsResponse findProductById(ReturnProductDetailsRequest returnProductDetailsRequest) {
         String message = "";
         ReturnProductDetailsResponse response = new ReturnProductDetailsResponse();
@@ -963,4 +1029,300 @@ public class WebServiceControl {
         }
         return response;
     }
+
+    static public PendingTransferOrderResponse getPendingTransferOrders() {
+        String message;
+        PendingTransferOrderResponse response = new PendingTransferOrderResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "GetTrasladosForInventoriesBoss";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+                response = gson.fromJson(envelope.getResponse().toString(), PendingTransferOrderResponse.class);
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.GetTrasladosForInventoriesBoss: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
+    static public VendorsByTypeResponse getVendorByType(int usertype) {
+        String message;
+        VendorsByTypeResponse response = new VendorsByTypeResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "GetVendorsByType";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                request.addProperty("usertype", usertype);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+                response = gson.fromJson(envelope.getResponse().toString(), VendorsByTypeResponse.class);
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.GetVendorsByType: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
+    static public GenericResponse splitOrder(String seriesNumber, int orderNumber, String usersCode) {
+        String message;
+        GenericResponse response = new GenericResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "SplitOrder";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                request.addProperty("numserie", seriesNumber);
+                request.addProperty("numpedido", orderNumber);
+                request.addProperty("users", usersCode);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+                response = gson.fromJson(envelope.getResponse().toString(), GenericResponse.class);
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.SplitOrder: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
+    static public VendorByUserNameAndPasswordResponse getVendorByUserNameAndPassword(String username, String password) {
+        String message = "";
+        VendorByUserNameAndPasswordResponse response = new VendorByUserNameAndPasswordResponse();
+        try {
+            if (Utils.IsOnline()) {
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "GetVendedorByUserAndPassword";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                request.addProperty("userName", username);
+                request.addProperty("password", password);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+                response.setCode(200);
+                response.setMessage(message);
+                response.setVendorCode(Integer.parseInt(envelope.getResponse().toString()));
+            } else {
+                response.setCode(401);
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.getVendorByUserNameAndPassword: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
+    static public TransfersOrderForUserCodeResponse getTransfersOrderForUserCode(int user) {
+        String message;
+        TransfersOrderForUserCodeResponse response = new TransfersOrderForUserCodeResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "GetTransfersOrderForUserCode";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                request.addProperty("user", user);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+                response = gson.fromJson(envelope.getResponse().toString(), TransfersOrderForUserCodeResponse.class);
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.GetTrasladoDetail: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
+    static public TransfersOrderDetailForUserResponse getTransfersOrderDetailForUser(String seriesNumber, int orderNumber, int user) {
+        String message;
+        TransfersOrderDetailForUserResponse response = new TransfersOrderDetailForUserResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "GetTransfersOrderDetailForUser";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                request.addProperty("numserie", seriesNumber);
+                request.addProperty("numpedido", orderNumber);
+                request.addProperty("user", user);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+                response = gson.fromJson(envelope.getResponse().toString(), TransfersOrderDetailForUserResponse.class);
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.GetTrasladoDetail: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
+    static public GenericResponse updateQuantityPrepareTransfer(UpdateQuantityPrepareTransferRequest params) {
+        String message;
+        GenericResponse response = new GenericResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "UpdateQuantityPrepareTransfer";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                request.addProperty("numserie", params.getSeriesNumber());
+                request.addProperty("numpedido", params.getOrderNumber());
+                request.addProperty("codarticulo", params.getProductCode());
+                request.addProperty("talla", params.getSize());
+                request.addProperty("color", params.getColor());
+                request.addProperty("canpreparada", params.getPreparedQuantity());
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+                response = gson.fromJson(envelope.getResponse().toString(), GenericResponse.class);
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.UpdateQuantityPrepareTransfer: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
+    static public GenericResponse validateBoxMasterCodeBar(String barcode, int state, String methodName) {
+        String message;
+        GenericResponse response = new GenericResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = methodName;
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                if(methodName.equals(VALIDATE_BOX_MASTER_CODE_BAR)){
+                    request.addProperty("barCode", barcode);
+                    request.addProperty("state", state);
+                }else if(methodName.equals(VALIDATE_EXIST_BOX_MASTER)){
+                    request.addProperty("codigoBrras", barcode);
+                }
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+                response = gson.fromJson(envelope.getResponse().toString(), GenericResponse.class);
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl." + methodName + ": " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
 }

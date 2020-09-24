@@ -73,9 +73,31 @@
     <string name="text_toolbar_bar_codes">Generar códigos de barra</string>
     <string name="text_hint_number_of_codes">Cantidad de códigos</string>
 
-
     <string name="text_toolbar_return_product">Orden de Devolución</string>
     <string name="purchase_order">Orden de Devolución</string>
+    <string name="pendingtransferorder_search_text">Buscar Traslados</string>
+    <string name="pendingtransferorder_update_text">Actualizar</string>
+    <string name="itemtransferorder_order_number">Numero de Pedido: %d</string>
+    <string name="itemtransferorder_series_number">Numero de Serie: %s</string>
+    <string name="itemtransferorder_series_order_number">Número de Serie Orden: %s</string>
+    <string name="assignedpendingoreder_vendor_code">Código del vendedor: %d</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="preparependingorder_title">Traslados Asignados</string>
+    <string name="all_loading_text">Cargando…</string>
+    <string name="all_start_text">Iniciar</string>
+    <string name="transferproductdetail_title">Descripción del Artículo</string>
+    <string name="pendingorderdetail_add_box">Añadir caja</string>
+
+    <string name="productdetail_product_code">Código artículo: %d</string>
+    <string name="productdetail_size">Talla: %s</string>
+    <string name="productdetail_color">Color: %s</string>
+    <string name="productdetail_requested_date">Fecha de solicitud: %s</string>
+    <string name="productdetail_preparation_date">Fecha de preparación: %s</string>
+    <string name="productdetail_requested_quantity">Cantidad solicitada: %d</string>
+    <string name="pendingorderdetail_remaining_products">Te quedan %d productos por registrar</string>
+    <string name="pendingorderdetail_process_not_initialized">Aún no has iniciado el proceso de registro de productos</string>
+    <string name="text_hint_quantity">Cantidad</string>
 
 </resources>
 

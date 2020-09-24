@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ import com.ec.managementsystem.clases.responses.PickingPedidoUserResponse;
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
 import com.ec.managementsystem.interfaces.IListenerUbicaciones;
 import com.ec.managementsystem.moduleView.BaseActivity;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.adapters.UbicacionesListAdapter;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.PickingUpdateTaskController;
@@ -114,7 +116,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
             ivActionQuantityPicking.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDialogScanner(false, CODIGO_INTENT);
+                    showDialogScanner(true, CODIGO_INTENT);
                 }
             });
             ivActionBarCode.setOnClickListener(new View.OnClickListener() {
@@ -127,8 +129,13 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                 @Override
                 public void onClick(View view) {
                     if (etQuantityPicking.getText().length() > 0 && etBarCode.getText().length() > 0) {
-                        Integer quantity = Integer.valueOf(etQuantityPicking.getText().toString());
-                        if (quantity <= pedidoDetailSelected.getUnidadesTotales()) {
+                        int quantity;
+                        try {
+                            quantity = Integer.parseInt(etQuantityPicking.getText().toString().trim());
+                        } catch (Exception e) {
+                            quantity = 0;
+                        }
+                        if (quantity <= pedidoDetailSelected.getUnidadesTotales() && quantity > 0) {
                             PickingUpdateTaskController task = new PickingUpdateTaskController();
                             task.setListener(PickingDetailItemActivity.this);
                             PickingRequest request = new PickingRequest();
@@ -146,7 +153,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                             request.setPath(2);
                             task.execute(request);
                         } else {
-                            Toast.makeText(PickingDetailItemActivity.this, "Cantidad ingresada supera la cantidad del pedido", Toast.LENGTH_LONG).show();
+                            Toast.makeText(PickingDetailItemActivity.this, "Cantidad ingresada supera la cantidad del pedido o está en mal formato", Toast.LENGTH_LONG).show();
                         }
 
                     } else {
@@ -201,12 +208,12 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        DialogScanner dialogScanner = new DialogScanner();
-        dialogScanner.setScanMultiple(scanMultiple);
-        dialogScanner.setCode_intent(codeIntent);
-        dialogScanner.setPermisoCamaraConcedido(permisoCamaraConcedido);
-        dialogScanner.setPermisoSolicitadoDesdeBoton(permisoSolicitadoDesdeBoton);
-        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+        Intent i = new Intent(this, SensorActivity.class);
+        i.putExtra("scanMultiple", scanMultiple);
+        i.putExtra("permisoCamaraConcedido", true);
+        i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.setAction(String.valueOf(codeIntent));
+        startActivityForResult(i, codeIntent);
     }
 
     @Override
@@ -216,6 +223,12 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
             if (data != null && data.getAction().equals(String.valueOf(CODIGO_INTENT))) {
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+
+                    for (String name : bundleResponse.getMapCodes().keySet()){
+                        Log.d("onScannerBarCode: ", name);
+                    }
+
+
                     String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
                     codes.add(codeBar);
                     tvQuantityPicking.setText(String.valueOf(codes.size()));
@@ -284,6 +297,10 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     public void onScannerBarCode(BundleResponse bundleResponse, int action) {
         if (action == CODIGO_INTENT) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+                for (String name : bundleResponse.getMapCodes().keySet()){
+                    Log.d("onScannerBarCode: ", name);
+                }
+
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
                 codes.add(codeBar);
                 tvQuantityPicking.setText(String.valueOf(codes.size()));
@@ -301,13 +318,16 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
 
     @Override
     public void onSuccessUpdate(GenericResponse response) {
+        Intent intentResult = new Intent();
         if (response != null && response.getCode() == 200) {
+            intentResult.putExtra("result",1);
             Toast.makeText(PickingDetailItemActivity.this, "Picking registrado correctamente", Toast.LENGTH_LONG).show();
-            onBackPressed();
-
         } else {
+            intentResult.putExtra("result",0);
             Toast.makeText(PickingDetailItemActivity.this, "Error registrando el picking", Toast.LENGTH_LONG).show();
         }
+        setResult(Activity.RESULT_OK, intentResult);
+        finish();
     }
 
     @Override

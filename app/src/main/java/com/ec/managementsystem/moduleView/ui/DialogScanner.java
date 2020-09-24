@@ -1,7 +1,6 @@
 package com.ec.managementsystem.moduleView.ui;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,7 +12,6 @@ import android.os.PowerManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -36,10 +34,8 @@ import com.ec.managementsystem.util.Utils;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ec.managementsystem.util.Utils.ShowDialog;
 
-
-public class DialogScanner extends AppCompatDialogFragment implements View.OnKeyListener {
+public class DialogScanner extends AppCompatDialogFragment {
     private static final int CODIGO_PERMISOS_CAMARA = 1;
     private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
     private DialogScanerFinished listener;
@@ -166,7 +162,7 @@ public class DialogScanner extends AppCompatDialogFragment implements View.OnKey
             }
         });
         etBarCode.requestFocus();
-        etBarCode.setOnKeyListener(this);
+        // etBarCode.setOnKeyListener(this);
         etBarCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -175,10 +171,30 @@ public class DialogScanner extends AppCompatDialogFragment implements View.OnKey
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
+                if (editable.length() > 1) {
+                    //etBarCode.setText("637358535603008420JEACD");
+                    Utils.StopSound();
+                    codeReader = etBarCode.getText().toString();
+                    //etBarCode.setText(codeReader);
+                    tvCounter.setText(String.valueOf(++count));
+                    updateMap();
+                    if (!showDialog && totalUnit != -1 && count > totalUnit) {
+                        showDialog = true;
+                        ShowDialog("Alerta", "El total de artículos contados supera el total de unidades de la orden de compra");
+                    }
+
+                    Utils.PlaySound(false);
+                    if (!scanMultiple && etBarCode.getText().length() > 0) {
+                        FinishDialog();
+                    } else {
+                        etBarCode.setText("");
+                    }
+                }
             }
         });
 
@@ -192,7 +208,7 @@ public class DialogScanner extends AppCompatDialogFragment implements View.OnKey
         if (!barCodes.equals("")) {
             BundleResponse bundleResponse = new BundleResponse();
             bundleResponse.setMapCodes(mapCodes);
-            listener.onScannerBarCode(bundleResponse,code_intent);
+            listener.onScannerBarCode(bundleResponse, code_intent);
             alertDialog.dismiss();
         } else {
 
@@ -213,32 +229,6 @@ public class DialogScanner extends AppCompatDialogFragment implements View.OnKey
         }
     }
 
-    @Override
-    public boolean onKey(View view, int i, KeyEvent keyEvent) {
-        switch (keyEvent.getAction())
-        {
-            case KeyEvent.ACTION_DOWN:
-                break;
-            case KeyEvent.ACTION_UP:
-                //etBarCode.setText("001MD43991001310");
-                Utils.StopSound();
-                codeReader = etBarCode.getText().toString();
-                etBarCode.setText(codeReader);
-                tvCounter.setText(String.valueOf(++count));
-                updateMap();
-                if (!showDialog && totalUnit != -1 && count > totalUnit) {
-                    showDialog = true;
-                    ShowDialog( "Alerta", "El total de artículos contados supera el total de unidades de la orden de compra");
-                }
-
-                Utils.PlaySound(false);
-                if (!scanMultiple && etBarCode.getText().length() > 0) {
-                    FinishDialog();
-                }
-                break;
-        }
-        return  true;
-    }
 
     public interface DialogScanerFinished {
         void onScannerBarCode(BundleResponse bundleResponse, int action);
