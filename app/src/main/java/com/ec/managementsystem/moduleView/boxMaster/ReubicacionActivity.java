@@ -20,6 +20,7 @@ import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.interfaces.IDelegateBoxMasterTaskControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.BoxMasterTaskController;
 import com.ec.managementsystem.util.KeyValue;
@@ -28,14 +29,14 @@ import com.ec.managementsystem.util.KeyValueSpinner;
 import java.util.ArrayList;
 
 public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMasterTaskControl, DialogScanner.DialogScanerFinished {
-    private static final int CODE_INTENT_ARTICLE = 1, CODE_INTENT_BOX_MASTER_DESTINY = 2,  CODE_INTENT_UBICACION_ORIGIN= 3,  CODE_INTENT_UBICACION_DESTINY= 4,  CODE_INTENT_BOX_MASTER_ORIGIN_2 = 5;
+    private static final int CODE_INTENT_ARTICLE = 1, CODE_INTENT_BOX_MASTER_DESTINY = 2, CODE_INTENT_UBICACION_ORIGIN = 3, CODE_INTENT_UBICACION_DESTINY = 4, CODE_INTENT_BOX_MASTER_ORIGIN_2 = 5;
     Toolbar toolbar;
     String barCodeBoxMaster = "";
     LinearLayout llRegister;
     EditText etBarCodeArticle, etQuantity, etBarCodeBoxMasterDestiny;
     ImageView ivScanBarCodeArticle, ivScanBarCodeBoxMasterDestiny;
     ImageView ivBarCodeUbicacionOrigen, ivUbicacionDestino;
-    EditText  etBarCodeUbicacionDestino, etBarCodeUbicacionOrigen;
+    EditText etBarCodeUbicacionDestino, etBarCodeUbicacionOrigen;
     Spinner spAction;
     LinearLayout llBoxMaster, llArticle;
     KeyValue actionSelected;
@@ -84,7 +85,7 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
             llRegister.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(actionSelected != null && actionSelected.getId() == 1) {
+                    if (actionSelected != null && actionSelected.getId() == 1) {
                         String codeBarBoxMasterDestinity = etBarCodeBoxMasterDestiny.getText().toString();
                         String codeBarArticle = etBarCodeArticle.getText().toString();
                         String codeBarBoxMasterDestiny = etBarCodeBoxMasterDestiny.getText().toString();
@@ -103,7 +104,7 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
                             task.setListener(ReubicacionActivity.this);
                             task.execute(request);
                         }
-                    }else  if(actionSelected != null && actionSelected.getId() == 2)  {
+                    } else if (actionSelected != null && actionSelected.getId() == 2) {
                         String codeUbicacionOrigen = etBarCodeUbicacionOrigen.getText().toString();
                         String codeUbicacionDestinity = etBarCodeUbicacionDestino.getText().toString();
                         if (barCodeBoxMaster.isEmpty() || codeUbicacionOrigen.isEmpty() || codeUbicacionDestinity.isEmpty()) {
@@ -124,7 +125,7 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
             });
 
             //Article
-           ivScanBarCodeArticle.setOnClickListener(new View.OnClickListener() {
+            ivScanBarCodeArticle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     scanBarCode(CODE_INTENT_ARTICLE);
@@ -175,10 +176,10 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 actionSelected = (KeyValue) spAction.getSelectedItem();
-                if(position == 0){
+                if (position == 0) {
                     llArticle.setVisibility(View.VISIBLE);
                     llBoxMaster.setVisibility(View.GONE);
-                }else {
+                } else {
                     llArticle.setVisibility(View.GONE);
                     llBoxMaster.setVisibility(View.VISIBLE);
                 }
@@ -235,12 +236,12 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        DialogScanner dialogScanner = new DialogScanner();
-        dialogScanner.setScanMultiple(scanMultiple);
-        dialogScanner.setCode_intent(codeIntent);
-        dialogScanner.setPermisoCamaraConcedido(true);
-        dialogScanner.setPermisoSolicitadoDesdeBoton(true);
-        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+        Intent i = new Intent(this, SensorActivity.class);
+        i.putExtra("scanMultiple", scanMultiple);
+        i.putExtra("permisoCamaraConcedido", true);
+        i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.setAction(String.valueOf(codeIntent));
+        startActivityForResult(i, codeIntent);
 
     }
 

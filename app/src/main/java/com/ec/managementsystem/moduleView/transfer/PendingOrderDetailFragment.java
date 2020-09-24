@@ -1,5 +1,6 @@
 package com.ec.managementsystem.moduleView.transfer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,9 +27,9 @@ import com.ec.managementsystem.clases.responses.TransfersOrderDetailForUserRespo
 import com.ec.managementsystem.dataAccess.WebServiceControl;
 import com.ec.managementsystem.interfaces.IDelegateResponseGeneric;
 import com.ec.managementsystem.interfaces.OnItemClickListener;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.adapters.BoxTransferPendingOrdersAdapter;
 import com.ec.managementsystem.moduleView.adapters.ProductToPrepareAdapter;
-import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.TransfersOrderDetailForUserTaskController;
 import com.ec.managementsystem.task.ValidateBoxMasterCodeBar;
 import com.ec.managementsystem.util.Utils;
@@ -183,9 +184,9 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
                 new IDelegateResponseGeneric<GenericResponse>() {
                     @Override
                     public void onResponse(GenericResponse response) {
-                        if(response != null){
+                        if (response != null) {
                             if (response.getCode() == 200) {
-                                
+
                                 if (productPreparationViewModel.getRegisteredProducts() == null) {
                                     productToPrepareAdapter.changeIsEditable();
                                     productPreparationViewModel.setMutableLiveDataValue(new ArrayList<TransferSubOrder>());
@@ -198,7 +199,7 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
                             } else if (response.getCode() == 201) {
                                 Toast.makeText(getContext(), "La caja ingresada no existe o ya fue registrada", Toast.LENGTH_SHORT).show();
                             }
-                        }else{
+                        } else {
                             Toast.makeText(getContext(), "Error validando la caja", Toast.LENGTH_SHORT).show();
                         }
                         changeVisibilityButton(boxTransferPendingOrders.size() >= 2, btnAddBox, View.VISIBLE);
@@ -237,12 +238,12 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
     }
 
     private void showDialogScanner() {
-        DialogScanner dialogScanner = new DialogScanner();
-        dialogScanner.setScanMultiple(false);
-        dialogScanner.setCode_intent(TransferFlowActivity.CODE_INTENT_CONTAINER_BOX);
-        dialogScanner.setPermisoCamaraConcedido(true);
-        dialogScanner.setPermisoSolicitadoDesdeBoton(true);
-        dialogScanner.show(getChildFragmentManager(), DialogScanner.class.getSimpleName());
+        Intent i = new Intent(getActivity(), SensorActivity.class);
+        i.putExtra("scanMultiple", false);
+        i.putExtra("permisoCamaraConcedido", true);
+        i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.setAction(String.valueOf(TransferFlowActivity.CODE_INTENT_CONTAINER_BOX));
+        startActivityForResult(i, TransferFlowActivity.CODE_INTENT_CONTAINER_BOX);
     }
 
     @Override

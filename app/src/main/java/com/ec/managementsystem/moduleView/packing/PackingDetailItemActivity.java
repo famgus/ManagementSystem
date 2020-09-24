@@ -28,7 +28,7 @@ import com.ec.managementsystem.clases.responses.FacturasDetasilResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
-import com.ec.managementsystem.moduleView.picking.PickingDetailItemActivity;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.PickingUpdateTaskController;
 
@@ -147,12 +147,12 @@ public class PackingDetailItemActivity extends BaseActivity implements DialogSca
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        DialogScanner dialogScanner = new DialogScanner();
-        dialogScanner.setScanMultiple(scanMultiple);
-        dialogScanner.setCode_intent(codeIntent);
-        dialogScanner.setPermisoCamaraConcedido(permisoCamaraConcedido);
-        dialogScanner.setPermisoSolicitadoDesdeBoton(permisoSolicitadoDesdeBoton);
-        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+        Intent i = new Intent(this, SensorActivity.class);
+        i.putExtra("scanMultiple", scanMultiple);
+        i.putExtra("permisoCamaraConcedido", true);
+        i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.setAction(String.valueOf(codeIntent));
+        startActivityForResult(i, codeIntent);
     }
 
     @Override

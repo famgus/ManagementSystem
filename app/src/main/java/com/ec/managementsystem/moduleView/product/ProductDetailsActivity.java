@@ -33,6 +33,7 @@ import com.ec.managementsystem.clases.responses.ProductoResponse;
 import com.ec.managementsystem.interfaces.IDelegateProductTaskControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
 import com.ec.managementsystem.moduleView.ScannerActivity;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.ui.DialogLocationBoxMaster;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.ProductTaskController;
@@ -272,7 +273,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent, double totalU, String codeReader) {
-        DialogScanner dialogScanner = new DialogScanner();
+        /*DialogScanner dialogScanner = new DialogScanner();
         dialogScanner.setScanMultiple(scanMultiple);
         dialogScanner.setPathReception(pathReception);
         dialogScanner.setCode_intent(codeIntent);
@@ -280,7 +281,17 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
         dialogScanner.setPermisoSolicitadoDesdeBoton(true);
         dialogScanner.setTotalUnit(totalU);
         dialogScanner.setCodeReader(codeReader);
-        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");*/
+
+        Intent i = new Intent(this, SensorActivity.class);
+        i.putExtra("scanMultiple", scanMultiple);
+        i.putExtra("path", pathReception);
+        i.putExtra("totalUnit", totalU);
+        i.putExtra("permisoCamaraConcedido", permisoCamaraConcedido);
+        i.putExtra("permisoSolicitadoDesdeBoton", permisoSolicitadoDesdeBoton);
+        i.putExtra("codeReader", codeReader);
+        i.setAction(String.valueOf(codeIntent));
+        startActivityForResult(i, codeIntent);
     }
 
     @Override
@@ -451,7 +462,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
 
     @Override
     public void onScannerBarCode(BundleResponse bundleResponse, int action) {
-        if (action == CODIGO_INTENT){
+        if (action == CODIGO_INTENT) {
             if (!scannerkind) {
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                     String existDifferentProducts = "";
@@ -484,7 +495,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
                 }
             }
         }
-        if (action == NEW_CODIGO_PRODUCT_INTENT){
+        if (action == NEW_CODIGO_PRODUCT_INTENT) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
                 ProductoRequest productoRequest = new ProductoRequest();
@@ -495,7 +506,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
             }
         }
 
-        if(action == CODE_INTENT_LOCATION && dialogLocationBoxMaster != null){
+        if (action == CODE_INTENT_LOCATION && dialogLocationBoxMaster != null) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
                 dialogLocationBoxMaster.getEtLocation().setText(codeBar);

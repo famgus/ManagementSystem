@@ -29,6 +29,7 @@ import com.ec.managementsystem.clases.responses.PickingPedidoUserResponse;
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
 import com.ec.managementsystem.interfaces.IListenerPickingDetail;
 import com.ec.managementsystem.moduleView.BaseActivity;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.adapters.PickingDetailAdapter;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.PickingUpdateTaskController;
@@ -222,12 +223,12 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
     }*/
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        DialogScanner dialogScanner = new DialogScanner();
-        dialogScanner.setScanMultiple(scanMultiple);
-        dialogScanner.setCode_intent(codeIntent);
-        dialogScanner.setPermisoCamaraConcedido(permisoCamaraConcedido);
-        dialogScanner.setPermisoSolicitadoDesdeBoton(permisoSolicitadoDesdeBoton);
-        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+        Intent i = new Intent(this, SensorActivity.class);
+        i.putExtra("scanMultiple", scanMultiple);
+        i.putExtra("permisoCamaraConcedido", true);
+        i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.setAction(String.valueOf(codeIntent));
+        startActivityForResult(i, codeIntent);
     }
 
     @Override
@@ -267,13 +268,13 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
 
     @Override
     public void onSuccessUpdate(GenericResponse response) {
-        if(response != null && response.getCode() == 200){
+        if (response != null && response.getCode() == 200) {
             header.setComplete(true);
             MySingleton.getInstance().setPickingUserResponse(header);
             MySingleton.SavePedidoPicking();
             Toast.makeText(PickingDetailActivity.this, "Picking resgistrado correctamente", Toast.LENGTH_LONG).show();
             onBackPressed();
-        }else {
+        } else {
             Toast.makeText(PickingDetailActivity.this, "Error actualizando el estado del pedido", Toast.LENGTH_LONG).show();
         }
     }

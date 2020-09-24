@@ -1,5 +1,6 @@
 package com.ec.managementsystem.moduleView.transfer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,8 +28,8 @@ import com.ec.managementsystem.clases.request.UpdateQuantityPrepareTransferReque
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.dataAccess.WebServiceControl;
 import com.ec.managementsystem.interfaces.IDelegateResponseGeneric;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.adapters.ProductUbicationsAdapter;
-import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.UpdateQuantityPrepareTransferTaskController;
 import com.ec.managementsystem.task.ValidateBoxMasterCodeBar;
 import com.ec.managementsystem.util.Utils;
@@ -167,12 +168,12 @@ public class TransferProductDetailFragment extends Fragment {
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        DialogScanner dialogScanner = new DialogScanner();
-        dialogScanner.setScanMultiple(scanMultiple);
-        dialogScanner.setCode_intent(codeIntent);
-        dialogScanner.setPermisoCamaraConcedido(false);
-        dialogScanner.setPermisoSolicitadoDesdeBoton(false);
-        dialogScanner.show(getChildFragmentManager(), DialogScanner.class.getSimpleName());
+        Intent i = new Intent(getActivity(), SensorActivity.class);
+        i.putExtra("scanMultiple", scanMultiple);
+        i.putExtra("permisoCamaraConcedido", true);
+        i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.setAction(String.valueOf(codeIntent));
+        startActivityForResult(i, codeIntent);
     }
 
     private void setInformativeTexts() {

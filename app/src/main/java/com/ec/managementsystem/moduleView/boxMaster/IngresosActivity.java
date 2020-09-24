@@ -18,6 +18,7 @@ import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.interfaces.IDelegateBoxMasterTaskControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.BoxMasterTaskController;
 
@@ -110,12 +111,12 @@ public class IngresosActivity extends BaseActivity implements IDelegateBoxMaster
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        DialogScanner dialogScanner = new DialogScanner();
-        dialogScanner.setScanMultiple(scanMultiple);
-        dialogScanner.setCode_intent(codeIntent);
-        dialogScanner.setPermisoCamaraConcedido(true);
-        dialogScanner.setPermisoSolicitadoDesdeBoton(true);
-        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+        Intent i = new Intent(this, SensorActivity.class);
+        i.putExtra("scanMultiple", scanMultiple);
+        i.putExtra("permisoCamaraConcedido", true);
+        i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.setAction(String.valueOf(codeIntent));
+        startActivityForResult(i, codeIntent);
 
     }
 
