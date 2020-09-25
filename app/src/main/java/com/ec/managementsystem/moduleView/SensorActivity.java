@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -145,42 +147,50 @@ public class SensorActivity extends BaseActivity {
             }
         });
         etBarCode.requestFocus();
-        etBarCode.setOnKeyListener(new View.OnKeyListener() {
+        etBarCode.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (keyEvent.getAction()!=KeyEvent.ACTION_DOWN)
-                    return true;
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                // If the event is a key-down event on the "enter" button
-                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    //etBarCode.setText("637358535603008420JEACD");
-                    Utils.StopSound();
-                    codeReader = etBarCode.getText().toString();
-                    //etBarCode.setText(codeReader);
-                    tvCounter.setText(String.valueOf(++count));
-                    updateMap();
-                    if (!showDialog && totalUnit != -1 && count + 1 > totalUnit) {
-                        showDialog = true;
-                        ShowDialog("Alerta", "El total de artículos contados supera el total de unidades de la orden de compra");
-                    }
+            }
 
-                    Utils.PlaySound(false);
-                    if (!showDialog) {
-                        if (!scanMultiple && etBarCode.getText().length() > 0) {
-                            FinishActivity();
-                        } else {
-                            if (scanMultiple) {
-                                etBarCode.setText("");
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String code = editable.toString();
+                if(code.length() >= 2){
+                    if(code.substring(code.length() - 1, code.length()).equals("\n")){
+                        {
+                            //etBarCode.setText("637358535603008420JEACD");
+                            Utils.StopSound();
+                            codeReader = etBarCode.getText().toString().replace("\n", "");
+                            //etBarCode.setText(codeReader);
+                            tvCounter.setText(String.valueOf(++count));
+                            if (!showDialog && totalUnit != -1 && count + 1 > totalUnit) {
+                                showDialog = true;
+                                ShowDialog("Alerta", "El total de artículos contados supera el total de unidades de la orden de compra");
+                            }else {
+                                updateMap();
+                            }
+
+                            Utils.PlaySound(false);
+                            if (!showDialog) {
+                                if (!scanMultiple && etBarCode.getText().length() > 0) {
+                                    FinishActivity();
+                                } else {
+                                    if (scanMultiple) {
+                                        etBarCode.setText("");
+                                    }
+                                }
+                            }else {
+                                createDataResponse();
                             }
                         }
-                    }else {
-                        createDataResponse();
                     }
                 }
-        /*if(keyEvent.getKeyCode() == 25){
-            etBarCode.setText("637358535603008420JEACD");
-        }*/
-                return true;
             }
         });
     }
