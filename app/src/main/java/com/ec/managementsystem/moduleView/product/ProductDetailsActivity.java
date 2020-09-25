@@ -149,7 +149,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
         btnnextscanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(totalInBoxMaster < totalUnidades){
+                if(totalcontados < totalUnidades){
                     escanear();
                 }else{
                     Toast.makeText(ProductDetailsActivity.this, "Ya alcanzó la cantidad máxima de productos a recibir", Toast.LENGTH_SHORT).show();
@@ -210,7 +210,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
                 tvTotalBoxMaster.setText(String.valueOf(totalInBoxMaster));
                 codes.add(productDetailSelected.getCodBarras());
             }
-            tvProductNameTable.setText(productDetailSelected.getDescripcion());
+            tvProductNameTable.setText(productDetailSelected.getDescripcion().substring(0, 5));
             posBoxSelected = MySingleton.getInstance().getPosclicked();
             boxMasterSelected = MySingleton.getInstance().boxMasterList.get(posBoxSelected);
             boxMasterSelected.setCountProduct(codes.size());
