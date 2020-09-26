@@ -125,7 +125,7 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                                 Utils.StopSound();
                                 codeReader = code;
                                 if (!scanMultiple) {
-                                    updateMap();
+                                    updateMapCodeRead();
                                     Utils.PlaySound(false);
                                 }
                                 FinishActivity();
@@ -199,11 +199,10 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                                         String barCode=barCodes.get(i).trim();
                                         Log.i("Compare 1", code.trim());
                                         Log.i("Compare 2", barCode);
-                                        Log.i("Compare 3", String.valueOf(barCode==code.trim()));
-                                        Log.i("Compare 4", String.valueOf(barCode.equals(code.trim())));
                                         if (code.trim().equals(barCode)) {
                                             Log.i("Done", barCodes.get(i));
                                             valid = true;
+                                            break;
                                         }
                                     }
                                     Log.i("Valid", String.valueOf(valid));
@@ -217,8 +216,6 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                                     tvCounter.setText(String.valueOf(++count));
                                     updateMap();
                                 }
-
-
                             }
 
                             Utils.PlaySound(false);
@@ -241,6 +238,7 @@ public class SensorActivityWithCodeBar extends BaseActivity {
     }
 
     public void createDataResponse() {
+        Log.i("createDataResponse",String.valueOf(mapCodes.size()));
         Utils.StopSound();
         Intent intentRegreso = new Intent();
         BundleResponse bundleResponse = new BundleResponse();
@@ -305,14 +303,16 @@ public class SensorActivityWithCodeBar extends BaseActivity {
         Toast.makeText(SensorActivityWithCodeBar.this, "No puedes escanear si no das permiso", Toast.LENGTH_LONG).show();
     }
 
+    private void updateMapCodeRead() {
+        int count= mapCodes.size();
+        Log.i("updateMapCodeRead",String.valueOf( count));
+        mapCodes.put(codeReader, count);
+    }
+
     private void updateMap() {
-        Log.i("updateMap","updateMap");
-        if (mapCodes.containsKey(codeReader)) {
-            int count = mapCodes.get(codeReader) + 1;
-            mapCodes.put(codeReader, count);
-        } else {
-            mapCodes.put(codeReader, 1);
-        }
+        int count= mapCodes.size();
+        Log.i("updateMap",String.valueOf( count));
+        mapCodes.put(String.valueOf( count), count);
     }
 
     public void ShowDialog(String subject, String body) {

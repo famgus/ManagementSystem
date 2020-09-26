@@ -249,20 +249,25 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        Log.i("onActivityResult","onActivityResult");
+
         if (resultCode == Activity.RESULT_OK) {
             if (data != null && data.getAction().equals(String.valueOf(CODIGO_INTENT))) {
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
+
+                Log.i("bundleResponse",String.valueOf(bundleResponse.getMapCodes().size()));
+
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
 
                     for (String name : bundleResponse.getMapCodes().keySet()) {
-                        Log.d("onScannerBarCode: ", name);
+                        Log.i("onScannerBarCode: ", name);
+                        codes.add(name);
                     }
 
-
-                    String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                    codes.add(codeBar);
                     tvQuantityPicking.setText(String.valueOf(codes.size()));
                     etQuantityPicking.setText(String.valueOf(codes.size()));
+
                 }
             }
 
@@ -325,14 +330,15 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
 
     @Override
     public void onScannerBarCode(BundleResponse bundleResponse, int action) {
+
+        Log.i("onScannerBarCode: ", String.valueOf(bundleResponse.getMapCodes().size()));
         if (action == CODIGO_INTENT) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 for (String name : bundleResponse.getMapCodes().keySet()) {
                     Log.i("onScannerBarCode: ", name);
+                    codes.add(name);
                 }
 
-                String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                codes.add(codeBar);
                 tvQuantityPicking.setText(String.valueOf(codes.size()));
                 etQuantityPicking.setText(String.valueOf(codes.size()));
             }
