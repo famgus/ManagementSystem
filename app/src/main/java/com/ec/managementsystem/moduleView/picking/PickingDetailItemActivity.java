@@ -26,26 +26,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.request.PickingRequest;
+import com.ec.managementsystem.clases.request.RequestGetProductDetailBySomeParameters;
 import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.clases.responses.LocationDetail;
 import com.ec.managementsystem.clases.responses.PickingPedidoDetailResponse;
 import com.ec.managementsystem.clases.responses.PickingPedidoUserResponse;
+import com.ec.managementsystem.clases.responses.ResponseGetProductDetailBySomeParameters;
+import com.ec.managementsystem.interfaces.IDelegateGetProductDetailBySomeParameters;
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
 import com.ec.managementsystem.interfaces.IListenerUbicaciones;
 import com.ec.managementsystem.moduleView.BaseActivity;
 import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.adapters.UbicacionesListAdapter;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
+import com.ec.managementsystem.task.GetProductDetailBySomeParametersTaskController;
 import com.ec.managementsystem.task.PickingUpdateTaskController;
 import com.ec.managementsystem.util.MySingleton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PickingDetailItemActivity extends BaseActivity implements DialogScanner.DialogScanerFinished, IDelegateUpdatePickingControl, IListenerUbicaciones {
+public class PickingDetailItemActivity extends BaseActivity implements DialogScanner.DialogScanerFinished, IDelegateUpdatePickingControl, IListenerUbicaciones
+        , IDelegateGetProductDetailBySomeParameters {
     private static final int CODIGO_PERMISOS_CAMARA = 1, CODIGO_INTENT = 2, CODIGO_BAR = 3;
-    private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
     Toolbar toolbar;
     PickingPedidoDetailResponse pedidoDetailSelected;
     TextView tvNumberPedido, tvDescription, tvTalla, tvColor, tvQuantity, tvQuantityPicking;
@@ -61,6 +65,8 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     UbicacionesListAdapter locationApdater;
     RadioButton rbBoxmaster, rbUbicacion;
     EditText etBarCode;
+    private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
+    private ResponseGetProductDetailBySomeParameters productOtherDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +75,13 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
         setupView();
         initCollection();
         initRecyclerView();
+        this.productLoad();
     }
 
     private void setupView() {
         try {
+            productOtherDetails = null;
+
             // Set Toolbar
             toolbar = findViewById(R.id.toolbar);
             tvNumberPedido = findViewById(R.id.tvNumberPedido);
@@ -109,7 +118,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                 tvDescription.setText(String.valueOf(pedidoDetailSelected.getDescription()));
                 tvTalla.setText(String.valueOf(pedidoDetailSelected.getTalla()));
                 tvColor.setText(String.valueOf(pedidoDetailSelected.getColor()));
-                tvQuantity.setText(String.valueOf(pedidoDetailSelected.getUnidadesTotales()));
+                tvQuantity.setText(String.valueOf(pedidoDetailSelected.getUnidadesTotales()));//todo: cantidad
                 tvQuantityPicking.setText(String.valueOf(quantityPicking));
             }
 
@@ -224,7 +233,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
 
-                    for (String name : bundleResponse.getMapCodes().keySet()){
+                    for (String name : bundleResponse.getMapCodes().keySet()) {
                         Log.d("onScannerBarCode: ", name);
                     }
 
@@ -297,7 +306,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     public void onScannerBarCode(BundleResponse bundleResponse, int action) {
         if (action == CODIGO_INTENT) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
-                for (String name : bundleResponse.getMapCodes().keySet()){
+                for (String name : bundleResponse.getMapCodes().keySet()) {
                     Log.d("onScannerBarCode: ", name);
                 }
 
@@ -320,14 +329,26 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     public void onSuccessUpdate(GenericResponse response) {
         Intent intentResult = new Intent();
         if (response != null && response.getCode() == 200) {
-            intentResult.putExtra("result",1);
+            intentResult.putExtra("result", 1);
             Toast.makeText(PickingDetailItemActivity.this, "Picking registrado correctamente", Toast.LENGTH_LONG).show();
         } else {
-            intentResult.putExtra("result",0);
+            intentResult.putExtra("result", 0);
             Toast.makeText(PickingDetailItemActivity.this, "Error registrando el picking", Toast.LENGTH_LONG).show();
         }
         setResult(Activity.RESULT_OK, intentResult);
         finish();
+    }
+
+    public void productLoad() {
+        Log.i("productLoad", "load");
+        RequestGetProductDetailBySomeParameters request = new RequestGetProductDetailBySomeParameters(
+                pedidoDetailSelected.getCodeArticle(),
+                pedidoDetailSelected.getTalla(),
+                pedidoDetailSelected.getColor()
+        );
+        GetProductDetailBySomeParametersTaskController task = new GetProductDetailBySomeParametersTaskController();
+        task.setListener(PickingDetailItemActivity.this);
+        task.execute(request);
     }
 
     @Override
@@ -343,5 +364,19 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     @Override
     public void onItemRemoveClick(LocationDetail item) {
 
+    }
+
+    @Override
+    public void onGetProduct(ResponseGetProductDetailBySomeParameters response) {
+        Log.i("onGetProduct", response.getBarcode1() + "-" + response.getBarcode2() + "-" + response.getBarcode3());
+        Log.i("onGetProduct", String.valueOf(response.getCode()));
+        productOtherDetails = response;
+        switch (response.getCode()) {
+            case 200:
+                break;
+            default:
+                Toast.makeText(PickingDetailItemActivity.this, "Ocurrio un problema intente nuevamente", Toast.LENGTH_LONG).show();
+                break;
+        }
     }
 }
