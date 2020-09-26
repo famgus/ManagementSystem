@@ -61,7 +61,7 @@ public class ScannerActivityWithCodeBar extends BaseActivity implements ZXingSca
         escanerZXing = new ZXingScannerView(this);
         // Hacer que el contenido de la actividad sea el escaner
         //setContentView(escanerZXing);
-        setContentView(R.layout.camera_view);
+        setContentView(R.layout.camera_view_with_codebar);
         llCamera = findViewById(R.id.llCamera);
         llCamera.addView(escanerZXing);
         etBarCode = findViewById(R.id.etBarCode);
@@ -143,6 +143,7 @@ public class ScannerActivityWithCodeBar extends BaseActivity implements ZXingSca
     @Override
     public void handleResult(Result resultado) {
         Log.i("handleResult", String.valueOf(count));
+        Log.i("handleResult", resultado.getText());
         Utils.StopSound();
         codeReader = resultado.getText();
         etBarCode.setText(codeReader);
@@ -172,7 +173,7 @@ public class ScannerActivityWithCodeBar extends BaseActivity implements ZXingSca
                 }
             } else {
                 tvCounter.setText(String.valueOf(++count));
-                updateMap();
+                updateMapCodeRead();
             }
         }
 

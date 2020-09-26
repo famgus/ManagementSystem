@@ -154,7 +154,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                         try {
                             quantity = Integer.parseInt(etQuantityPicking.getText().toString().trim());
                         } catch (Exception e) {
-                            quantity = 0;
+                            quantity = -1;
                         }
                         if (quantity <= pedidoDetailSelected.getUnidadesTotales() && quantity >= 0) {
                             PickingUpdateTaskController task = new PickingUpdateTaskController();
@@ -174,7 +174,10 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                             request.setPath(2);
                             task.execute(request);
                         } else {
-                            Toast.makeText(PickingDetailItemActivity.this, "Si no exite cartel para hacer picking colocar cantidad en 0", Toast.LENGTH_LONG).show();
+                            if (quantity > pedidoDetailSelected.getUnidadesTotales())
+                                Toast.makeText(PickingDetailItemActivity.this, "La cantidad supera al maximo", Toast.LENGTH_LONG).show();
+                            else
+                                Toast.makeText(PickingDetailItemActivity.this, "Si no exite cartel para hacer picking colocar cantidad en 0", Toast.LENGTH_LONG).show();
                         }
 
                     } else {
@@ -252,7 +255,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     }
 
     private void updateQuantity(BundleResponse bundleResponse) {
-        codes=new ArrayList<>();
+        codes = new ArrayList<>();
         Log.i("bundleResponse", String.valueOf(bundleResponse.getMapCodes().size()));
         if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
             for (String name : bundleResponse.getMapCodes().keySet()) {
@@ -359,7 +362,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
         if (action == CODIGO_BAR || lastCode == CODE_FLOW_MASTER_BOX || lastCode == CODE_FLOW_UBICATION) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-               this.sendValidation(codeBar,lastCode);
+                this.sendValidation(codeBar, lastCode);
             }
         }
     }
@@ -438,7 +441,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
 
     private boolean readValidation(String barCode, int code, int typeValidation) {
         Log.i("readValidation", barCode + "," + code + "," + typeValidation);
-        codes=new ArrayList<>();
+        codes = new ArrayList<>();
 
         boolean response = false;
         if (code == 200) {
