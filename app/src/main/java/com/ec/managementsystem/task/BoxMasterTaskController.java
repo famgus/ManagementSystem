@@ -48,6 +48,15 @@ public class BoxMasterTaskController extends AsyncTask<BoxMasterRequest, Void, G
                     response = WebServiceControl.ValidateExistBoxMaster(request.getBarCodeBoxMasterOrigin());
                     response.setPath(request.getActionPath());
                     break;
+                case 9://Reubicacion de articulo ubicacion por ubicacion
+                    response = WebServiceControl.CreateReubicacionArticleSinCajaMasterUbicacion(request);
+                    break;
+                case 10://Reubicacion de articulo CajaMaster a ubicacion
+                    response = WebServiceControl.CreateReubicacionArticleCajaMaster(request);
+                    break;
+                case 11://Reubicacion de articulo ubicacion a CajaMaster
+                    response = WebServiceControl.CreateReubicacionArticleACajaMaster(request);
+                    break;
             }
             return response;
         }

@@ -45,12 +45,12 @@ public class BoxMasterActivity extends BaseActivity implements DialogScanner.Dia
             ivIngresos = findViewById(R.id.ivIngresos);
             ivDespacho = findViewById(R.id.ivDespacho);
             ivTraslado = findViewById(R.id.ivTraslado);
-            ivIngresos.setEnabled(false);
-            ivDespacho.setEnabled(false);
-            ivTraslado.setEnabled(false);
+            ivIngresos.setEnabled(true);
+            ivDespacho.setEnabled(true);
+            ivTraslado.setEnabled(true);
             // Set Toolbar
             toolbar = findViewById(R.id.toolbarBar);
-            this.toolbar.setTitle("Módulo de Cajas Master");
+            this.toolbar.setTitle("Módulo de Reubicación ");
             this.setupToolBar(toolbar);
             this.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -79,9 +79,9 @@ public class BoxMasterActivity extends BaseActivity implements DialogScanner.Dia
                         ivTraslado.setEnabled(true);
                         codeBar = text;
                     } else {
-                        ivIngresos.setEnabled(false);
-                        ivDespacho.setEnabled(false);
-                        ivTraslado.setEnabled(false);
+                        ivIngresos.setEnabled(true);
+                        ivDespacho.setEnabled(true);
+                        ivTraslado.setEnabled(true);
                     }
                 }
             });
@@ -177,7 +177,7 @@ public class BoxMasterActivity extends BaseActivity implements DialogScanner.Dia
 
     @Override
     public void onBoxMasterResponse(GenericResponse response) {
-        if (response != null && response.getCode() == 200) {
+//        if (response != null && response.getCode() == 200) {
             if (pathSelected == 1) {
                 Intent i = new Intent(BoxMasterActivity.this, IngresosActivity.class);
                 i.putExtra("codeBarBoxMaster", etBarCode.getText().toString());
@@ -188,11 +188,11 @@ public class BoxMasterActivity extends BaseActivity implements DialogScanner.Dia
                 startActivity(i);
             } else if (pathSelected == 3) {
                 Intent i = new Intent(BoxMasterActivity.this, ReubicacionActivity.class);
-                i.putExtra("codeBarBoxMaster", etBarCode.getText().toString());
+                //i.putExtra("codeBarBoxMaster", etBarCode.getText().toString());
                 startActivity(i);
             }
-        } else {
-            Toast.makeText(BoxMasterActivity.this, "El código de barras no existe en el sistema de cajas master", Toast.LENGTH_LONG).show();
-        }
+//        } else {
+//            Toast.makeText(BoxMasterActivity.this, "El código de barras no existe en el sistema de cajas master", Toast.LENGTH_LONG).show();
+//        }
     }
 }
