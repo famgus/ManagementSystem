@@ -344,7 +344,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
         RequestGetProductDetailBySomeParameters request = new RequestGetProductDetailBySomeParameters(
                 String.valueOf(pedidoDetailSelected.getCodeArticle()),
                 pedidoDetailSelected.getTalla(),
-                pedidoDetailSelected.getColor()
+                pedidoDetailSelected.getCodcolor()
         );
         GetProductDetailBySomeParametersTaskController task = new GetProductDetailBySomeParametersTaskController();
         task.setListener(PickingDetailItemActivity.this);
@@ -376,6 +376,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                 break;
             default:
                 Toast.makeText(PickingDetailItemActivity.this, "Ocurrio un problema intente nuevamente", Toast.LENGTH_LONG).show();
+                onBackPressed();
                 break;
         }
     }
