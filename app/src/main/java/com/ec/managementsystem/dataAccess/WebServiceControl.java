@@ -1332,15 +1332,15 @@ public class WebServiceControl {
         ResponseGetProductDetailBySomeParameters response = new ResponseGetProductDetailBySomeParameters();
         try {
             if (Utils.IsOnline()) {
-                Log.i("getProductDetailBy", requestGetProductDetailBySomeParameters.getProductCode());
-                Log.i("getProductDetailBy", requestGetProductDetailBySomeParameters.getColor());
+                Log.i("getProductDetailBy", String.valueOf(requestGetProductDetailBySomeParameters.getProductCode()));
                 Log.i("getProductDetailBy", requestGetProductDetailBySomeParameters.getSize());
+                Log.i("getProductDetailBy", requestGetProductDetailBySomeParameters.getColor());
                 Gson gson = new Gson();
                 final String NAMESPACE = "http://tempuri.org/";
                 final String METHOD_NAME = "GetProductDetailBySomeParameters";
                 final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
                 SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-                request.addProperty("codeproduct", requestGetProductDetailBySomeParameters.getProductCode());
+                request.addProperty("codigoarticulo", requestGetProductDetailBySomeParameters.getProductCode());
                 request.addProperty("talla", requestGetProductDetailBySomeParameters.getSize());
                 request.addProperty("color", requestGetProductDetailBySomeParameters.getColor());
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
@@ -1353,7 +1353,9 @@ public class WebServiceControl {
                 htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
                 htse.call(SOAP_ACTION, envelope);
 
+                Log.i("getProductDetailBy",envelope.getResponse().toString());
                 response = gson.fromJson(envelope.getResponse().toString(), ResponseGetProductDetailBySomeParameters.class);
+                Log.i("getProductDetailBy", response.getProductDetail().getBarcode1());
                 return response;
             } else {
                 message = MyApplication.GetAppContext().getString(R.string.no_internet);

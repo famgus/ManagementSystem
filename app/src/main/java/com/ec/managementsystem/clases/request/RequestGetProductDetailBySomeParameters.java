@@ -1,21 +1,21 @@
 package com.ec.managementsystem.clases.request;
 
 public class RequestGetProductDetailBySomeParameters {
-    String productCode;
+    int productCode;
     String size;
     String color;
 
-    public RequestGetProductDetailBySomeParameters(String productCode, String size, String color) {
+    public RequestGetProductDetailBySomeParameters(int productCode, String size, String color) {
         this.productCode = productCode;
         this.size = size;
         this.color = color;
     }
 
-    public String getProductCode() {
+    public int getProductCode() {
         return productCode;
     }
 
-    public void setProductCode(String productCode) {
+    public void setProductCode(int productCode) {
         this.productCode = productCode;
     }
 

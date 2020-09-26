@@ -342,7 +342,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     public void productLoad() {
         Log.i("productLoad", "load");
         RequestGetProductDetailBySomeParameters request = new RequestGetProductDetailBySomeParameters(
-                String.valueOf(pedidoDetailSelected.getCodeArticle()),
+                pedidoDetailSelected.getCodeArticle(),
                 pedidoDetailSelected.getTalla(),
                 pedidoDetailSelected.getCodcolor()
         );
@@ -368,7 +368,12 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
 
     @Override
     public void onGetProduct(ResponseGetProductDetailBySomeParameters response) {
-        Log.i("onGetProduct", response.getBarcode1() + "-" + response.getBarcode2() + "-" + response.getBarcode3());
+        if (response.getProductDetail().getBarcode1() != null)
+            Log.i("onGetProduct", response.getProductDetail().getBarcode1());
+        if (response.getProductDetail().getBarcode2() != null)
+            Log.i("onGetProduct", response.getProductDetail().getBarcode2());
+        if (response.getProductDetail().getBarcode3() != null)
+            Log.i("onGetProduct", response.getProductDetail().getBarcode3());
         Log.i("onGetProduct", String.valueOf(response.getCode()));
         productOtherDetails = response;
         switch (response.getCode()) {
