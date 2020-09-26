@@ -9,6 +9,7 @@ import com.ec.managementsystem.clases.request.BoxMasterRequest;
 import com.ec.managementsystem.clases.request.PurchaseOrderRequest;
 import com.ec.managementsystem.clases.request.PurchaseParentRequest;
 import com.ec.managementsystem.clases.request.QualityControlRequest;
+import com.ec.managementsystem.clases.request.RequestGetProductDetailBySomeParameters;
 import com.ec.managementsystem.clases.request.ReturnProductChangeRequest;
 import com.ec.managementsystem.clases.request.ReturnProductDetailsRequest;
 import com.ec.managementsystem.clases.request.ReturnProductRequest;
@@ -24,6 +25,7 @@ import com.ec.managementsystem.clases.responses.PedidoResponse;
 import com.ec.managementsystem.clases.responses.PendingTransferOrderResponse;
 import com.ec.managementsystem.clases.responses.PickingPedidoUserResponse;
 import com.ec.managementsystem.clases.responses.ProductoResponse;
+import com.ec.managementsystem.clases.responses.ResponseGetProductDetailBySomeParameters;
 import com.ec.managementsystem.clases.responses.ReturnProductChangeResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductDetailsResponse;
 import com.ec.managementsystem.clases.responses.ReturnProductListResponse;
@@ -53,12 +55,12 @@ public class WebServiceControl {
         int port = 9298;
         if (BuildConfig.DEBUG) {
             String IP_DEBUG = "3.21.12.158";
-            IP_DEBUG = "10.238.26.69";
+//            IP_DEBUG = "10.238.26.69";
             port = 9298;
             return "http://" + IP_DEBUG + ":" + port + "/Service1.asmx";
         } else {
             String IP_RELEASE = "3.21.12.158";
-            IP_RELEASE = "10.238.26.69";
+//            IP_RELEASE = "10.238.26.69";
             return "http://" + IP_RELEASE + ":" + port + "/Service1.asmx";
         }
     }
@@ -1318,6 +1320,49 @@ public class WebServiceControl {
             }
         } catch (Exception e) {
             Utils.CreateLogFile("WebServiceControl." + methodName + ": " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
+    static public ResponseGetProductDetailBySomeParameters getProductDetailBySomeParameters(RequestGetProductDetailBySomeParameters requestGetProductDetailBySomeParameters) {
+        String message = "";
+        ResponseGetProductDetailBySomeParameters response = new ResponseGetProductDetailBySomeParameters();
+        try {
+            if (Utils.IsOnline()) {
+                Log.i("getProductDetailBy", String.valueOf(requestGetProductDetailBySomeParameters.getProductCode()));
+                Log.i("getProductDetailBy", requestGetProductDetailBySomeParameters.getSize());
+                Log.i("getProductDetailBy", requestGetProductDetailBySomeParameters.getColor());
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "GetProductDetailBySomeParameters";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                request.addProperty("codigoarticulo", requestGetProductDetailBySomeParameters.getProductCode());
+                request.addProperty("talla", requestGetProductDetailBySomeParameters.getSize());
+                request.addProperty("color", requestGetProductDetailBySomeParameters.getColor());
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+
+                Log.i("getProductDetailBy",envelope.getResponse().toString());
+                response = gson.fromJson(envelope.getResponse().toString(), ResponseGetProductDetailBySomeParameters.class);
+                Log.i("getProductDetailBy", response.getProductDetail().getBarcode1());
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.getProductDetailBySomeParameters: " + e.getMessage());
             message = e.getMessage();
             response.setCode(401);
             response.setMessage(message);

@@ -6,33 +6,44 @@ import java.io.Serializable;
 import java.util.List;
 
 public class PickingPedidoDetailResponse implements Serializable {
-    @SerializedName("numberSerie")
-   private String numberSerie ;
-    @SerializedName("numberPedido")
-   private Integer numberPedido ;
-    @SerializedName("numberLin")
-   private Integer numberLin ;
-    @SerializedName("reference")
-   private String reference ;
-    @SerializedName("description")
-   private String description ;
-    @SerializedName("talla")
-   private String talla ;
-    @SerializedName("color")
-   private String color ;
-    @SerializedName("codeArticle")
-   private Integer codeArticle ;
-    @SerializedName("unidadesTotales")
-   private Double unidadesTotales ;
-    @SerializedName("unidadesPen")
-   private Double unidadesPen ;
-    @SerializedName("unidadesRec")
-    private Double unidadesRec ;
-    @SerializedName("ubicaciones")
-    private List<LocationDetail> ubicaciones ;
     boolean finish;
+    @SerializedName("numberSerie")
+    private String numberSerie;
+    @SerializedName("numberPedido")
+    private Integer numberPedido;
+    @SerializedName("numberLin")
+    private Integer numberLin;
+    @SerializedName("reference")
+    private String reference;
+    @SerializedName("description")
+    private String description;
+    @SerializedName("talla")
+    private String talla;
+    @SerializedName("color")
+    private String color;
+    @SerializedName("codcolor")
+    private String codcolor;
+    @SerializedName("codeArticle")
+    private Integer codeArticle;
+    @SerializedName("unidadesTotales")
+    private Double unidadesTotales;
+    @SerializedName("unidadesPen")
+    private Double unidadesPen;
+    @SerializedName("unidadesRec")
+    private Double unidadesRec;
+    @SerializedName("ubicaciones")
+    private List<LocationDetail> ubicaciones;
 
-   public  PickingPedidoDetailResponse(){}
+    public PickingPedidoDetailResponse() {
+    }
+
+    public String getCodcolor() {
+        return codcolor;
+    }
+
+    public void setCodcolor(String codcolor) {
+        this.codcolor = codcolor;
+    }
 
     public String getNumberSerie() {
         return numberSerie;
