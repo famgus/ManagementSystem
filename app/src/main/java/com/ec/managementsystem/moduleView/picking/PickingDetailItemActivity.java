@@ -229,6 +229,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
         i.putExtra("scanMultiple", scanMultiple);
         i.putExtra("permisoCamaraConcedido", true);
         i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.putExtra("totalUnit", pedidoDetailSelected.getUnidadesTotales());
         i.setAction(String.valueOf(codeIntent));
         startActivityForResult(i, codeIntent);
     }
@@ -315,7 +316,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
         if (action == CODIGO_INTENT) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 for (String name : bundleResponse.getMapCodes().keySet()) {
-                    Log.d("onScannerBarCode: ", name);
+                    Log.i("onScannerBarCode: ", name);
                 }
 
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
