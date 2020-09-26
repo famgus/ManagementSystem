@@ -38,7 +38,7 @@ import com.ec.managementsystem.interfaces.IDelegateGetProductDetailBySomeParamet
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
 import com.ec.managementsystem.interfaces.IListenerUbicaciones;
 import com.ec.managementsystem.moduleView.BaseActivity;
-import com.ec.managementsystem.moduleView.SensorActivity;
+import com.ec.managementsystem.moduleView.SensorActivityWithCodeBar;
 import com.ec.managementsystem.moduleView.adapters.UbicacionesListAdapter;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.GetProductDetailBySomeParametersTaskController;
@@ -225,11 +225,23 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        Intent i = new Intent(this, SensorActivity.class);
+        ArrayList<String> barCodes = new ArrayList<>();
+        if (productOtherDetails.getBarcode1() != null) {
+            barCodes.add(productOtherDetails.getBarcode1());
+        }
+        if (productOtherDetails.getBarcode2() != null) {
+            barCodes.add(productOtherDetails.getBarcode2());
+        }
+        if (productOtherDetails.getBarcode3() != null) {
+            barCodes.add(productOtherDetails.getBarcode3());
+        }
+
+        Intent i = new Intent(this, SensorActivityWithCodeBar.class);
         i.putExtra("scanMultiple", scanMultiple);
         i.putExtra("permisoCamaraConcedido", true);
         i.putExtra("permisoSolicitadoDesdeBoton", true);
         i.putExtra("totalUnit", pedidoDetailSelected.getUnidadesTotales());
+        i.putStringArrayListExtra("barCodes", barCodes);
         i.setAction(String.valueOf(codeIntent));
         startActivityForResult(i, codeIntent);
     }
