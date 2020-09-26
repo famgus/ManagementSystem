@@ -55,12 +55,12 @@ public class WebServiceControl {
         int port = 9298;
         if (BuildConfig.DEBUG) {
             String IP_DEBUG = "3.21.12.158";
-//            IP_DEBUG = "10.238.26.69";
+            IP_DEBUG = "10.238.26.69";
             port = 9298;
             return "http://" + IP_DEBUG + ":" + port + "/Service1.asmx";
         } else {
             String IP_RELEASE = "3.21.12.158";
-//            IP_RELEASE = "10.238.26.69";
+            IP_RELEASE = "10.238.26.69";
             return "http://" + IP_RELEASE + ":" + port + "/Service1.asmx";
         }
     }
