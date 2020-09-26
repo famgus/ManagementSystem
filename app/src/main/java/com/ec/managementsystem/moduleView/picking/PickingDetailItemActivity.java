@@ -29,6 +29,7 @@ import com.ec.managementsystem.clases.request.PickingRequest;
 import com.ec.managementsystem.clases.request.RequestGetProductDetailBySomeParameters;
 import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
+import com.ec.managementsystem.clases.responses.GetProductDetailBySomeParameters;
 import com.ec.managementsystem.clases.responses.LocationDetail;
 import com.ec.managementsystem.clases.responses.PickingPedidoDetailResponse;
 import com.ec.managementsystem.clases.responses.PickingPedidoUserResponse;
@@ -49,6 +50,8 @@ import java.util.List;
 
 public class PickingDetailItemActivity extends BaseActivity implements DialogScanner.DialogScanerFinished, IDelegateUpdatePickingControl, IListenerUbicaciones
         , IDelegateGetProductDetailBySomeParameters {
+    public static final int CODE_FLOW_MASTER_BOX = 99, CODE_FLOW_QUANTITY = 100;
+    public static final int CODE_FLOW_UBICATION = 101;
     private static final int CODIGO_PERMISOS_CAMARA = 1, CODIGO_INTENT = 2, CODIGO_BAR = 3;
     Toolbar toolbar;
     PickingPedidoDetailResponse pedidoDetailSelected;
@@ -66,7 +69,8 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     RadioButton rbBoxmaster, rbUbicacion;
     EditText etBarCode;
     private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
-    private ResponseGetProductDetailBySomeParameters productOtherDetails;
+    private GetProductDetailBySomeParameters productOtherDetails;
+    private int lastCode = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,12 +129,16 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
             ivActionQuantityPicking.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    lastCode = CODE_FLOW_QUANTITY;
+                    Log.i("Click Code", String.valueOf(lastCode));
                     showDialogScanner(true, CODIGO_INTENT);
                 }
             });
             ivActionBarCode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    lastCode = (rbBoxmaster.isChecked()) ? CODE_FLOW_MASTER_BOX : CODE_FLOW_UBICATION;
+                    Log.i("Click Code", String.valueOf(lastCode));
                     showDialogScanner(false, CODIGO_BAR);
                 }
             });
@@ -375,7 +383,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
         if (response.getProductDetail().getBarcode3() != null)
             Log.i("onGetProduct", response.getProductDetail().getBarcode3());
         Log.i("onGetProduct", String.valueOf(response.getCode()));
-        productOtherDetails = response;
+        productOtherDetails = response.getProductDetail();
         switch (response.getCode()) {
             case 200:
                 break;
