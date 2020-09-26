@@ -155,10 +155,11 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                     verificarYPedirPermisosDeCamara();
                     return;
                 }
-                Intent i = new Intent(SensorActivityWithCodeBar.this, ScannerActivity.class);
+                Intent i = new Intent(SensorActivityWithCodeBar.this, ScannerActivityWithCodeBar.class);
                 i.putExtra("scanMultiple", scanMultiple);
                 i.putExtra("path", pathReception);
                 i.putExtra("totalUnit", totalUnit);
+                i.putStringArrayListExtra("barCodes", barCodes);
                 i.setAction(String.valueOf(code_intent));
                 startActivityForResult(i, code_intent);
             }
@@ -184,7 +185,6 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                 if (code.length() >= 2) {
                     if (code.substring(code.length() - 1).equals("\n")) {
                         {
-                            //etBarCode.setText("637358535603008420JEACD");
                             Utils.StopSound();
                             codeReader = etBarCode.getText().toString().replace("\n", "");
                             //etBarCode.setText(codeReader);
@@ -269,10 +269,11 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Escanear directamten solo si fue pedido desde el botón
                     if (permisoSolicitadoDesdeBoton) {
-                        Intent i = new Intent(SensorActivityWithCodeBar.this, ScannerActivity.class);
+                        Intent i = new Intent(SensorActivityWithCodeBar.this, ScannerActivityWithCodeBar.class);
                         i.putExtra("scanMultiple", false);
                         i.putExtra("path", pathReception);
                         i.putExtra("totalUnit", totalUnit);
+                        i.putStringArrayListExtra("barCodes", barCodes);
                         startActivityForResult(i, code_intent);
                     }
                     permisoCamaraConcedido = true;

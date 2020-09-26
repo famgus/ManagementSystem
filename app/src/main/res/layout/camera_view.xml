@@ -57,7 +57,7 @@
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp">
 
-            <EditText
+            <TextView
                 android:id="@+id/etBarCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
