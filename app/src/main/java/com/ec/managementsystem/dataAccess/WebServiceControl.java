@@ -51,7 +51,7 @@ public class WebServiceControl {
     public static final String VALIDATE_BOX_MASTER_CODE_BAR = "ValidateBoxMasterCodeBar";
     public static final String VALIDATE_EXIST_BOX_MASTER = "ValidateExistBoxMaster";
 
-    private static String GetURL() {
+    public static String GetURL() {
         int port = 9298;
         if (BuildConfig.DEBUG) {
             String IP_DEBUG = "3.21.12.158";
