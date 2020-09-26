@@ -41,7 +41,7 @@ public class ReturnProductDialogScanner extends AppCompatDialogFragment implemen
     EditText etBarCode;
     TextView tvCounter;
     ImageView ivCamera;
-    ImageView ivFinish;
+    TextView ivFinish;
     AlertDialog alertDialog;
     boolean scanMultiple = false;
     int pathReception = -1;
@@ -102,7 +102,7 @@ public class ReturnProductDialogScanner extends AppCompatDialogFragment implemen
         etBarCode = view.findViewById(R.id.etBarCode);
         tvCounter = view.findViewById(R.id.tvCounter);
         ivCamera = view.findViewById(R.id.ivCamera);
-        ivFinish = view.findViewById(R.id.ivFinish);
+        ivFinish = view.findViewById(R.id.textView3);
         mapCodes = new HashMap<>();
         builder.setView(view);
         this.alertDialog = builder.create();
