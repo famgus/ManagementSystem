@@ -342,7 +342,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     public void productLoad() {
         Log.i("productLoad", "load");
         RequestGetProductDetailBySomeParameters request = new RequestGetProductDetailBySomeParameters(
-                pedidoDetailSelected.getCodeArticle(),
+                String.valueOf(pedidoDetailSelected.getCodeArticle()),
                 pedidoDetailSelected.getTalla(),
                 pedidoDetailSelected.getColor()
         );
