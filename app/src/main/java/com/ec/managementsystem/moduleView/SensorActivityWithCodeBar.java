@@ -186,7 +186,8 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                     if (code.substring(code.length() - 1).equals("\n")) {
                         {
                             Utils.StopSound();
-                            codeReader = etBarCode.getText().toString().replace("\n", "");
+                            codeReader = etBarCode.getText().toString().replaceAll("\n", "");
+                            codeReader=codeReader.trim();
                             //etBarCode.setText(codeReader);
                             if (!showDialog && totalUnit != -1 && count + 1 > totalUnit) {
                                 showDialog = true;
@@ -197,9 +198,9 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                                     boolean valid = false;
                                     for (int i = 0; i < barCodes.size() - 1; i++) {
                                         String barCode=barCodes.get(i).trim();
-                                        Log.i("Compare 1", code.trim());
+                                        Log.i("Compare 1", codeReader);
                                         Log.i("Compare 2", barCode);
-                                        if (code.trim().equals(barCode)) {
+                                        if (codeReader.equals(barCode)) {
                                             Log.i("Done", barCodes.get(i));
                                             valid = true;
                                             break;
@@ -214,7 +215,7 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                                     }
                                 } else {
                                     tvCounter.setText(String.valueOf(++count));
-                                    updateMap();
+                                    updateMapCodeRead();
                                 }
                             }
 
