@@ -101,7 +101,7 @@ public class TransferWebServiceControl {
             if (Utils.IsOnline()) {
                 Gson gson = new Gson();
                 final String NAMESPACE = "http://tempuri.org/";
-                final String METHOD_NAME = "CreateBoxForDsispatch";
+                final String METHOD_NAME = "CreateBoxForDispatch";
                 final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
                 SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
                 request.addProperty("traspaso", transfers);
