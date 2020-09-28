@@ -115,7 +115,7 @@ public class PackOffTransferFragment extends Fragment implements OnItemClickList
                     if (response.getTransferPackOffs().size() > 0) {
                         transferPackOffList.clear();
                         transferPackOffList.addAll(response.getTransferPackOffs());
-                        transferPackOffList.set(0, new TransferPackOff(Utils.HEADER_TYPE));
+                        transferPackOffList.add(0, new TransferPackOff(Utils.HEADER_TYPE));
                         packOffTransferAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(getContext(), "No hay productos por despachar", Toast.LENGTH_SHORT).show();

@@ -44,6 +44,7 @@ public class PackOffTransferAdapter extends RecyclerView.Adapter<PackOffTransfer
         }
     }
 
+    @Override
     public int getItemViewType(int position) {
         return transferPackOffList.get(position).getRvType();
     }
