@@ -43,9 +43,8 @@
                 android:layout_width="180dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/reubicacion"
+                android:background="@drawable/traslados"
                 android:paddingLeft="8dp"/>
-
 
             <TextView
                 android:textStyle="bold"
@@ -56,8 +55,7 @@
                 android:text="¿Qué vamos  reubicar?"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="30dp"/>
-
-
+<!--          tipos de traslado-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,7 +79,7 @@
                     android:layout_marginRight="40dp"
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>
-
+<!--          articulo de cajaMaster a CajaMaster-->
             <LinearLayout
                 android:id="@+id/llArticle"
                 android:layout_width="match_parent"
@@ -95,11 +93,64 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
-                    android:text="Código de barras de la caja master destino:"
+                    android:text="Código Caja Master destino:"
                     android:gravity="center_horizontal"
                     android:layout_marginTop="10dp"/>
 
-                <LinearLayout
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:srcCompat="@drawable/bar_code"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="6dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/etBarCodeBoxMasterDestiny"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/text_hint_bar_code"
+                    android:hint="@string/text_hint_bar_code"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:drawableTintMode="src_in"
+                    android:drawableTint="@color/darkest_gray"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/ivScanBarCodeBoxMasterDestiny"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:srcCompat="@drawable/scannerbarcode"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="6dp"/>
+        </LinearLayout>
+
+            <TextView
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:text="Código Caja Master origen:"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="10dp"/>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -121,7 +172,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/etBarCodeBoxMasterDestiny"
+                        android:id="@+id/etBarCodeBoxMasterOrigen"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:autofillHints="@string/text_hint_bar_code"
@@ -134,7 +185,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageView
-                    android:id="@+id/ivScanBarCodeBoxMasterDestiny"
+                    android:id="@+id/ivScanBarCodeBoxMasterOrigen"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     app:srcCompat="@drawable/scannerbarcode"
@@ -142,13 +193,126 @@
                     android:layout_marginLeft="6dp"/>
             </LinearLayout>
 
+            <TextView
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:text="Código de artículo a ingresar:"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:srcCompat="@drawable/bar_code"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="6dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/etBarCodeArticle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="@string/text_hint_bar_code"
+                        android:hint="@string/text_hint_bar_code"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:drawableTintMode="src_in"
+                        android:drawableTint="@color/darkest_gray"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/ivScanBarCodeArticle"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:srcCompat="@drawable/scannerbarcode"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="6dp"/>
+            </LinearLayout>
+
+            <TextView
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:text="Cantidad de unidades del artículo:"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:srcCompat="@drawable/fab_add"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="6dp"
+                    android:tint="@color/colorPrimary"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="40dp">
+
+                    <EditText
+                        android:id="@+id/etQuantity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Cantidad de unidades"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:drawableTintMode="src_in"
+                        android:drawableTint="@color/darkest_gray"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/separator"
+                android:scaleType="fitXY"/>
+
+            </LinearLayout>
+<!--         articulo de ubicacion a ubicacion AU-->
+            <LinearLayout
+                android:id="@+id/llArticloXUbication"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
                 <TextView
                     android:textStyle="bold"
                     android:layout_gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
-                    android:text="Código de artículo a ingresar:"
+                    android:text="Ubicación origen:"
                     android:gravity="center_horizontal"
                     android:layout_marginTop="10dp"/>
 
@@ -159,7 +323,7 @@
                     android:layout_marginRight="30dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="5dp">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -174,7 +338,7 @@
                         android:layout_height="wrap_content">
 
                         <EditText
-                            android:id="@+id/etBarCodeArticle"
+                            android:id="@+id/etAUBarCodeUbicacionOrigen"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="@string/text_hint_bar_code"
@@ -187,7 +351,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <ImageView
-                        android:id="@+id/ivScanBarCodeArticle"
+                        android:id="@+id/ivAUBarCodeUbicacionOrigen"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         app:srcCompat="@drawable/scannerbarcode"
@@ -201,9 +365,113 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
-                    android:text="Cantidad de unidades del artículo:"
+                    android:text="Ubicación destino:"
                     android:gravity="center_horizontal"
                     android:layout_marginTop="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_below="@+id/rlLocation"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/bar_code"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/etAUBarCodeUbicacionDestino"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/text_hint_bar_code"
+                            android:hint="@string/text_hint_bar_code"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:drawableTintMode="src_in"
+                            android:drawableTint="@color/darkest_gray"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/ivAUUbicacionDestino"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/scannerbarcode"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="6dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="1dp"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="20dp"
+                    android:text="Codigo de Articulo:"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_below="@+id/rlLocation"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/bar_code"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"/>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/etAUBarCodeArticle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/text_hint_bar_code"
+                            android:hint="@string/text_hint_bar_code"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:drawableTintMode="src_in"
+                            android:drawableTint="@color/darkest_gray"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <ImageView
+                        android:id="@+id/ivAUScanBarCodeArticle"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/scannerbarcode"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="6dp"/>
+
+                </LinearLayout>
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="Cantidad de unidades del artículo:"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="5dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -227,7 +495,7 @@
                         android:layout_marginRight="40dp">
 
                         <EditText
-                            android:id="@+id/etQuantity"
+                            android:id="@+id/etAUQuantity"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Cantidad de unidades"
@@ -246,16 +514,15 @@
                     android:src="@drawable/separator"
                     android:scaleType="fitXY"/>
 
-            </LinearLayout>
 
+            </LinearLayout>
+<!--         articulo de CajaMaster a ubicacion ACMU-->
             <LinearLayout
-                android:id="@+id/llBoxMaster"
+                android:id="@+id/llArticloCajaMasterUbicacion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
-
-
+                android:visibility="gone">
 
                 <TextView
                     android:textStyle="bold"
@@ -263,7 +530,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
-                    android:text="Ubicación origen:"
+                    android:text="Código Caja Master Origen:"
                     android:gravity="center_horizontal"
                     android:layout_marginTop="10dp"/>
 
@@ -274,7 +541,443 @@
                     android:layout_marginRight="30dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="5dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/bar_code"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/etACMUBarCodeMasterBoxOrigen"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/text_hint_bar_code"
+                            android:hint="@string/text_hint_bar_code"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:drawableTintMode="src_in"
+                            android:drawableTint="@color/darkest_gray"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/ivACMUBarCodeMasterBoxOrigen"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/scannerbarcode"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="6dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="Código ubicación destino:"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_below="@+id/rlLocation"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/bar_code"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/etACMUBarCodeUbicacionDestino"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/text_hint_bar_code"
+                            android:hint="@string/text_hint_bar_code"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:drawableTintMode="src_in"
+                            android:drawableTint="@color/darkest_gray"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/ivACMUBarCodeUbicacionDestino"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/scannerbarcode"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="6dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="1dp"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="20dp"
+                    android:text="Código  Artículo:"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_below="@+id/rlLocation"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/bar_code"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"/>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/etACMUBarCodeArticle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/text_hint_bar_code"
+                            android:hint="@string/text_hint_bar_code"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:drawableTintMode="src_in"
+                            android:drawableTint="@color/darkest_gray"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <ImageView
+                        android:id="@+id/ivACMUBarCodeArticle"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/scannerbarcode"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="6dp"/>
+
+                </LinearLayout>
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="Cantidad de unidades del artículo:"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="5dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/fab_add"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"
+                        android:tint="@color/colorPrimary"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="40dp">
+
+                        <EditText
+                            android:id="@+id/etACMUQuantity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Cantidad de unidades"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:drawableTintMode="src_in"
+                            android:drawableTint="@color/darkest_gray"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/separator"
+                    android:scaleType="fitXY"/>
+
+
+            </LinearLayout>
+<!--         articulo de ubicacion a CajaMaster AUCM-->
+            <LinearLayout
+                android:id="@+id/llArticloUbicacionCajaMaster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="Código Caja Master Destino:"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/bar_code"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/etAUCMBarCodeMasterBoxDestiny"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/text_hint_bar_code"
+                            android:hint="@string/text_hint_bar_code"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:drawableTintMode="src_in"
+                            android:drawableTint="@color/darkest_gray"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/ivAUCMBarCodeMasterBoxDestiny"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/scannerbarcode"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="6dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="Ubicación Origen:"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_below="@+id/rlLocation"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/bar_code"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/etAUCMBarCodeUbicacionOrigen"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/text_hint_bar_code"
+                            android:hint="@string/text_hint_bar_code"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:drawableTintMode="src_in"
+                            android:drawableTint="@color/darkest_gray"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/ivAUCMBarCodeUbicacionOrigen"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/scannerbarcode"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="6dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="1dp"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="20dp"
+                    android:text="Código  Artículo:"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_below="@+id/rlLocation"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/bar_code"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"/>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/etAUCMBarCodeArticle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/text_hint_bar_code"
+                            android:hint="@string/text_hint_bar_code"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:drawableTintMode="src_in"
+                            android:drawableTint="@color/darkest_gray"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <ImageView
+                        android:id="@+id/ivAUCMBarCodeArticle"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/scannerbarcode"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="6dp"/>
+
+                </LinearLayout>
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="Cantidad de unidades del artículo:"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="5dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/fab_add"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"
+                        android:tint="@color/colorPrimary"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="40dp">
+
+                        <EditText
+                            android:id="@+id/etAUCMQuantity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Cantidad de unidades"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:drawableTintMode="src_in"
+                            android:drawableTint="@color/darkest_gray"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/separator"
+                    android:scaleType="fitXY"/>
+
+
+            </LinearLayout>
+<!--         caja master de ubiccion a ubicacion-->
+            <LinearLayout
+                android:id="@+id/llBoxMaster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="Ubicación origen:"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="5dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -318,7 +1021,7 @@
                     android:paddingLeft="20dp"
                     android:text="Ubicación destino:"
                     android:gravity="center_horizontal"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="5dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -326,8 +1029,9 @@
                     android:orientation="horizontal"
                     android:layout_marginRight="30dp"
                     android:layout_marginLeft="30dp"
+                    android:layout_below="@+id/rlLocation"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="5dp">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -363,6 +1067,57 @@
                         android:layout_marginLeft="6dp"/>
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="1dp"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="20dp"
+                    android:text="Codigo Caja Master:"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_below="@+id/rlLocation"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/bar_code"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"/>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/etBarCodeCajaMaster"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/text_hint_bar_code"
+                            android:hint="@string/text_hint_bar_code"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:drawableTintMode="src_in"
+                            android:drawableTint="@color/darkest_gray"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <ImageView
+                        android:id="@+id/ivScanBarCodeCajaMaster"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/scannerbarcode"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="6dp"/>
+
+                </LinearLayout>
+
                 <ImageView
                     android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
@@ -370,16 +1125,16 @@
                     android:src="@drawable/separator"
                     android:scaleType="fitXY"/>
 
+
             </LinearLayout>
-
-
+<!--        boton de registrar-->
             <LinearLayout
                 android:id="@+id/llRegister"
                 android:layout_width="200dp"
                 android:layout_height="45dp"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="60dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/btnripple"
                 android:visibility="visible">
@@ -396,6 +1151,7 @@
                     android:drawableLeft="@drawable/baseline_check_circle_outline_white_24"
                     android:paddingLeft="12dp"/>
             </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>

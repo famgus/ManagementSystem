@@ -382,6 +382,123 @@ public class WebServiceControl {
         return response;
     }
 
+    static public GenericResponse CreateReubicacionArticleSinCajaMasterUbicacion(BoxMasterRequest boxMasterRequest) {
+        String message = "";
+        GenericResponse response = new GenericResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "CreateReubicacionArticleSinCajaMasterUbicacion";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                request.addProperty("ubicacionOrigen", boxMasterRequest.getUbicacionOrigen());
+                request.addProperty("barCodeArticle", boxMasterRequest.getBarCodeArticle());
+                request.addProperty("quantityArticle", boxMasterRequest.getQuantityArticle());
+                request.addProperty("ubicacionDestino", boxMasterRequest.getUbicacionDestiny());
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+
+                response = gson.fromJson(envelope.getResponse().toString(), GenericResponse.class);
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.CreateTraslado: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
+    static public GenericResponse CreateReubicacionArticleCajaMaster(BoxMasterRequest boxMasterRequest) {
+        String message = "";
+        GenericResponse response = new GenericResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "CreateReubicacionArticleCajaMaster";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                request.addProperty("barCodeBoxMasterOrigin", boxMasterRequest.getBarCodeBoxMasterOrigin());
+                request.addProperty("barCodeArticle", boxMasterRequest.getBarCodeArticle());
+                request.addProperty("quantityArticle", boxMasterRequest.getQuantityArticle());
+                request.addProperty("ubicacion", boxMasterRequest.getUbicacionDestiny());
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+
+                response = gson.fromJson(envelope.getResponse().toString(), GenericResponse.class);
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.CreateTraslado: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
+    static public GenericResponse CreateReubicacionArticleACajaMaster(BoxMasterRequest boxMasterRequest) {
+        String message = "";
+        GenericResponse response = new GenericResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "CreateReubicacionArticleACajaMaster";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                request.addProperty("ubicacionOrigen", boxMasterRequest.getUbicacionOrigen());
+                request.addProperty("barCodeArticle", boxMasterRequest.getBarCodeArticle());
+                request.addProperty("quantityArticle", boxMasterRequest.getQuantityArticle());
+                request.addProperty("cajamaster", boxMasterRequest.getBarCodeBoxMasterDestiny());
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+
+                response = gson.fromJson(envelope.getResponse().toString(), GenericResponse.class);
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.CreateTraslado: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
     static public GenericResponse CreateReubicacionBoxMaster(BoxMasterRequest boxMasterRequest) {
         String message = "";
         GenericResponse response = new GenericResponse();
@@ -419,7 +536,6 @@ public class WebServiceControl {
         }
         return response;
     }
-
 
     static public FacturasClientResponse GetClientFacturasPacking(String numberClient) {
         String message = "";
@@ -1376,5 +1492,6 @@ public class WebServiceControl {
         }
         return response;
     }
+
 
 }
