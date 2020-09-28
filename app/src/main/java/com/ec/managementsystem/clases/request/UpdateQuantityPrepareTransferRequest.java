@@ -3,15 +3,20 @@ package com.ec.managementsystem.clases.request;
 public class UpdateQuantityPrepareTransferRequest {
 
     private String seriesNumber, size, color;
-    private int orderNumber, productCode, preparedQuantity;
+    private int orderNumber, productCode, preparedQuantity, vendorCode;
 
-    public UpdateQuantityPrepareTransferRequest(String seriesNumber, String size, String color, int orderNumber, int productCode, int preparedQuantity) {
+    public UpdateQuantityPrepareTransferRequest(String seriesNumber, String size, String color, int orderNumber, int productCode, int preparedQuantity, int vendorCode) {
         this.seriesNumber = seriesNumber;
         this.size = size;
         this.color = color;
         this.orderNumber = orderNumber;
         this.productCode = productCode;
         this.preparedQuantity = preparedQuantity;
+        this.vendorCode = vendorCode;
+    }
+
+    public int getVendorCode() {
+        return vendorCode;
     }
 
     public String getSeriesNumber() {

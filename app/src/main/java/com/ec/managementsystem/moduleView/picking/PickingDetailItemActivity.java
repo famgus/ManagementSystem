@@ -26,26 +26,37 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.request.PickingRequest;
+import com.ec.managementsystem.clases.request.RequestGetProductDetailBySomeParameters;
+import com.ec.managementsystem.clases.request.ReturnProductValidationRequest;
 import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
+import com.ec.managementsystem.clases.responses.GetProductDetailBySomeParameters;
 import com.ec.managementsystem.clases.responses.LocationDetail;
 import com.ec.managementsystem.clases.responses.PickingPedidoDetailResponse;
 import com.ec.managementsystem.clases.responses.PickingPedidoUserResponse;
+import com.ec.managementsystem.clases.responses.ResponseGetProductDetailBySomeParameters;
+import com.ec.managementsystem.clases.responses.ReturnProductValidationResponse;
+import com.ec.managementsystem.interfaces.IDelegateGetProductDetailBySomeParameters;
+import com.ec.managementsystem.interfaces.IDelegateReturnProductValidationControl;
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
 import com.ec.managementsystem.interfaces.IListenerUbicaciones;
 import com.ec.managementsystem.moduleView.BaseActivity;
-import com.ec.managementsystem.moduleView.SensorActivity;
+import com.ec.managementsystem.moduleView.SensorActivityWithCodeBar;
 import com.ec.managementsystem.moduleView.adapters.UbicacionesListAdapter;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
+import com.ec.managementsystem.task.GetProductDetailBySomeParametersTaskController;
 import com.ec.managementsystem.task.PickingUpdateTaskController;
+import com.ec.managementsystem.task.ReturnProductValidationTaskController;
 import com.ec.managementsystem.util.MySingleton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PickingDetailItemActivity extends BaseActivity implements DialogScanner.DialogScanerFinished, IDelegateUpdatePickingControl, IListenerUbicaciones {
+public class PickingDetailItemActivity extends BaseActivity implements DialogScanner.DialogScanerFinished, IDelegateUpdatePickingControl, IListenerUbicaciones
+        , IDelegateGetProductDetailBySomeParameters, IDelegateReturnProductValidationControl {
+    public static final int CODE_FLOW_MASTER_BOX = 99, CODE_FLOW_QUANTITY = 100;
+    public static final int CODE_FLOW_UBICATION = 101;
     private static final int CODIGO_PERMISOS_CAMARA = 1, CODIGO_INTENT = 2, CODIGO_BAR = 3;
-    private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
     Toolbar toolbar;
     PickingPedidoDetailResponse pedidoDetailSelected;
     TextView tvNumberPedido, tvDescription, tvTalla, tvColor, tvQuantity, tvQuantityPicking;
@@ -60,7 +71,10 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     List<LocationDetail> filterList;
     UbicacionesListAdapter locationApdater;
     RadioButton rbBoxmaster, rbUbicacion;
-    EditText etBarCode;
+    TextView etBarCode;
+    private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
+    private GetProductDetailBySomeParameters productOtherDetails;
+    private int lastCode = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +83,13 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
         setupView();
         initCollection();
         initRecyclerView();
+        this.productLoad();
     }
 
     private void setupView() {
         try {
+            productOtherDetails = null;
+
             // Set Toolbar
             toolbar = findViewById(R.id.toolbar);
             tvNumberPedido = findViewById(R.id.tvNumberPedido);
@@ -109,19 +126,23 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                 tvDescription.setText(String.valueOf(pedidoDetailSelected.getDescription()));
                 tvTalla.setText(String.valueOf(pedidoDetailSelected.getTalla()));
                 tvColor.setText(String.valueOf(pedidoDetailSelected.getColor()));
-                tvQuantity.setText(String.valueOf(pedidoDetailSelected.getUnidadesTotales()));
+                tvQuantity.setText(String.valueOf(pedidoDetailSelected.getUnidadesTotales()));//todo: cantidad
                 tvQuantityPicking.setText(String.valueOf(quantityPicking));
             }
 
             ivActionQuantityPicking.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    lastCode = CODE_FLOW_QUANTITY;
+                    Log.i("Click Code", String.valueOf(lastCode));
                     showDialogScanner(true, CODIGO_INTENT);
                 }
             });
             ivActionBarCode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    lastCode = (rbBoxmaster.isChecked()) ? CODE_FLOW_MASTER_BOX : CODE_FLOW_UBICATION;
+                    Log.i("Click Code", String.valueOf(lastCode));
                     showDialogScanner(false, CODIGO_BAR);
                 }
             });
@@ -133,9 +154,9 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                         try {
                             quantity = Integer.parseInt(etQuantityPicking.getText().toString().trim());
                         } catch (Exception e) {
-                            quantity = 0;
+                            quantity = -1;
                         }
-                        if (quantity <= pedidoDetailSelected.getUnidadesTotales() && quantity > 0) {
+                        if (quantity <= pedidoDetailSelected.getUnidadesTotales() && quantity >= 0) {
                             PickingUpdateTaskController task = new PickingUpdateTaskController();
                             task.setListener(PickingDetailItemActivity.this);
                             PickingRequest request = new PickingRequest();
@@ -153,7 +174,10 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                             request.setPath(2);
                             task.execute(request);
                         } else {
-                            Toast.makeText(PickingDetailItemActivity.this, "Cantidad ingresada supera la cantidad del pedido o está en mal formato", Toast.LENGTH_LONG).show();
+                            if (quantity > pedidoDetailSelected.getUnidadesTotales())
+                                Toast.makeText(PickingDetailItemActivity.this, "La cantidad supera al maximo", Toast.LENGTH_LONG).show();
+                            else
+                                Toast.makeText(PickingDetailItemActivity.this, "Si no exite cartel para hacer picking colocar cantidad en 0", Toast.LENGTH_LONG).show();
                         }
 
                     } else {
@@ -208,40 +232,73 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        Intent i = new Intent(this, SensorActivity.class);
+        Intent i = new Intent(this, SensorActivityWithCodeBar.class);
         i.putExtra("scanMultiple", scanMultiple);
         i.putExtra("permisoCamaraConcedido", true);
         i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.putExtra("totalUnit", pedidoDetailSelected.getUnidadesTotales());
+        if (lastCode == CODE_FLOW_QUANTITY) {
+            ArrayList<String> barCodes = new ArrayList<>();
+            if (productOtherDetails.getBarcode1() != null) {
+                barCodes.add(productOtherDetails.getBarcode1());
+            }
+            if (productOtherDetails.getBarcode2() != null) {
+                barCodes.add(productOtherDetails.getBarcode2());
+            }
+            if (productOtherDetails.getBarcode3() != null) {
+                barCodes.add(productOtherDetails.getBarcode3());
+            }
+            i.putStringArrayListExtra("barCodes", barCodes);
+        }
         i.setAction(String.valueOf(codeIntent));
         startActivityForResult(i, codeIntent);
     }
 
+    private void updateQuantity(BundleResponse bundleResponse) {
+        codes = new ArrayList<>();
+        Log.i("bundleResponse", String.valueOf(bundleResponse.getMapCodes().size()));
+        if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+            for (String name : bundleResponse.getMapCodes().keySet()) {
+                Log.i("onScannerBarCode: ", name);
+                codes.add(name);
+            }
+            tvQuantityPicking.setText(String.valueOf(codes.size()));
+            etQuantityPicking.setText(String.valueOf(codes.size()));
+        }
+    }
+
+    private void sendValidation(String data, int typeValidation) {
+        Log.i("Send Validation", String.valueOf(typeValidation));
+        Log.i("Send Validation", String.valueOf(data));
+        ReturnProductValidationRequest request = new ReturnProductValidationRequest(data, typeValidation);
+        ReturnProductValidationTaskController task = new ReturnProductValidationTaskController();
+        task.setListener(PickingDetailItemActivity.this);
+        task.execute(request);
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        Log.i("onActivityResult", "onActivityResult");
+
         if (resultCode == Activity.RESULT_OK) {
-            if (data != null && data.getAction().equals(String.valueOf(CODIGO_INTENT))) {
+            if (data != null && (data.getAction().equals(String.valueOf(CODIGO_INTENT)) ||
+                    lastCode == CODE_FLOW_QUANTITY
+            )
+            ) {
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
-                if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
-
-                    for (String name : bundleResponse.getMapCodes().keySet()){
-                        Log.d("onScannerBarCode: ", name);
-                    }
-
-
-                    String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                    codes.add(codeBar);
-                    tvQuantityPicking.setText(String.valueOf(codes.size()));
-                    etQuantityPicking.setText(String.valueOf(codes.size()));
-                }
+                this.updateQuantity(bundleResponse);
             }
 
-            if (data != null && data.getAction().equals(String.valueOf(CODIGO_BAR))) {
+            if (data != null && (data.getAction().equals(String.valueOf(CODIGO_BAR))
+                    || lastCode == CODE_FLOW_UBICATION || lastCode == CODE_FLOW_MASTER_BOX)
+            ) {
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                     String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                    etBarCode.setText(String.valueOf(codeBar));
-                    //TODO VALIDATE
+                    this.sendValidation(codeBar, lastCode);
                 }
             }
         }
@@ -295,23 +352,17 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
 
     @Override
     public void onScannerBarCode(BundleResponse bundleResponse, int action) {
-        if (action == CODIGO_INTENT) {
-            if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
-                for (String name : bundleResponse.getMapCodes().keySet()){
-                    Log.d("onScannerBarCode: ", name);
-                }
 
-                String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                codes.add(codeBar);
-                tvQuantityPicking.setText(String.valueOf(codes.size()));
-                etQuantityPicking.setText(String.valueOf(codes.size()));
+        Log.i("onScannerBarCode: ", String.valueOf(bundleResponse.getMapCodes().size()));
+        if (action == CODIGO_INTENT || lastCode == CODE_FLOW_QUANTITY) {
+            if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+                this.updateQuantity(bundleResponse);
             }
         }
-        if (action == CODIGO_BAR) {
+        if (action == CODIGO_BAR || lastCode == CODE_FLOW_MASTER_BOX || lastCode == CODE_FLOW_UBICATION) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                etBarCode.setText(codeBar);
-
+                this.sendValidation(codeBar, lastCode);
             }
         }
     }
@@ -320,14 +371,26 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     public void onSuccessUpdate(GenericResponse response) {
         Intent intentResult = new Intent();
         if (response != null && response.getCode() == 200) {
-            intentResult.putExtra("result",1);
+            intentResult.putExtra("result", 1);
             Toast.makeText(PickingDetailItemActivity.this, "Picking registrado correctamente", Toast.LENGTH_LONG).show();
         } else {
-            intentResult.putExtra("result",0);
+            intentResult.putExtra("result", 0);
             Toast.makeText(PickingDetailItemActivity.this, "Error registrando el picking", Toast.LENGTH_LONG).show();
         }
         setResult(Activity.RESULT_OK, intentResult);
         finish();
+    }
+
+    public void productLoad() {
+        Log.i("productLoad", "load");
+        RequestGetProductDetailBySomeParameters request = new RequestGetProductDetailBySomeParameters(
+                pedidoDetailSelected.getCodeArticle(),
+                pedidoDetailSelected.getTalla(),
+                pedidoDetailSelected.getCodcolor()
+        );
+        GetProductDetailBySomeParametersTaskController task = new GetProductDetailBySomeParametersTaskController();
+        task.setListener(PickingDetailItemActivity.this);
+        task.execute(request);
     }
 
     @Override
@@ -343,5 +406,67 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     @Override
     public void onItemRemoveClick(LocationDetail item) {
 
+    }
+
+    @Override
+    public void onGetProduct(ResponseGetProductDetailBySomeParameters response) {
+        if (response.getProductDetail().getBarcode1() != null)
+            Log.i("onGetProduct", response.getProductDetail().getBarcode1());
+        if (response.getProductDetail().getBarcode2() != null)
+            Log.i("onGetProduct", response.getProductDetail().getBarcode2());
+        if (response.getProductDetail().getBarcode3() != null)
+            Log.i("onGetProduct", response.getProductDetail().getBarcode3());
+        Log.i("onGetProduct", String.valueOf(response.getCode()));
+        productOtherDetails = response.getProductDetail();
+        switch (response.getCode()) {
+            case 200:
+                break;
+            default:
+                Toast.makeText(PickingDetailItemActivity.this, "Ocurrio un problema intente nuevamente", Toast.LENGTH_LONG).show();
+                onBackPressed();
+                break;
+        }
+    }
+
+    @Override
+    public void onValidationMasterBoxUbication(ReturnProductValidationResponse returnProductValidationResponse) {
+        Log.i("ReadResponseActivity", returnProductValidationResponse.getMessage());
+        Log.i("ReadResponseActivity", String.valueOf(returnProductValidationResponse.getCode()));
+        this.readValidation(
+                returnProductValidationResponse.getBarCode(),
+                returnProductValidationResponse.getCode(),
+                returnProductValidationResponse.getTypeValidation()
+        );
+    }
+
+    private boolean readValidation(String barCode, int code, int typeValidation) {
+        Log.i("readValidation", barCode + "," + code + "," + typeValidation);
+        codes = new ArrayList<>();
+
+        boolean response = false;
+        if (code == 200) {
+            response = true;
+
+            if (typeValidation == CODE_FLOW_MASTER_BOX) {
+                Log.i("Assign Barcode", barCode);
+                codes.add(barCode);
+                etBarCode.setText(barCode);
+            }
+            if (typeValidation == CODE_FLOW_UBICATION) {
+                Log.i("Assign Barcode", barCode);
+                codes.add(barCode);
+                etBarCode.setText(barCode);
+            }
+
+        } else {
+            Log.i("sendValidation", "Ocurrio un problema");
+            if (typeValidation == CODE_FLOW_MASTER_BOX) {
+                Toast.makeText(PickingDetailItemActivity.this, "Caja maestra inválida", Toast.LENGTH_LONG).show();
+            }
+            if (typeValidation == CODE_FLOW_UBICATION) {
+                Toast.makeText(PickingDetailItemActivity.this, "Ubicación inválida", Toast.LENGTH_LONG).show();
+            }
+        }
+        return response;
     }
 }

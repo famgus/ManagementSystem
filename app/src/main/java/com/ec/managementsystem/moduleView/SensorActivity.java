@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,14 +27,12 @@ import androidx.core.content.ContextCompat;
 
 import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.responses.BundleResponse;
-import com.ec.managementsystem.moduleView.merchandiseReception.PurchaseOrderDetailsActivity;
-import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.util.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SensorActivity extends  BaseActivity {
+public class SensorActivity extends BaseActivity {
 
     private static final int CODIGO_PERMISOS_CAMARA = 1;
     private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
@@ -41,7 +40,7 @@ public class SensorActivity extends  BaseActivity {
     EditText etBarCode;
     TextView tvCounter;
     ImageView ivCamera;
-    ImageView ivFinish;
+    LinearLayout llFinish;
     boolean scanMultiple = false;
     int pathReception = -1;
     int code_intent = -1;
@@ -64,7 +63,7 @@ public class SensorActivity extends  BaseActivity {
         etBarCode = findViewById(R.id.etBarCode);
         tvCounter = findViewById(R.id.tvCounter);
         ivCamera = findViewById(R.id.ivCamera);
-        ivFinish = findViewById(R.id.ivFinish);
+        llFinish = findViewById(R.id.llFinish);
         mapCodes = new HashMap<>();
 
         Bundle bundle = getIntent().getExtras();
@@ -89,21 +88,33 @@ public class SensorActivity extends  BaseActivity {
 
         code_intent = Integer.parseInt(getIntent().getAction());
 
-        ivFinish.setOnClickListener(
+        if (scanMultiple) {
+            count = 0;
+            tvCounter.setText(String.valueOf(0));
+            tvCounter.setVisibility(View.VISIBLE);
+        } else {
+            tvCounter.setVisibility(View.GONE);
+        }
+
+        llFinish.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String code = etBarCode.getText().toString();
-                        if (!code.equals("")) {
-                            Utils.StopSound();
-                            codeReader = code;
-                            if (!scanMultiple) {
-                                updateMap();
-                                Utils.PlaySound(false);
-                            }
-                            FinishActivity();
+                        if (scanMultiple && code.equals("")) {
+                            createDataResponse();
                         } else {
-                            Toast.makeText(SensorActivity.this, "Debe ingresar un código de barras", Toast.LENGTH_LONG).show();
+                            if (!code.equals("")) {
+                                Utils.StopSound();
+                                codeReader = code;
+                                if (!scanMultiple) {
+                                    updateMap();
+                                    Utils.PlaySound(false);
+                                }
+                                FinishActivity();
+                            } else {
+                                Toast.makeText(SensorActivity.this, "Debe ingresar un código de barras", Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
                 }
@@ -113,7 +124,7 @@ public class SensorActivity extends  BaseActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        finish();
                     }
                 }
         );
@@ -136,48 +147,70 @@ public class SensorActivity extends  BaseActivity {
             }
         });
         etBarCode.requestFocus();
-        // etBarCode.setOnKeyListener(this);
-        etBarCode.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // If the event is a key-down event on the "enter" button
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    //etBarCode.setText("637358535603008420JEACD");
-                    Utils.StopSound();
-                    codeReader = etBarCode.getText().toString();
-                    //etBarCode.setText(codeReader);
-                    tvCounter.setText(String.valueOf(++count));
-                    updateMap();
-                    if (!showDialog && totalUnit != -1 && count > totalUnit) {
-                        showDialog = true;
-                        ShowDialog("Alerta", "El total de artículos contados supera el total de unidades de la orden de compra");
-                    }
+        etBarCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                    Utils.PlaySound(false);
-                    if (!scanMultiple && etBarCode.getText().length() > 0) {
-                        FinishActivity();
-                    }else {
-                        if(scanMultiple) {
-                            etBarCode.setText("");
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String code = editable.toString();
+                if(code.length() >= 2){
+                    if(code.substring(code.length() - 1, code.length()).equals("\n")){
+                        {
+                            //etBarCode.setText("637358535603008420JEACD");
+                            Utils.StopSound();
+                            codeReader = etBarCode.getText().toString().replace("\n", "");
+                            //etBarCode.setText(codeReader);
+                            tvCounter.setText(String.valueOf(++count));
+                            if (!showDialog && totalUnit != -1 && count + 1 > totalUnit) {
+                                showDialog = true;
+                                ShowDialog("Alerta", "El total de artículos contados supera el total de unidades de la orden de compra");
+                            }else {
+                                updateMap();
+                            }
+
+                            Utils.PlaySound(false);
+                            if (!showDialog) {
+                                if (!scanMultiple && etBarCode.getText().length() > 0) {
+                                    FinishActivity();
+                                } else {
+                                    if (scanMultiple) {
+                                        etBarCode.setText("");
+                                    }
+                                }
+                            }else {
+                                createDataResponse();
+                            }
                         }
                     }
-                    return true;
                 }
-                return false;
             }
         });
+    }
+
+    public void createDataResponse() {
+        Utils.StopSound();
+        Intent intentRegreso = new Intent();
+        BundleResponse bundleResponse = new BundleResponse();
+        bundleResponse.setMapCodes(mapCodes);
+        intentRegreso.putExtra("codigo", bundleResponse);
+        intentRegreso.setAction(getIntent().getAction());
+        setResult(Activity.RESULT_OK, intentRegreso);
+        finish();
     }
 
     public void FinishActivity() {
         // Search
         String barCodes = etBarCode.getText().toString();
         if (!barCodes.equals("")) {
-            Intent intentRegreso = new Intent();
-            BundleResponse bundleResponse = new BundleResponse();
-            bundleResponse.setMapCodes(mapCodes);
-            intentRegreso.putExtra("codigo", bundleResponse);
-            intentRegreso.setAction(getIntent().getAction());
-            setResult(Activity.RESULT_OK, intentRegreso);
-            finish();
+            createDataResponse();
         } else {
 
             Toast ToastGravity = Toast.makeText(this, "Debe escanear un código de barras", Toast.LENGTH_SHORT);
@@ -215,7 +248,7 @@ public class SensorActivity extends  BaseActivity {
             permisoCamaraConcedido = true;
         } else {
             // Si no, pedimos permisos. Ahora mira onRequestPermissionsResult
-            ActivityCompat.requestPermissions( SensorActivity.this,
+            ActivityCompat.requestPermissions(SensorActivity.this,
                     new String[]{Manifest.permission.CAMERA},
                     CODIGO_PERMISOS_CAMARA);
         }
@@ -281,4 +314,5 @@ public class SensorActivity extends  BaseActivity {
             }
         }
     }
+
 }

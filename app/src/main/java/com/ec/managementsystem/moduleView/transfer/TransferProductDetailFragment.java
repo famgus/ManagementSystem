@@ -35,6 +35,7 @@ import com.ec.managementsystem.task.ValidateBoxMasterCodeBar;
 import com.ec.managementsystem.util.Utils;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TransferProductDetailFragment extends Fragment {
@@ -42,7 +43,7 @@ public class TransferProductDetailFragment extends Fragment {
     public static final String PRODUCT_TO_PREPARE_SELECTED = "TransferSubOrder";
 
     private TransferSubOrder productToPrepare;
-    private int productToPrepareIndex;
+    private int productToPrepareIndex, vendorCode;
     private RadioGroup rgProductOrigin;
     private TextView tvProductCode, tvSize, tvColor, tvRequestedDate, tvPreparationDate, tvRequestedQuantity;
     private ImageView ivBarCode, ivPreparedQuantity;
@@ -64,6 +65,7 @@ public class TransferProductDetailFragment extends Fragment {
         if (getArguments() != null) {
             productToPrepare = (TransferSubOrder) getArguments().getSerializable(PRODUCT_TO_PREPARE_SELECTED);
             productToPrepareIndex = getArguments().getInt("index");
+            vendorCode = getArguments().getInt("vendorCode");
             productPreparationViewModel = new ViewModelProvider(requireActivity()).get(ProductPreparationViewModel.class);
             scannerViewModel = new ViewModelProvider(requireActivity()).get(ScannerViewModel.class);
         }
@@ -101,8 +103,9 @@ public class TransferProductDetailFragment extends Fragment {
                     if (scannerResponse.getIntentCode() == TransferFlowActivity.CODE_INTENT_BAR_CODE_DETAIL) {
                         validateBoxMaster(codeBar);
                     } else if (scannerResponse.getIntentCode() == TransferFlowActivity.CODE_INTENT_PREPARED_QUANTITY) {
-                        etQuantity.setText(codeBar);
+                        etQuantity.setText(String.valueOf(scannerResponse.getResponse().getMapCodes().get(codeBar)));
                     }
+                    scannerViewModel.setScannerResponse(null);
                 }
             }
         });
@@ -112,47 +115,63 @@ public class TransferProductDetailFragment extends Fragment {
     }
 
     private void validateBoxMaster(final String codeBar) {
-        // 637357613432254224JEA45
-        ValidateBoxMasterCodeBar boxMasterCodeBar = new ValidateBoxMasterCodeBar(codeBar, 1, WebServiceControl.VALIDATE_EXIST_BOX_MASTER,
-                new IDelegateResponseGeneric<GenericResponse>() {
-                    @Override
-                    public void onResponse(GenericResponse response) {
-                        if (response != null) {
-                            if (response.getCode() == 200) {
-                                etBarCode.setText(codeBar);
-                            } else if (response.getCode() == 201) {
-                                Toast.makeText(getContext(), "La caja ingresada no existe o ya fue registrada", Toast.LENGTH_SHORT).show();
+        if(rgProductOrigin.getCheckedRadioButtonId() != -1){
+
+            String methodName = "";
+            switch (rgProductOrigin.getCheckedRadioButtonId()) {
+                case R.id.rb_transferproductdetail_boxmaster:
+                    methodName = WebServiceControl.VALIDATE_EXIST_BOX_MASTER;
+                    break;
+                case R.id.rb_transferproductdetail_ubication:
+                    methodName = WebServiceControl.VALIDATE_EXIST_LOCATION;
+                    break;
+            }
+
+            ValidateBoxMasterCodeBar boxMasterCodeBar = new ValidateBoxMasterCodeBar(codeBar, -1, methodName,
+                    new IDelegateResponseGeneric<GenericResponse>() {
+                        @Override
+                        public void onResponse(GenericResponse response) {
+                            if (response != null) {
+                                if (response.getCode() == 200) {
+                                    etBarCode.setText(codeBar);
+                                } else if (response.getCode() == 201) {
+                                    Toast.makeText(getContext(), "El código de barras ingresado no existe", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(getContext(), "Error al validar el código de barras", Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            Toast.makeText(getContext(), "Error al validar la caja", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                });
-        boxMasterCodeBar.execute();
+                    });
+            boxMasterCodeBar.execute();
+        }else{
+            Toast.makeText(getContext(), "Debe seleccionar una opción de traslado para validar el código", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initializeUbicationsRV() {
-        List<ProductUbication> productUbications = productToPrepare.getUbications();
-        productUbications.add(0, new ProductUbication(Utils.HEADER_TYPE));
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        ProductUbicationsAdapter ubicationsAdapter = new ProductUbicationsAdapter(productUbications);
-        rvUbications.setLayoutManager(linearLayoutManager);
-        rvUbications.setAdapter(ubicationsAdapter);
+        if(productToPrepare.getUbications() != null && productToPrepare.getUbications().size()>0){
+            List<ProductUbication> productUbications = new ArrayList<>(productToPrepare.getUbications());
+            productUbications.add(0, new ProductUbication(Utils.HEADER_TYPE));
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+            ProductUbicationsAdapter ubicationsAdapter = new ProductUbicationsAdapter(productUbications);
+            rvUbications.setLayoutManager(linearLayoutManager);
+            rvUbications.setAdapter(ubicationsAdapter);
+        }
     }
 
     private void setListener() {
         rgProductOrigin.setOnCheckedChangeListener(radioGroupListener());
         etQuantity.addTextChangedListener(quantityTextListener());
         btnRegisterPreparedProduct.setOnClickListener(registerButtonListener());
-        ivBarCode.setOnClickListener(iconsListener(false, TransferFlowActivity.CODE_INTENT_BAR_CODE_DETAIL));
-        ivPreparedQuantity.setOnClickListener(iconsListener(true, TransferFlowActivity.CODE_INTENT_PREPARED_QUANTITY));
+        ivBarCode.setOnClickListener(iconsListener(false, TransferFlowActivity.CODE_INTENT_BAR_CODE_DETAIL, -1));
+        ivPreparedQuantity.setOnClickListener(iconsListener(true, TransferFlowActivity.CODE_INTENT_PREPARED_QUANTITY, (productToPrepare.getRequestedUnits())));
     }
 
-    private View.OnClickListener iconsListener(final boolean scanMultiple, final int codeIntent) {
+    private View.OnClickListener iconsListener(final boolean scanMultiple, final int codeIntent, final int totalUnits) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialogScanner(scanMultiple, codeIntent);
+                showDialogScanner(scanMultiple, codeIntent, totalUnits);
             }
         };
     }
@@ -161,17 +180,18 @@ public class TransferProductDetailFragment extends Fragment {
         UpdateQuantityPrepareTransferRequest params = new UpdateQuantityPrepareTransferRequest(
                 productToPrepare.getSeriesNumber(), productToPrepare.getSize(),
                 productToPrepare.getColor(), productToPrepare.getOrderNumber(),
-                productToPrepare.getProductCode(), preparedUnits);
+                productToPrepare.getProductCode(), preparedUnits, vendorCode);
         UpdateQuantityPrepareTransferTaskController prepareTransferTaskController = new UpdateQuantityPrepareTransferTaskController();
         prepareTransferTaskController.setListener(updateQuantityListener());
         prepareTransferTaskController.execute(params);
     }
 
-    private void showDialogScanner(boolean scanMultiple, int codeIntent) {
+    private void showDialogScanner(boolean scanMultiple, int codeIntent, int totalUnits) {
         Intent i = new Intent(getActivity(), SensorActivity.class);
         i.putExtra("scanMultiple", scanMultiple);
         i.putExtra("permisoCamaraConcedido", true);
         i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.putExtra("totalUnit", Double.valueOf(totalUnits));
         i.setAction(String.valueOf(codeIntent));
         startActivityForResult(i, codeIntent);
     }
@@ -191,11 +211,8 @@ public class TransferProductDetailFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rb_transferproductdetail_boxmaster:
-                        etBarCode.setEnabled(false);
-                        break;
                     case R.id.rb_transferproductdetail_ubication:
                         etBarCode.setText("");
-                        etBarCode.setEnabled(true);
                         break;
                 }
             }
@@ -209,6 +226,8 @@ public class TransferProductDetailFragment extends Fragment {
                 if (isValidQuantity && rgProductOrigin.getCheckedRadioButtonId() != -1 && etBarCode.getText().toString().length() > 0) {
                     int preparedUnits = Integer.parseInt(etQuantity.getText().toString());
                     updateQuantity(preparedUnits);
+                }else{
+                    Toast.makeText(getContext(), "Debe llenar los campos de código de barras y los productos", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -238,15 +257,6 @@ public class TransferProductDetailFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-            }
-        };
-    }
-
-    private IDelegateResponseGeneric<GenericResponse> codeBarValidateResponse() {
-        return new IDelegateResponseGeneric<GenericResponse>() {
-            @Override
-            public void onResponse(GenericResponse response) {
-
             }
         };
     }

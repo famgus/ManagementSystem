@@ -30,6 +30,7 @@ import com.ec.managementsystem.interfaces.OnItemClickListener;
 import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.adapters.BoxTransferPendingOrdersAdapter;
 import com.ec.managementsystem.moduleView.adapters.ProductToPrepareAdapter;
+import com.ec.managementsystem.task.CreateBoxForDsispatchTaskController;
 import com.ec.managementsystem.task.TransfersOrderDetailForUserTaskController;
 import com.ec.managementsystem.task.ValidateBoxMasterCodeBar;
 import com.ec.managementsystem.util.Utils;
@@ -41,7 +42,7 @@ import java.util.List;
 public class PendingOrderDetailFragment extends Fragment implements IDelegateResponseGeneric<TransfersOrderDetailForUserResponse>, OnItemClickListener<TransferSubOrder> {
 
     private RecyclerView rvProductToPrepare, rvBoxMaster;
-    private TextView tvRegisteredProductsNumber;
+    private TextView tvRegisteredProductsNumber, tvSeriesNumber, tvOrderNumber, tvVendorCode;
     private List<TransferSubOrder> transferSubOrders = new ArrayList<>();
     private List<BoxTransferPendingOrder> boxTransferPendingOrders = new ArrayList<>();
     private BoxTransferPendingOrdersAdapter boxTransferPendingOrdersAdapter;
@@ -50,6 +51,7 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
     private ProductPreparationViewModel productPreparationViewModel;
     private ScannerViewModel scannerViewModel;
     private int vendorCode;
+    private AssignedTransferOrder assignedTransferOrder;
 
 
     public PendingOrderDetailFragment() {
@@ -60,7 +62,7 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            AssignedTransferOrder assignedTransferOrder = (AssignedTransferOrder) getArguments().getSerializable("item");
+            assignedTransferOrder = (AssignedTransferOrder) getArguments().getSerializable("item");
             vendorCode = getArguments().getInt("vendorCode");
             productPreparationViewModel = new ViewModelProvider(requireActivity()).get(ProductPreparationViewModel.class);
             scannerViewModel = new ViewModelProvider(requireActivity()).get(ScannerViewModel.class);
@@ -92,6 +94,14 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
         View rootView = inflater.inflate(R.layout.fragment_pending_order_detail, container, false);
         rvProductToPrepare = rootView.findViewById(R.id.rv_pendingorderdetail);
         rvBoxMaster = rootView.findViewById(R.id.rv_pendingorderdetail_box);
+        tvSeriesNumber = rootView.findViewById(R.id.tv_pendingorderdetail_series_number);
+        tvSeriesNumber.setText(getString(R.string.all_series_number, assignedTransferOrder.getSeriesNumber()));
+
+        tvOrderNumber = rootView.findViewById(R.id.tv_pendingorderdetail_order_number);
+        tvOrderNumber.setText(getString(R.string.all_order_number, assignedTransferOrder.getOrderNumber()));
+
+        tvVendorCode = rootView.findViewById(R.id.tv_pendingorderdetail_vendor_code);
+        tvVendorCode.setText(getString(R.string.all_vendor_code, assignedTransferOrder.getVendorCode()));
         tvRegisteredProductsNumber = rootView.findViewById(R.id.tv_pendingorderdetail_registered_products_number);
         tvRegisteredProductsNumber.setText(R.string.pendingorderdetail_process_not_initialized);
         scannerViewModel.getScannerResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<ScannerResponse>() {
@@ -100,7 +110,6 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
                 if (scannerResponse != null) {
                     if (scannerResponse.getIntentCode() == TransferFlowActivity.CODE_INTENT_CONTAINER_BOX) {
                         String codeBar = scannerResponse.getResponse().getMapCodes().keySet().iterator().next();
-                        Log.d("barCode: ", codeBar);
                         if (!isBoxMasterRegistered(codeBar)) {
                             validateBoxMaster(codeBar);
                         }
@@ -138,6 +147,20 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
                     RegisterTransferPendingOrderRequest params = new RegisterTransferPendingOrderRequest(vendorCode, boxTransfers);
                     String json = new Gson().toJson(params);
                     // Todo : llamar WS
+                    CreateBoxForDsispatchTaskController createBoxForDsispatchTaskController = new CreateBoxForDsispatchTaskController();
+                    createBoxForDsispatchTaskController.setListener(new IDelegateResponseGeneric<GenericResponse>() {
+                        @Override
+                        public void onResponse(GenericResponse response) {
+                            if(response != null && response.getCode() == 200){
+                                Toast.makeText(getContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
+                                NavHostFragment.findNavController(PendingOrderDetailFragment.this).navigateUp();
+                            }else{
+                                Log.d("onResponse: ", response.getMessage());
+                                Toast.makeText(getContext(), "Ocurrió un error al guardar el registro", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    createBoxForDsispatchTaskController.execute(json);
                     Log.d("FINISH_PROCESS", json);
                 }
             }
@@ -166,6 +189,7 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
                         }
 
                         if (sizeWithoutHeader == registered) {
+                            btnOrderDetailStart.setText(getString(R.string.text_button_register));
                             btnOrderDetailStart.setVisibility(View.VISIBLE);
                         } else {
                             remaining = sizeWithoutHeader - registered;
@@ -179,12 +203,12 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
     }
 
     private void validateBoxMaster(final String codeBar) {
-        // 637357613432254224JEA45
         ValidateBoxMasterCodeBar boxMasterCodeBar = new ValidateBoxMasterCodeBar(codeBar, 1, WebServiceControl.VALIDATE_BOX_MASTER_CODE_BAR,
                 new IDelegateResponseGeneric<GenericResponse>() {
                     @Override
                     public void onResponse(GenericResponse response) {
                         if (response != null) {
+                            // TODO: descomentar
                             if (response.getCode() == 200) {
 
                                 if (productPreparationViewModel.getRegisteredProducts() == null) {
@@ -199,6 +223,7 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
                             } else if (response.getCode() == 201) {
                                 Toast.makeText(getContext(), "La caja ingresada no existe o ya fue registrada", Toast.LENGTH_SHORT).show();
                             }
+                            scannerViewModel.setScannerResponse(null);
                         } else {
                             Toast.makeText(getContext(), "Error validando la caja", Toast.LENGTH_SHORT).show();
                         }
@@ -246,6 +271,20 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
         startActivityForResult(i, TransferFlowActivity.CODE_INTENT_CONTAINER_BOX);
     }
 
+    private IDelegateResponseGeneric<GenericResponse> registerResponse(){
+        return new IDelegateResponseGeneric<GenericResponse>() {
+            @Override
+            public void onResponse(GenericResponse response) {
+                if(response != null && response.getCode() == 200){
+                    Toast.makeText(getContext(), "Se registró exitosamente", Toast.LENGTH_SHORT).show();
+                    NavHostFragment.findNavController(PendingOrderDetailFragment.this).navigateUp();
+                }else{
+                    Toast.makeText(getContext(), "Error al realizar el registro", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
+
     @Override
     public void onResponse(TransfersOrderDetailForUserResponse response) {
         if (response != null && response.getCode() == 200) {
@@ -264,6 +303,7 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
         int index = transferSubOrders.indexOf(item);
         args.putSerializable(TransferProductDetailFragment.PRODUCT_TO_PREPARE_SELECTED, item);
         args.putInt("index", index);
+        args.putInt("vendorCode", vendorCode);
         NavHostFragment.findNavController(this).navigate(R.id.action_pendingOrderDetailFragment_to_transferProductDetailFragment, args);
     }
 

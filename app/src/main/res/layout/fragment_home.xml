@@ -217,7 +217,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/icon_return_product"></RelativeLayout>
+                        android:background="@drawable/mnp_devoluciones"></RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- borrar -->

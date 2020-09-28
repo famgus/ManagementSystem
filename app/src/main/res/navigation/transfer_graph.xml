@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_transferTypeFragment_to_searchTransferOrderFragment"
             app:destination="@id/searchTransferOrderFragment" />
+        <action
+            android:id="@+id/action_transferTypeFragment_to_packOffTransferFragment"
+            app:destination="@id/packOffTransferFragment" />
     </fragment>
     <fragment
         android:id="@+id/preparePendingOrderFragment"
@@ -38,11 +41,16 @@
     <fragment
         android:id="@+id/transferProductDetailFragment"
         android:name="com.ec.managementsystem.moduleView.transfer.TransferProductDetailFragment"
-        android:label="fragment_transfer_product_detail"
+        android:label="Detalle de producto de traslado"
         tools:layout="@layout/fragment_transfer_product_detail" />
     <fragment
         android:id="@+id/searchTransferOrderFragment"
         android:name="com.ec.managementsystem.SearchTransferOrderFragment"
         android:label="fragment_search_transfer_order"
         tools:layout="@layout/fragment_search_transfer_order" />
+    <fragment
+        android:id="@+id/packOffTransferFragment"
+        android:name="com.ec.managementsystem.moduleView.transfer.PackOffTransferFragment"
+        android:label="Despachar Traslados"
+        tools:layout="@layout/fragment_pack_off_transfer" />
 </navigation>

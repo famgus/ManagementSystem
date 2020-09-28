@@ -18,17 +18,17 @@ import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.interfaces.IDelegateBoxMasterTaskControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
-import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.BoxMasterTaskController;
 
 public class DespachoActivity extends BaseActivity implements IDelegateBoxMasterTaskControl, DialogScanner.DialogScanerFinished {
     private static final int CODE_INTENT_ARTICLE = 1, CODE_INTENT_LOCATION = 2;
+    private static final int CODE_INTENT_BOX_MASTER = 1;
     Toolbar toolbar;
     String barCodeBoxMaster = "";
     LinearLayout llRegister;
-    EditText etBarCodeArticle, etQuantity, etBarCodeLocation;
-    ImageView ivScanBarCodeArticle, ivScanBarCodeLocation;
+    EditText etBarCodeArticle, etQuantity, etBarCodeLocation,etBarCode;
+    ImageView ivScanBarCodeArticle, ivScanBarCodeLocation,ivScanBarCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,8 @@ public class DespachoActivity extends BaseActivity implements IDelegateBoxMaster
             etQuantity = findViewById(R.id.etQuantity);
             etBarCodeLocation = findViewById(R.id.etBarCodeLocation);
             ivScanBarCodeLocation = findViewById(R.id.ivScanBarCodeLocation);
+            etBarCode = findViewById(R.id.etBarCode);
+            ivScanBarCode = findViewById(R.id.ivScanBarCode);
             // Set Toolbar
             toolbar = findViewById(R.id.toolbarBar);
             this.toolbar.setTitle("Despacho de artículos");
@@ -55,10 +57,10 @@ public class DespachoActivity extends BaseActivity implements IDelegateBoxMaster
                     onBackPressed();
                 }
             });
-            Bundle bundle = getIntent().getExtras();
-            if (bundle != null && bundle.containsKey("codeBarBoxMaster")) {
-                barCodeBoxMaster = bundle.getString("codeBarBoxMaster");
-            }
+//            Bundle bundle = getIntent().getExtras();
+//            if (bundle != null && bundle.containsKey("codeBarBoxMaster")) {
+//                barCodeBoxMaster = bundle.getString("codeBarBoxMaster");
+//            }
             //Set Listener
             llRegister.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -66,14 +68,16 @@ public class DespachoActivity extends BaseActivity implements IDelegateBoxMaster
                     String codeBarArticle = etBarCodeArticle.getText().toString();
                     String codeLocation = etBarCodeLocation.getText().toString();
                     Integer quantity = Integer.parseInt(etQuantity.getText().toString());
-                    if (codeBarArticle.isEmpty() || quantity == 0 || barCodeBoxMaster.isEmpty() || codeLocation.isEmpty()) {
+                    String etBarCodeMasterBox = etBarCode.getText().toString();
+                    ValidaBarCode(etBarCodeMasterBox);
+                    if (codeBarArticle.isEmpty() || quantity == 0 || barCodeBoxMaster.isEmpty() || codeLocation.isEmpty() || etBarCodeMasterBox.isEmpty()) {
                         Toast.makeText(DespachoActivity.this, "Debe llenar todos los campos", Toast.LENGTH_LONG).show();
                     } else {
                         //Call Service
                         BoxMasterRequest request = new BoxMasterRequest();
                         request.setActionPath(3);
                         request.setBarCodeArticle(codeBarArticle);
-                        request.setBarCodeBoxMasterOrigin(barCodeBoxMaster);
+                        request.setBarCodeBoxMasterOrigin(etBarCodeMasterBox);
                         request.setQuantityArticle(quantity);
                         request.setCodeStorage(codeLocation);
                         BoxMasterTaskController task = new BoxMasterTaskController();
@@ -92,6 +96,12 @@ public class DespachoActivity extends BaseActivity implements IDelegateBoxMaster
                 @Override
                 public void onClick(View view) {
                     scanBarCode(CODE_INTENT_LOCATION);
+                }
+            });
+            ivScanBarCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scanBarCode(CODE_INTENT_BOX_MASTER);
                 }
             });
         } catch (Exception e) {
@@ -118,6 +128,13 @@ public class DespachoActivity extends BaseActivity implements IDelegateBoxMaster
                     etBarCodeLocation.setText(codeBar);
                 }
             }
+            if (data != null && data.getAction().equals(String.valueOf(CODE_INTENT_BOX_MASTER))) {
+                BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
+                if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+                    String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
+                    etBarCode.setText(codeBar);
+                }
+            }
         }
     }
 
@@ -129,12 +146,20 @@ public class DespachoActivity extends BaseActivity implements IDelegateBoxMaster
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        Intent i = new Intent(this, SensorActivity.class);
-        i.putExtra("scanMultiple", scanMultiple);
-        i.putExtra("permisoCamaraConcedido", true);
-        i.putExtra("permisoSolicitadoDesdeBoton", true);
-        i.setAction(String.valueOf(codeIntent));
-        startActivityForResult(i, codeIntent);
+        DialogScanner dialogScanner = new DialogScanner();
+        dialogScanner.setScanMultiple(scanMultiple);
+        dialogScanner.setCode_intent(codeIntent);
+        dialogScanner.setPermisoCamaraConcedido(true);
+        dialogScanner.setPermisoSolicitadoDesdeBoton(true);
+        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+    }
+    public void ValidaBarCode( String barCodeMasterBox) {
+        BoxMasterRequest request = new BoxMasterRequest();
+        request.setActionPath(8);
+        request.setBarCodeBoxMasterOrigin(barCodeMasterBox);
+        BoxMasterTaskController task = new BoxMasterTaskController();
+        task.setListener(DespachoActivity.this);
+        task.execute(request);
     }
 
     @Override
@@ -158,6 +183,12 @@ public class DespachoActivity extends BaseActivity implements IDelegateBoxMaster
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
                 etBarCodeLocation.setText(codeBar);
+            }
+        }
+        if (action == CODE_INTENT_BOX_MASTER) {
+            if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+                String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
+                etBarCode.setText(codeBar);
             }
         }
     }

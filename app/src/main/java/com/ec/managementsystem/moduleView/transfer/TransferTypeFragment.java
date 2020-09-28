@@ -18,7 +18,7 @@ import com.ec.managementsystem.R;
  */
 public class TransferTypeFragment extends Fragment implements View.OnClickListener {
 
-    ImageView ivPrepareOrder, ivReceiveOrder;
+    ImageView ivPrepareOrder, ivReceiveOrder, ivPackOff;
 
     public TransferTypeFragment() {
         // Required empty public constructor
@@ -30,6 +30,8 @@ public class TransferTypeFragment extends Fragment implements View.OnClickListen
         View view = inflater.inflate(R.layout.fragment_transfer_type, container, false);
         ivPrepareOrder = view.findViewById(R.id.iv_transfer_type_prepare);
         ivReceiveOrder = view.findViewById(R.id.iv_transfer_type_receive);
+        ivPackOff = view.findViewById(R.id.iv_transfer_type_deliver);
+        ivPackOff.setOnClickListener(this);
         ivPrepareOrder.setOnClickListener(this);
         ivReceiveOrder.setOnClickListener(this);
         return view;
@@ -43,6 +45,9 @@ public class TransferTypeFragment extends Fragment implements View.OnClickListen
                 break;
             case R.id.iv_transfer_type_receive:
                 // Todo : go to receive orders activity
+                break;
+            case R.id.iv_transfer_type_deliver:
+                NavHostFragment.findNavController(this).navigate(R.id.action_transferTypeFragment_to_packOffTransferFragment);
                 break;
         }
     }

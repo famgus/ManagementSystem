@@ -6,11 +6,6 @@ import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.dataAccess.WebServiceControl;
 import com.ec.managementsystem.interfaces.IDelegateResponseGeneric;
 
-/**
- * Created by Gorky Muñoz on 21/9/2020.
- * Indra
- * gamunozg@indracompany.com
- */
 public class ValidateBoxMasterCodeBar extends AsyncTask<Void, Void, GenericResponse> {
 
     private String barCode;

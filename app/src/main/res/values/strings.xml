@@ -98,6 +98,9 @@
     <string name="pendingorderdetail_remaining_products">Te quedan %d productos por registrar</string>
     <string name="pendingorderdetail_process_not_initialized">Aún no has iniciado el proceso de registro de productos</string>
     <string name="text_hint_quantity">Cantidad</string>
+    <string name="all_series_number">Número Serie: %s</string>
+    <string name="all_order_number">Número Pedido: %d</string>
+    <string name="all_vendor_code">Vendedor: %d</string>
 
 </resources>
 
