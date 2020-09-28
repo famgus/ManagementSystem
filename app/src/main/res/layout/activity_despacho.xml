@@ -54,7 +54,7 @@
                 android:paddingLeft="20dp"
                 android:text="Código de almacen:"
                 android:gravity="center_horizontal"
-                android:layout_marginTop="30dp"/>
+                android:layout_marginTop="20dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -97,6 +97,58 @@
 
                     <ImageView
                         android:id="@+id/ivScanBarCodeLocation"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/scannerbarcode"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="6dp"/>
+                </LinearLayout>
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="Codigo Caja Master Origen"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="10dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_below="@+id/rlLocation"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/bar_code"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="6dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/etBarCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/text_hint_bar_code"
+                            android:hint="@string/text_hint_bar_code"
+                            android:inputType="text"
+                            android:singleLine="true"
+                            android:drawableTintMode="src_in"
+                            android:drawableTint="@color/darkest_gray"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/ivScanBarCode"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         app:srcCompat="@drawable/scannerbarcode"
@@ -216,7 +268,7 @@
                 android:layout_height="45dp"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/btnripple"
                 android:visibility="visible">
