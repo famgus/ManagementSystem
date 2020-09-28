@@ -131,7 +131,7 @@ public class DialogAssignPendingTransferOrder extends AppCompatDialogFragment im
                 btnAssignPendingOrder.setEnabled(false);
             }
         } else {
-            // Todo: mostrar caso de error
+            Toast.makeText(getContext(), "No se pudo obtener los vendedores", Toast.LENGTH_SHORT).show();
         }
     }
 }

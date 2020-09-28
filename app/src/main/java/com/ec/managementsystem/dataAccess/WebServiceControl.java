@@ -50,12 +50,13 @@ public class WebServiceControl {
 
     public static final String VALIDATE_BOX_MASTER_CODE_BAR = "ValidateBoxMasterCodeBar";
     public static final String VALIDATE_EXIST_BOX_MASTER = "ValidateExistBoxMaster";
+    public static final String VALIDATE_EXIST_LOCATION = "ValidateLocationCodeBar";
 
     public static String GetURL() {
         int port = 9298;
         if (BuildConfig.DEBUG) {
             String IP_DEBUG = "3.21.12.158";
-            IP_DEBUG = "10.238.26.69";
+            //IP_DEBUG = "10.238.26.69";
             port = 9298;
             return "http://" + IP_DEBUG + ":" + port + "/Service1.asmx";
         } else {
@@ -1263,6 +1264,7 @@ public class WebServiceControl {
                 request.addProperty("talla", params.getSize());
                 request.addProperty("color", params.getColor());
                 request.addProperty("canpreparada", params.getPreparedQuantity());
+                request.addProperty("codvendedor", params.getVendorCode());
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                 envelope.dotNet = true;
                 envelope.implicitTypes = true;
@@ -1294,14 +1296,19 @@ public class WebServiceControl {
             if (Utils.IsOnline()) {
                 Gson gson = new Gson();
                 final String NAMESPACE = "http://tempuri.org/";
-                final String METHOD_NAME = methodName;
-                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
-                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-                if(methodName.equals(VALIDATE_BOX_MASTER_CODE_BAR)){
-                    request.addProperty("barCode", barcode);
-                    request.addProperty("state", state);
-                }else if(methodName.equals(VALIDATE_EXIST_BOX_MASTER)){
-                    request.addProperty("codigoBrras", barcode);
+                final String SOAP_ACTION = NAMESPACE + methodName;
+                SoapObject request = new SoapObject(NAMESPACE, methodName);
+                switch (methodName) {
+                    case VALIDATE_BOX_MASTER_CODE_BAR:
+                        request.addProperty("barCode", barcode);
+                        request.addProperty("state", state);
+                        break;
+                    case VALIDATE_EXIST_BOX_MASTER:
+                        request.addProperty("codigoBrras", barcode);
+                        break;
+                    case VALIDATE_EXIST_LOCATION:
+                        request.addProperty("barCode", barcode);
+                        break;
                 }
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                 envelope.dotNet = true;
