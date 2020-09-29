@@ -198,8 +198,8 @@ public class TransferProductDetailFragment extends Fragment {
 
     private void setInformativeTexts() {
         tvProductCode.setText(getString(R.string.productdetail_product_code, productToPrepare.getProductCode()));
-        tvSize.setText(getString(R.string.productdetail_size, productToPrepare.getSize()));
-        tvColor.setText(getString(R.string.productdetail_color, productToPrepare.getColor()));
+        tvSize.setText(getString(R.string.all_size, productToPrepare.getSize()));
+        tvColor.setText(getString(R.string.all_color, productToPrepare.getColor()));
         tvRequestedDate.setText(getString(R.string.productdetail_requested_date, productToPrepare.getAssignedDate()));
         tvPreparationDate.setText(getString(R.string.productdetail_preparation_date, productToPrepare.getPreparedDate()));
         tvRequestedQuantity.setText(getString(R.string.productdetail_requested_quantity, productToPrepare.getRequestedUnits()));

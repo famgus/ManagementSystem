@@ -6,11 +6,11 @@
 
     <TextView
         android:id="@+id/tv_producttoprepare_position"
-        android:layout_width="56dp"
+        android:layout_width="48dp"
         android:layout_height="0dp"
         android:background="@drawable/bg_cell_item"
         android:text="No."
-        app:layout_constraintBottom_toBottomOf="@id/tv_producttoprepare_reference"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tv_producttoprepare_reference"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,9 +32,45 @@
         android:layout_height="0dp"
         android:background="@drawable/bg_cell_item"
         android:text="Unidades"
-        app:layout_constraintBottom_toBottomOf="@id/tv_producttoprepare_reference"
-        app:layout_constraintEnd_toStartOf="@id/cl_producttoprepare"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_producttoprepare_fourth"
         app:layout_constraintStart_toEndOf="@id/tv_producttoprepare_reference"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_producttoprepare_fourth"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_cell_item"
+        android:text="Unidades"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_producttoprepare_fifth"
+        app:layout_constraintStart_toEndOf="@id/tv_producttoprepare_units"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_producttoprepare_fifth"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_cell_item"
+        android:text="Unidades"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_producttoprepare_sixth"
+        app:layout_constraintStart_toEndOf="@id/tv_producttoprepare_fourth"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_producttoprepare_sixth"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_cell_item"
+        android:text="Unidades"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/cl_producttoprepare"
+        app:layout_constraintStart_toEndOf="@id/tv_producttoprepare_fifth"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -50,8 +86,8 @@
             android:id="@+id/iv_producttoprepare"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/recibir_mercaderia"
             android:background="@drawable/bg_cell_item"
+            android:src="@drawable/recibir_mercaderia"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

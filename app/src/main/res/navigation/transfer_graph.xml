@@ -45,12 +45,21 @@
         tools:layout="@layout/fragment_transfer_product_detail" />
     <fragment
         android:id="@+id/searchTransferOrderFragment"
-        android:name="com.ec.managementsystem.SearchTransferOrderFragment"
-        android:label="fragment_search_transfer_order"
-        tools:layout="@layout/fragment_search_transfer_order" />
+        android:name="com.ec.managementsystem.moduleView.transfer.ReceiveTransferOrderFragment"
+        android:label="Pedidos por recibir"
+        tools:layout="@layout/fragment_search_transfer_order" >
+        <action
+            android:id="@+id/action_searchTransferOrderFragment_to_receiveTransferOrderDetailFragment"
+            app:destination="@id/receiveTransferOrderDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/packOffTransferFragment"
         android:name="com.ec.managementsystem.moduleView.transfer.PackOffTransferFragment"
         android:label="Despachar Traslados"
         tools:layout="@layout/fragment_pack_off_transfer" />
+    <fragment
+        android:id="@+id/receiveTransferOrderDetailFragment"
+        android:name="com.ec.managementsystem.moduleView.transfer.ReceiveTransferOrderDetailFragment"
+        android:label="Descripción de artículo por recibir"
+        tools:layout="@layout/fragment_receive_transfer_order_detail" />
 </navigation>

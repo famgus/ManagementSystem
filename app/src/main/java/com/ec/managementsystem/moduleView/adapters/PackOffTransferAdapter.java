@@ -18,6 +18,8 @@ import com.ec.managementsystem.util.Utils;
 
 import java.util.List;
 
+import static com.ec.managementsystem.util.Utils.changeHeaderColor;
+
 public class PackOffTransferAdapter extends RecyclerView.Adapter<PackOffTransferAdapter.PackOffTransferVH> {
 
     private List<TransferPackOff> transferPackOffList;
@@ -66,12 +68,6 @@ public class PackOffTransferAdapter extends RecyclerView.Adapter<PackOffTransfer
             tvPackOff = itemView.findViewById(R.id.tv_itempackofftransfer_quantity_to_packoff);
             chPackOffTransfer = itemView.findViewById(R.id.cb_itempackoff);
             clWrapperQuantity = itemView.findViewById(R.id.cl_itempackoff_wrapper_quantity);
-        }
-
-        private void changeHeaderColor(View... views) {
-            for (View view : views) {
-                view.setBackgroundResource(R.drawable.bg_header_table);
-            }
         }
 
         private void bindHeader(){

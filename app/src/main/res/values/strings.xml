@@ -90,8 +90,8 @@
     <string name="pendingorderdetail_add_box">Añadir caja</string>
 
     <string name="productdetail_product_code">Código artículo: %d</string>
-    <string name="productdetail_size">Talla: %s</string>
-    <string name="productdetail_color">Color: %s</string>
+    <string name="all_size">Talla: %s</string>
+    <string name="all_color">Color: %s</string>
     <string name="productdetail_requested_date">Fecha de solicitud: %s</string>
     <string name="productdetail_preparation_date">Fecha de preparación: %s</string>
     <string name="productdetail_requested_quantity">Cantidad solicitada: %d</string>
@@ -101,6 +101,17 @@
     <string name="all_series_number">Número Serie: %s</string>
     <string name="all_order_number">Número Pedido: %d</string>
     <string name="all_vendor_code">Vendedor: %d</string>
+    <string name="all_product_code">Código articulo: %d</string>
+    <string name="all_received_quantity">Cantidad a recibir: %d</string>
+    <string name="all_dispatched_quantity">Cantidad despachada: %d</string>
+
+    <!--Header traspasos recibidos-->
+    <string name="header_product_code">Cod. Artículo</string>
+    <string name="header_size">Talla</string>
+    <string name="header_color">Color</string>
+    <string name="header_total_dispatched">Cant. Despachada</string>
+    <string name="header_total_received">Cant. Recibida</string>
+
 
 </resources>
 

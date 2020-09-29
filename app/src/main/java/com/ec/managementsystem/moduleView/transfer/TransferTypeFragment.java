@@ -44,7 +44,7 @@ public class TransferTypeFragment extends Fragment implements View.OnClickListen
                 NavHostFragment.findNavController(this).navigate(R.id.action_transferTypeFragment_to_preparePendingOrderFragment);
                 break;
             case R.id.iv_transfer_type_receive:
-                // Todo : go to receive orders activity
+                NavHostFragment.findNavController(this).navigate(R.id.action_transferTypeFragment_to_searchTransferOrderFragment);
                 break;
             case R.id.iv_transfer_type_deliver:
                 NavHostFragment.findNavController(this).navigate(R.id.action_transferTypeFragment_to_packOffTransferFragment);

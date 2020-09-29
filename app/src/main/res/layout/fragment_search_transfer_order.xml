@@ -1,60 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".moduleView.transfer.ReceiveTransferOrderFragment">
 
-    <TextView
-        android:id="@+id/tv_searchtransferorder_title"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:gravity="center_horizontal"
-        android:text="Ingrese el número de orden de compra"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="8dp">
 
+        <ImageView
+            android:id="@+id/iv_searchtransferorder"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_receive"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_serachtransferorder"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="@id/tv_searchtransferorder_title"
-        app:layout_constraintStart_toStartOf="@id/tv_searchtransferorder_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_searchtransferorder_title">
-
-
-        <EditText
-            android:id="@+id/etNumberPedido"
-            android:layout_width="match_parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_searchtransferorder_series_number"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Número de orden"
-            android:inputType="number"
-            android:singleLine="true" />
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_searchtransferorder">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/tv_searchtransferoder_series_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Número de serie"
+                app:layout_constraintBottom_toBottomOf="@id/et_searchtransferorder_series"
+                app:layout_constraintEnd_toStartOf="@id/et_searchtransferorder_series"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/et_searchtransferorder_series" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/btnripple"
-        android:drawableStart="@drawable/baseline_search_white_36"
-        android:drawablePadding="8dp"
-        android:paddingVertical="8dp"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:text="@string/buscarnumero"
-        android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/tv_searchtransferorder_title"
-        app:layout_constraintStart_toStartOf="@id/tv_searchtransferorder_title"
-        app:layout_constraintTop_toBottomOf="@id/til_serachtransferorder"
-        app:layout_constraintVertical_bias="0.0" />
+            <EditText
+                android:id="@+id/et_searchtransferorder_series"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:hint="Serie"
+                android:inputType="textCapCharacters"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_searchtransferoder_series_number"
+                app:layout_constraintTop_toTopOf="parent"
+                android:autofillHints="XXXXXX" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_searchtransferorder_order_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@id/cl_searchtransferorder_series_number"
+            app:layout_constraintStart_toStartOf="@id/cl_searchtransferorder_series_number"
+            app:layout_constraintTop_toBottomOf="@id/cl_searchtransferorder_series_number">
+
+            <TextView
+                android:id="@+id/tv_searctransferorder_order_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Número de pedido"
+                app:layout_constraintBottom_toBottomOf="@id/et_searchtransferorder_order_number"
+                app:layout_constraintEnd_toStartOf="@id/et_searchtransferorder_order_number"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/et_searchtransferorder_order_number" />
+
+            <EditText
+                android:id="@+id/et_searchtransferorder_order_number"
+                android:layout_width="0dp"
+                android:inputType="number"
+                android:hint="Pedido"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_searctransferorder_order_number"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/btn_searchtransferorder_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/buscarnumero"
+            android:background="@drawable/btn_generic"
+            app:layout_constraintEnd_toEndOf="@id/cl_searchtransferorder_series_number"
+            app:layout_constraintStart_toStartOf="@id/cl_searchtransferorder_series_number"
+            app:layout_constraintTop_toBottomOf="@id/cl_searchtransferorder_order_number" />
+
+        <TextView
+            android:id="@+id/tv_searchtransferorder_title_table"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Detalle para recepción"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_searchtransferorder_search" />
+
+        <RelativeLayout
+            android:id="@+id/rl_sto_rvwrapper"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/btn_searchtransferorder_register"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="200dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_searchtransferorder_title_table"
+            app:layout_constraintVertical_bias="0.0">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_searchtransferorder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                tools:listitem="@layout/item_transfer_order" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_searchtransferorder_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="8dp"
+            android:text="@string/text_button_register"
+            android:background="@drawable/btn_generic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/cl_searchtransferorder_series_number"
+            app:layout_constraintStart_toStartOf="@id/cl_searchtransferorder_series_number"
+            app:layout_constraintTop_toBottomOf="@id/rl_sto_rvwrapper" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>
 
