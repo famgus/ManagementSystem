@@ -232,11 +232,22 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
+        int quantity = 0;
+        if (etQuantityPicking.getText().length() > 0) {
+            try {
+                quantity = Integer.parseInt(etQuantityPicking.getText().toString().trim());
+            } catch (Exception e) {
+                quantity = 0;
+            }
+        }
+        Log.i("showDialogScanner", String.valueOf(quantity));
+
         Intent i = new Intent(this, SensorActivityWithCodeBar.class);
         i.putExtra("scanMultiple", scanMultiple);
         i.putExtra("permisoCamaraConcedido", true);
         i.putExtra("permisoSolicitadoDesdeBoton", true);
         i.putExtra("totalUnit", pedidoDetailSelected.getUnidadesTotales());
+
         if (lastCode == CODE_FLOW_QUANTITY) {
             ArrayList<String> barCodes = new ArrayList<>();
             if (productOtherDetails.getBarcode1() != null) {
@@ -249,6 +260,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                 barCodes.add(productOtherDetails.getBarcode3());
             }
             i.putStringArrayListExtra("barCodes", barCodes);
+            i.putExtra("quantity", quantity);
         }
         i.setAction(String.valueOf(codeIntent));
         startActivityForResult(i, codeIntent);
