@@ -183,7 +183,7 @@ public class TransferProductDetailFragment extends Fragment {
             params = new SaveTransferPrepareRequest(
                     productToPrepare.getSeriesNumber(), productToPrepare.getSize(), productToPrepare.getColor(), cart,
                     barcode, "C", "0", "0",
-                    productToPrepare.getOrderNumber(), productToPrepare.getProductCode(), preparedUnits);
+                    productToPrepare.getOrderNumber(), productToPrepare.getProductCode(), 1);
         } else if (type == 1) { // Caja master
             params = new SaveTransferPrepareRequest(
                     productToPrepare.getSeriesNumber(), productToPrepare.getSize(), productToPrepare.getColor(), cart,

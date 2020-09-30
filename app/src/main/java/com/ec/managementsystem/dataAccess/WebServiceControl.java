@@ -1371,7 +1371,7 @@ public class WebServiceControl {
             if (Utils.IsOnline()) {
                 Gson gson = new Gson();
                 final String NAMESPACE = "http://tempuri.org/";
-                final String METHOD_NAME = "UpdateQuantityPrepareTransfer";
+                final String METHOD_NAME = "SaveTransferPrepare";
                 final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
                 SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
                 request.addProperty("numserie", params.getSeriesNumber());
@@ -1402,7 +1402,7 @@ public class WebServiceControl {
                 response.setMessage(message);
             }
         } catch (Exception e) {
-            Utils.CreateLogFile("WebServiceControl.UpdateQuantityPrepareTransfer: " + e.getMessage());
+            Utils.CreateLogFile("WebServiceControl.SaveTransferPrepare: " + e.getMessage());
             message = e.getMessage();
             response.setCode(401);
             response.setMessage(message);

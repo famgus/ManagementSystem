@@ -24,14 +24,14 @@ public class TransferWebServiceControl {
 
     private static final String TAG = TransferWebServiceControl.class.getSimpleName();
 
-    public static GetDispatchResponse getDispatch(String seriesNumber, int orderNumber){
+    public static GetDispatchResponse getArticlesAndBoxMasterToDispatch(String seriesNumber, int orderNumber){
         String message;
         GetDispatchResponse response = new GetDispatchResponse();
         try {
             if (Utils.IsOnline()) {
                 Gson gson = new Gson();
                 final String NAMESPACE = "http://tempuri.org/";
-                final String METHOD_NAME = "GetDispatch";
+                final String METHOD_NAME = "GetArticlesAndBoxMasterToDispatch";
                 final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
                 SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
                 request.addProperty("numeroSerie", seriesNumber);
@@ -52,7 +52,7 @@ public class TransferWebServiceControl {
                 response.setMessage(message);
             }
         } catch (Exception e) {
-            Utils.CreateLogFile("WebServiceControl.GetDispatch: " + e.getMessage());
+            Utils.CreateLogFile("WebServiceControl.GetArticlesAndBoxMasterToDispatch: " + e.getMessage());
             message = e.getMessage();
             response.setCode(401);
             response.setMessage(message);
