@@ -159,7 +159,7 @@ public class ScannerActivityWithCodeBar extends BaseActivity implements ZXingSca
         codeReader = resultado.getText();
         etBarCode.setText(codeReader);
 
-        if (!showDialog && totalUnit != -1 && count + 1 > totalUnit) {
+        if (totalUnit != -1 && count + 1 > totalUnit) {
             showDialog = true;
             ShowDialog(ScannerActivityWithCodeBar.this, "Alerta", "El total de artículos contados supera el total de unidades de la orden de compra");
             isValid=false;
