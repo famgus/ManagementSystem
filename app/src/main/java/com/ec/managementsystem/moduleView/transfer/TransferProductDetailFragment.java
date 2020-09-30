@@ -108,7 +108,7 @@ public class TransferProductDetailFragment extends Fragment {
                 if (scannerResponse != null) {
                     String codeBar = scannerResponse.getResponse().getMapCodes().keySet().iterator().next();
                     if (scannerResponse.getIntentCode() == TransferFlowActivity.CODE_INTENT_BAR_CODE_DETAIL) {
-                        validateBoxMaster(codeBar);
+                        validateBoxMaster(codeBar.trim());
                     } else if (scannerResponse.getIntentCode() == TransferFlowActivity.CODE_INTENT_PREPARED_QUANTITY) {
                         etQuantity.setText(String.valueOf(scannerResponse.getResponse().getMapCodes().get(codeBar)));
                     }
@@ -225,7 +225,7 @@ public class TransferProductDetailFragment extends Fragment {
                     etBarCode.setText(codeBar);
                     etQuantity.setText(String.valueOf(response.getQuantity()));
                     if (isValidQuantity) {
-                        updateQuantity(response.getQuantity(), etBarCode.getText().toString(), 0);
+                        updateQuantity(response.getQuantity(), etBarCode.getText().toString().trim(), 0);
                         Log.d("onResponse: ", "La cantidad es valida || " + response.getQuantity());
                     } else {
                         Log.d("onResponse: ", "ERROR La cantidad no es valida || " + response.getQuantity());
@@ -288,7 +288,7 @@ public class TransferProductDetailFragment extends Fragment {
                             type = 2;
                             break;
                     }
-                    updateQuantity(preparedUnits, etBarCode.getText().toString(), type);
+                    updateQuantity(preparedUnits, etBarCode.getText().toString().trim(), type);
                 } else {
                     Toast.makeText(getContext(), "Debe llenar los campos de código de barras y los productos", Toast.LENGTH_SHORT).show();
                 }

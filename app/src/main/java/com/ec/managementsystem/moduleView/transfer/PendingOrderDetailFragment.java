@@ -110,8 +110,8 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
                 if (scannerResponse != null) {
                     if (scannerResponse.getIntentCode() == TransferFlowActivity.CODE_INTENT_CONTAINER_BOX) {
                         String codeBar = scannerResponse.getResponse().getMapCodes().keySet().iterator().next();
-                        if (!isBoxMasterRegistered(codeBar)) {
-                            validateBoxMaster(codeBar);
+                        if (!isBoxMasterRegistered(codeBar.trim())) {
+                            validateBoxMaster(codeBar.trim());
                         }
                     }
                 }
