@@ -49,11 +49,13 @@ public class CustomerInvoicesForSendAdapter extends RecyclerView.Adapter<Custome
     static class CustomerInvoicesForSendVH extends RecyclerView.ViewHolder {
         private TextView tvBillNumber;
         private TextView tvSeriesNumber;
+        private TextView tvIdPicking;
         private CheckBox chChecked;
         public CustomerInvoicesForSendVH(@NonNull View itemView) {
             super(itemView);
             tvBillNumber = itemView.findViewById(R.id.tvNumberFactura);
             tvSeriesNumber = itemView.findViewById(R.id.tvNumberSerie);
+            tvIdPicking = itemView.findViewById(R.id.tvIdPicking);
             chChecked = itemView.findViewById(R.id.chChecked);
         }
 
@@ -61,6 +63,7 @@ public class CustomerInvoicesForSendAdapter extends RecyclerView.Adapter<Custome
             chChecked.setEnabled(false);
             tvBillNumber.setText(String.valueOf(currentGuide.getBillNumber()));
             tvSeriesNumber.setText(currentGuide.getSeriesNumber());
+            tvIdPicking.setText(currentGuide.getIdPicking());
             chChecked.setChecked(currentGuide.isVerified());
         }
     }
