@@ -109,6 +109,16 @@ public class ScannerActivityWithCodeBar extends BaseActivity implements ZXingSca
         } else {
             tvCounter.setVisibility(View.GONE);
         }
+
+        if (bundle != null && bundle.containsKey("quantity")) {
+            Log.i("onCreate", "Read Quantity");
+            count = bundle.getInt("quantity");
+            Log.i("onCreate", String.valueOf(count));
+            tvCounter.setText(String.valueOf(count));
+            for (int i = 1; i <= count; i++) {
+                updateMap();
+            }
+        }
     }
 
 
@@ -142,6 +152,7 @@ public class ScannerActivityWithCodeBar extends BaseActivity implements ZXingSca
     // Estamos sobrescribiendo un método de la interfaz ZXingScannerView.ResultHandler
     @Override
     public void handleResult(Result resultado) {
+        boolean isValid=true;
         Log.i("handleResult", String.valueOf(count));
         Log.i("handleResult", resultado.getText());
         Utils.StopSound();
@@ -151,6 +162,7 @@ public class ScannerActivityWithCodeBar extends BaseActivity implements ZXingSca
         if (!showDialog && totalUnit != -1 && count + 1 > totalUnit) {
             showDialog = true;
             ShowDialog(ScannerActivityWithCodeBar.this, "Alerta", "El total de artículos contados supera el total de unidades de la orden de compra");
+            isValid=false;
         } else {
             if (!barCodes.isEmpty()) {
                 boolean valid = false;
@@ -177,24 +189,26 @@ public class ScannerActivityWithCodeBar extends BaseActivity implements ZXingSca
             }
         }
 
-        Utils.PlaySound(false);
-        if (!showDialog) {
-            if (scanMultiple) {
-                escanerZXing.resumeCameraPreview(ScannerActivityWithCodeBar.this);
-                new Thread() {
-                    public void run() {
-                        try {
-                            sleep(15000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+        if (isValid) {
+            Utils.PlaySound(false);
+            if (!showDialog) {
+                if (scanMultiple) {
+                    escanerZXing.resumeCameraPreview(ScannerActivityWithCodeBar.this);
+                    new Thread() {
+                        public void run() {
+                            try {
+                                sleep(15000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                }.start();
+                    }.start();
+                } else {
+                    finishReader(2);
+                }
             } else {
                 finishReader(2);
             }
-        } else {
-            finishReader(2);
         }
 
     }
