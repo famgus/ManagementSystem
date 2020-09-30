@@ -263,7 +263,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
         i.putExtra("codeReader", productDetailSelected.getCodBarras());
         i.putExtra("totalUnit", totalUnidades);
         startActivityForResult(i, CODIGO_INTENT);*/
-        showDialogScanner(true, CODIGO_INTENT, (totalUnidades - (totalcontados - 1)), productDetailSelected.getCodBarras());
+        showDialogScanner(true, CODIGO_INTENT, (totalUnidades - totalcontados), productDetailSelected.getCodBarras());
     }
 
     private void escanearNewProduct() {
