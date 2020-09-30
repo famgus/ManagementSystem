@@ -67,7 +67,7 @@ public class TransferWebServiceControl {
             if (Utils.IsOnline()) {
                 Gson gson = new Gson();
                 final String NAMESPACE = "http://tempuri.org/";
-                final String METHOD_NAME = "GetProductsDispatched";
+                final String METHOD_NAME = "GetProductsDispatchedTCM";
                 final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
                 SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
                 request.addProperty("numserie", seriesNumber);
@@ -147,6 +147,7 @@ public class TransferWebServiceControl {
                 request.addProperty("numserie", params.getSeriesNumber());
                 request.addProperty("numpedido", params.getOrderNumber());
                 request.addProperty("codArticulo", params.getProductCode());
+                request.addProperty("carrito", params.getCarrito());
                 request.addProperty("talla", params.getSize());
                 request.addProperty("color", params.getColor());
                 request.addProperty("cantidadrecibida", params.getReceivedQuantity());
@@ -181,7 +182,7 @@ public class TransferWebServiceControl {
             if (Utils.IsOnline()) {
                 Gson gson = new Gson();
                 final String NAMESPACE = "http://tempuri.org/";
-                final String METHOD_NAME = "UpdateStateBoxDispatch";
+                final String METHOD_NAME = "UpdateStateBoxDispatchTCM";
                 final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
                 SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
                 request.addProperty("boxMasterCodesBar", barCodes);
@@ -202,7 +203,7 @@ public class TransferWebServiceControl {
                 response.setMessage(message);
             }
         } catch (Exception e) {
-            Utils.CreateLogFile("WebServiceControl.UpdateStateBoxDispatch: " + e.getMessage());
+            Utils.CreateLogFile("WebServiceControl.UpdateStateBoxDispatchTCM: " + e.getMessage());
             message = e.getMessage();
             response.setCode(401);
             response.setMessage(message);

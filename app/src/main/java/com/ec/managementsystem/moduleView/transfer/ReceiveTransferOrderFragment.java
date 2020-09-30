@@ -39,6 +39,8 @@ public class ReceiveTransferOrderFragment extends Fragment {
     private DispatchedProductsAdapter dispatchedProductsAdapter;
     private ReceivedProductViewModel receivedProductViewModel;
     private View view;
+    private boolean startedToRegister = false;
+    int totalRegistered = 0;
 
     public ReceiveTransferOrderFragment() {
         // Required empty public constructor
@@ -67,6 +69,9 @@ public class ReceiveTransferOrderFragment extends Fragment {
                 if(dispatchedProduct != null){
                     int index = dispatchedProducts.indexOf(dispatchedProduct);
                     dispatchedProductsAdapter.notifyItemChanged(index);
+                    totalRegistered = totalRegistered+1;
+                    boolean hasRegisterAll = totalRegistered == (dispatchedProducts.size()-1);
+                    btnRegister.setVisibility(hasRegisterAll ? View.VISIBLE : View.GONE);
                 }
             }
         });
@@ -85,13 +90,15 @@ public class ReceiveTransferOrderFragment extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dispatchedProductsAdapter.changeIsEditable();
+                if(!startedToRegister){
+                    dispatchedProductsAdapter.changeIsEditable();
+                    btnRegister.setVisibility(View.GONE);
+                    startedToRegister = true;
+                }else{
+                    requireActivity().finish();
+                }
             }
         };
-    }
-
-    private void showRegisterButton(){
-
     }
 
     private void initializeRV() {

@@ -19,6 +19,12 @@ public class DispatchedProduct implements Serializable {
     private String color;
     @SerializedName("totalDespachado")
     private Integer totalDispatched;
+    @SerializedName("carrito")
+    private String carrito;
+    @SerializedName("cajaTraslado")
+    private String cajaTraslado;
+    @SerializedName("cajaOrigen")
+    private String cajaOrigen;
     private Integer totalReceived = 0;
     private int rvType = Utils.ITEM_TYPE;
     private boolean isRegistered = false;
@@ -36,6 +42,18 @@ public class DispatchedProduct implements Serializable {
 
     public void setRegistered(boolean registered) {
         isRegistered = registered;
+    }
+
+    public String getCarrito() {
+        return carrito;
+    }
+
+    public String getCajaTraslado() {
+        return cajaTraslado;
+    }
+
+    public String getCajaOrigen() {
+        return cajaOrigen;
     }
 
     public Integer getTotalReceived() {

@@ -134,6 +134,7 @@ public class ReceiveTransferOrderDetailFragment extends Fragment {
                 if (tilQuantity.getError() == null) {
                     int received = Integer.parseInt(receivedQuantity);
                     if (received <= selectedProduct.getTotalDispatched() && received > 0) {
+
                         executeTask(received);
                     } else {
                         Toast.makeText(getContext(), "Ha ingresado una cantidad incorrecta", Toast.LENGTH_SHORT).show();
@@ -148,7 +149,7 @@ public class ReceiveTransferOrderDetailFragment extends Fragment {
     private void executeTask(final int received) {
         UpdateProductReceivedTaskController updateProductReceivedTaskController = new UpdateProductReceivedTaskController();
         UpdateProductReceivedRequest params = new UpdateProductReceivedRequest(selectedProduct.getSeriesNumber(), selectedProduct.getSize(),
-                selectedProduct.getColor(), selectedProduct.getOrderNumber(), selectedProduct.getProductCode(), received);
+                selectedProduct.getColor(), selectedProduct.getOrderNumber(), selectedProduct.getProductCode(), received, selectedProduct.getCarrito());
         updateProductReceivedTaskController.setResponseListener(new IDelegateResponseGeneric<GenericResponse>() {
             @Override
             public void onResponse(GenericResponse response) {
