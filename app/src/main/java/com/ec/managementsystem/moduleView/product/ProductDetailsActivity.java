@@ -116,6 +116,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
             if (existCodeBar(code)) {
                 tvCode.setText(code);
                 updateView();
+                updateMapInSingleton();
             } else {
                 Toast.makeText(this, "El código escaneado no corresponde a ningún producto en la orden de compra", Toast.LENGTH_LONG).show();
                 onBackPressed();

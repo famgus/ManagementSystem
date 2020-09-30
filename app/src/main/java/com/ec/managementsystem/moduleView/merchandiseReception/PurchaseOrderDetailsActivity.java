@@ -479,7 +479,9 @@ public class PurchaseOrderDetailsActivity extends BaseActivity implements Dialog
        if(map != null) {
            if (!map.containsKey(codBarras)) {
                return true;
-           } else return map.containsKey(codBarras) && !map.get(codBarras).isComplete();
+           } else if(map.containsKey(codBarras) && !map.get(codBarras).isComplete() && map.get(codBarras).getTotalContado() + 1 <= map.get(codBarras).getTotalPedido()){
+               return  true;
+           }
        }
         return false;
     }
