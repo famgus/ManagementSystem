@@ -432,7 +432,6 @@
 
                     <TextView
                         android:id="@+id/tvRestScanner"
-                        android:layout_height="19dp"
                         android:layout_marginLeft="1dp"
                         android:layout_weight="1"
                         android:background="#FFF"

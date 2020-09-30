@@ -32,6 +32,7 @@ import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.BoxMaster;
 import com.ec.managementsystem.clases.PedidoDetail;
 import com.ec.managementsystem.clases.PedidoDetailSmall;
+import com.ec.managementsystem.clases.ProductQuantity;
 import com.ec.managementsystem.clases.request.BarCodeRequest;
 import com.ec.managementsystem.clases.request.BoxMasterRequest;
 import com.ec.managementsystem.clases.request.ProductoRequest;
@@ -96,6 +97,7 @@ public class PurchaseOrderDetailsActivity extends BaseActivity implements Dialog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_purchase_order_details);
+        MySingleton.getInstance().setMapCountOfProducts(new HashMap<String, ProductQuantity>());
         MySingleton.getInstance().setRegisterPurchaseOrder(false);
         verificarYPedirPermisosDeCamara();
         tableLayoutinformation = findViewById(R.id.tlTable01D);
@@ -458,14 +460,28 @@ public class PurchaseOrderDetailsActivity extends BaseActivity implements Dialog
     @Override
     public void onProductResponse(ProductoResponse response) {
         if (response != null && response.getCode() == 200 && response.getProductDetail() != null) {
-            MySingleton.getInstance().setProductoResponse(response);
-            Intent i = new Intent(this, ProductDetailsActivity.class);
-            i.putExtra("code", response.getProductDetail().getCodBarras());
-            i.putExtra("path", pathReception);
-            startActivity(i);
+            if(validateProductCount(response.getProductDetail().getCodBarras())) {
+                MySingleton.getInstance().setProductoResponse(response);
+                Intent i = new Intent(this, ProductDetailsActivity.class);
+                i.putExtra("code", response.getProductDetail().getCodBarras());
+                i.putExtra("path", pathReception);
+                startActivity(i);
+            }else {
+                Toast.makeText(getApplicationContext(), "Producto de la orden de compra ya se encuentra registrado en el sistema", Toast.LENGTH_LONG).show();
+            }
         } else {
             Toast.makeText(getApplicationContext(), "Producto no encontrada en el sistema", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private boolean validateProductCount(String codBarras) {
+       Map<String, ProductQuantity> map =  MySingleton.getInstance().getMapCountOfProducts();
+       if(map != null) {
+           if (!map.containsKey(codBarras)) {
+               return true;
+           } else return map.containsKey(codBarras) && !map.get(codBarras).isComplete();
+       }
+        return false;
     }
 
     public void refreshViewTable() {
