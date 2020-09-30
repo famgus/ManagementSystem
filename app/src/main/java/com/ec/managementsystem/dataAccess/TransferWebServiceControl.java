@@ -7,6 +7,7 @@ import com.ec.managementsystem.clases.request.UpdateProductReceivedRequest;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.clases.responses.GetDispatchResponse;
 import com.ec.managementsystem.clases.responses.GetProductsDispatchedResponse;
+import com.ec.managementsystem.clases.responses.GetQuantityProductInMasterBoxResponse;
 import com.ec.managementsystem.util.Core;
 import com.ec.managementsystem.util.MyApplication;
 import com.ec.managementsystem.util.Utils;
@@ -88,6 +89,44 @@ public class TransferWebServiceControl {
             }
         } catch (Exception e) {
             Utils.CreateLogFile("WebServiceControl.GetProductsDispatched: " + e.getMessage());
+            message = e.getMessage();
+            response.setCode(401);
+            response.setMessage(message);
+        }
+        return response;
+    }
+
+    public static GetQuantityProductInMasterBoxResponse getQuantityProductInMasterBox(int productCode, String size, String color, String barCode) {
+        String message;
+        GetQuantityProductInMasterBoxResponse response = new GetQuantityProductInMasterBoxResponse();
+        try {
+            if (Utils.IsOnline()) {
+                Gson gson = new Gson();
+                final String NAMESPACE = "http://tempuri.org/";
+                final String METHOD_NAME = "GetQuantityProductInMasterBox";
+                final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
+                SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+                request.addProperty("codigoArticulo", productCode);
+                request.addProperty("talla", size);
+                request.addProperty("color", color);
+                request.addProperty("codigoBarrasCaja", barCode);
+                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                envelope.dotNet = true;
+                envelope.implicitTypes = true;
+                envelope.setAddAdornments(false);
+                envelope.setOutputSoapObject(request);
+                HttpTransportSE htse = new HttpTransportSE(GetURL(), Core.TIME_OUT_WEB_SERVICES);
+                htse.debug = true;
+                htse.setXmlVersionTag("<!--?xml version=\"1.0\" encoding= \"UTF-8\" ?-->");
+                htse.call(SOAP_ACTION, envelope);
+                response = gson.fromJson(envelope.getResponse().toString(), GetQuantityProductInMasterBoxResponse.class);
+                return response;
+            } else {
+                message = MyApplication.GetAppContext().getString(R.string.no_internet);
+                response.setMessage(message);
+            }
+        } catch (Exception e) {
+            Utils.CreateLogFile("WebServiceControl.GetQuantityProductInMasterBox: " + e.getMessage());
             message = e.getMessage();
             response.setCode(401);
             response.setMessage(message);

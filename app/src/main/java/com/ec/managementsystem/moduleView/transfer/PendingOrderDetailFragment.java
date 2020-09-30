@@ -47,7 +47,7 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
     private List<BoxTransferPendingOrder> boxTransferPendingOrders = new ArrayList<>();
     private BoxTransferPendingOrdersAdapter boxTransferPendingOrdersAdapter;
     private ProductToPrepareAdapter productToPrepareAdapter;
-    private Button btnOrderDetailStart, btnAddBox;
+    private Button btnOrderDetailStart;
     private ProductPreparationViewModel productPreparationViewModel;
     private ScannerViewModel scannerViewModel;
     private int vendorCode;
@@ -123,16 +123,16 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
         initializeBoxRV();
 
         btnOrderDetailStart = rootView.findViewById(R.id.btn_pendingorderdetail);
-        btnAddBox = rootView.findViewById(R.id.btn_pendingorderdetail_add_box);
+/*        btnAddBox = rootView.findViewById(R.id.btn_pendingorderdetail_add_box);
         btnAddBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 productPreparationViewModel.clearRegisteredProduct();
                 showDialogScanner();
             }
-        });
+        });*/
 
-        changeVisibilityButton(boxTransferPendingOrders.size() < 2, btnAddBox, View.GONE);
+        //changeVisibilityButton(boxTransferPendingOrders.size() < 2, btnAddBox, View.GONE);
 
         changeVisibilityButton(productPreparationViewModel.getRegisteredProducts() != null, btnOrderDetailStart, View.GONE);
         btnOrderDetailStart.setOnClickListener(new View.OnClickListener() {
@@ -141,27 +141,10 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
                 if (productPreparationViewModel.getRegisteredProducts() == null) {
                     showDialogScanner();
                 } else {
-                    btnAddBox.setVisibility(View.GONE);
-                    List<BoxTransferPendingOrder> boxTransfers = new ArrayList<>(boxTransferPendingOrders);
-                    boxTransfers.remove(0);
-                    RegisterTransferPendingOrderRequest params = new RegisterTransferPendingOrderRequest(vendorCode, boxTransfers);
-                    String json = new Gson().toJson(params);
-                    // Todo : llamar WS
-                    CreateBoxForDsispatchTaskController createBoxForDsispatchTaskController = new CreateBoxForDsispatchTaskController();
-                    createBoxForDsispatchTaskController.setListener(new IDelegateResponseGeneric<GenericResponse>() {
-                        @Override
-                        public void onResponse(GenericResponse response) {
-                            if(response != null && response.getCode() == 200){
-                                Toast.makeText(getContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
-                                NavHostFragment.findNavController(PendingOrderDetailFragment.this).navigateUp();
-                            }else{
-                                Log.d("onResponse: ", response.getMessage());
-                                Toast.makeText(getContext(), "Ocurrió un error al guardar el registro", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                    createBoxForDsispatchTaskController.execute(json);
-                    Log.d("FINISH_PROCESS", json);
+                    //btnAddBox.setVisibility(View.GONE);
+                    productPreparationViewModel.setMutableLiveDataValue(null);
+                    productPreparationViewModel.setLastProductInserted(-1);
+                    requireActivity().finish();
                 }
             }
         });
@@ -170,32 +153,37 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
                 observe(getViewLifecycleOwner(), new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer index) {
-                        productToPrepareAdapter.notifyItemChanged(index);
+                        if(index != null){
+                            productToPrepareAdapter.notifyItemChanged(index);
 
 
-                        int lastIndexBox = boxTransferPendingOrders.size() - 1;
-                        TransferSubOrder registeredProduct = transferSubOrders.get(index);
-                        BoxTransferPendingOrder lastBoxRegistered = boxTransferPendingOrders.get(lastIndexBox);
-                        lastBoxRegistered.getRegisteredProducts().add(registeredProduct);
-                        int previousTotal = lastBoxRegistered.getTotalRegisteredProducts();
-                        int newTotal = registeredProduct.getPreparedUnits() + previousTotal;
-                        lastBoxRegistered.setTotalRegisteredProducts(newTotal);
-                        boxTransferPendingOrdersAdapter.notifyItemChanged(lastIndexBox);
+                            int lastIndexBox = boxTransferPendingOrders.size() - 1;
+                            TransferSubOrder registeredProduct = transferSubOrders.get(index);
+                            BoxTransferPendingOrder lastBoxRegistered = boxTransferPendingOrders.get(lastIndexBox);
 
-                        int registered = 0, remaining = 0, sizeWithoutHeader = transferSubOrders.size() - 1;
-                        for (int indexLoop = 1; indexLoop < boxTransferPendingOrders.size(); indexLoop++) {
-                            BoxTransferPendingOrder current = boxTransferPendingOrders.get(indexLoop);
-                            registered += current.getRegisteredProducts().size();
+                            if(!lastBoxRegistered.getRegisteredProducts().contains(registeredProduct)){
+                                lastBoxRegistered.getRegisteredProducts().add(registeredProduct);
+                            }
+                            int previousTotal = lastBoxRegistered.getTotalRegisteredProducts();
+                            int newTotal = registeredProduct.getPreparedUnits() + previousTotal;
+                            lastBoxRegistered.setTotalRegisteredProducts(newTotal);
+                            boxTransferPendingOrdersAdapter.notifyItemChanged(lastIndexBox);
+
+                            int registered = 0, remaining = 0, sizeWithoutHeader = transferSubOrders.size() - 1;
+                            for (int indexLoop = 1; indexLoop < boxTransferPendingOrders.size(); indexLoop++) {
+                                BoxTransferPendingOrder current = boxTransferPendingOrders.get(indexLoop);
+                                registered += current.getRegisteredProducts().size();
+                            }
+
+                            if (sizeWithoutHeader == registered) {
+                                btnOrderDetailStart.setText(getString(R.string.text_button_register));
+                                btnOrderDetailStart.setVisibility(View.VISIBLE);
+                            } else {
+                                remaining = sizeWithoutHeader - registered;
+                            }
+                            tvRegisteredProductsNumber.setText(getString(R.string.pendingorderdetail_remaining_products, remaining));
+
                         }
-
-                        if (sizeWithoutHeader == registered) {
-                            btnOrderDetailStart.setText(getString(R.string.text_button_register));
-                            btnOrderDetailStart.setVisibility(View.VISIBLE);
-                        } else {
-                            remaining = sizeWithoutHeader - registered;
-                        }
-                        tvRegisteredProductsNumber.setText(getString(R.string.pendingorderdetail_remaining_products, remaining));
-
                     }
                 });
 
@@ -227,7 +215,7 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
                         } else {
                             Toast.makeText(getContext(), "Error validando la caja", Toast.LENGTH_SHORT).show();
                         }
-                        changeVisibilityButton(boxTransferPendingOrders.size() >= 2, btnAddBox, View.VISIBLE);
+                        //changeVisibilityButton(boxTransferPendingOrders.size() >= 2, btnAddBox, View.VISIBLE);
                     }
 
 
@@ -271,20 +259,6 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
         startActivityForResult(i, TransferFlowActivity.CODE_INTENT_CONTAINER_BOX);
     }
 
-    private IDelegateResponseGeneric<GenericResponse> registerResponse(){
-        return new IDelegateResponseGeneric<GenericResponse>() {
-            @Override
-            public void onResponse(GenericResponse response) {
-                if(response != null && response.getCode() == 200){
-                    Toast.makeText(getContext(), "Se registró exitosamente", Toast.LENGTH_SHORT).show();
-                    NavHostFragment.findNavController(PendingOrderDetailFragment.this).navigateUp();
-                }else{
-                    Toast.makeText(getContext(), "Error al realizar el registro", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-    }
-
     @Override
     public void onResponse(TransfersOrderDetailForUserResponse response) {
         if (response != null && response.getCode() == 200) {
@@ -304,6 +278,7 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
         args.putSerializable(TransferProductDetailFragment.PRODUCT_TO_PREPARE_SELECTED, item);
         args.putInt("index", index);
         args.putInt("vendorCode", vendorCode);
+        args.putString("carrito", boxTransferPendingOrders.get(boxTransferPendingOrders.size()-1).getBoxCode());
         NavHostFragment.findNavController(this).navigate(R.id.action_pendingOrderDetailFragment_to_transferProductDetailFragment, args);
     }
 

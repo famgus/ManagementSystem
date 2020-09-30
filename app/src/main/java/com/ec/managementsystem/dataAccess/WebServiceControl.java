@@ -14,7 +14,7 @@ import com.ec.managementsystem.clases.request.ReturnProductChangeRequest;
 import com.ec.managementsystem.clases.request.ReturnProductDetailsRequest;
 import com.ec.managementsystem.clases.request.ReturnProductRequest;
 import com.ec.managementsystem.clases.request.ReturnProductValidationRequest;
-import com.ec.managementsystem.clases.request.UpdateQuantityPrepareTransferRequest;
+import com.ec.managementsystem.clases.request.SaveTransferPrepareRequest;
 import com.ec.managementsystem.clases.responses.FacturasClientResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.clases.responses.ListFacturasDetasilResponse;
@@ -1364,7 +1364,7 @@ public class WebServiceControl {
         return response;
     }
 
-    static public GenericResponse updateQuantityPrepareTransfer(UpdateQuantityPrepareTransferRequest params) {
+    static public GenericResponse SaveTransferPrepare(SaveTransferPrepareRequest params) {
         String message;
         GenericResponse response = new GenericResponse();
         try {
@@ -1377,10 +1377,15 @@ public class WebServiceControl {
                 request.addProperty("numserie", params.getSeriesNumber());
                 request.addProperty("numpedido", params.getOrderNumber());
                 request.addProperty("codarticulo", params.getProductCode());
+                request.addProperty("carrito", params.getCart());
+                request.addProperty("cajamastertraslado", params.getCajamastertraslado());
+                request.addProperty("ubicacionorigen", params.getUbicacionorigen());
+                request.addProperty("codigoarticulo", params.getProductCode());
+                request.addProperty("cajamasterorigen", params.getCajamasterorigen());
+                request.addProperty("formatotraslado", params.getFormatotraslado());
                 request.addProperty("talla", params.getSize());
                 request.addProperty("color", params.getColor());
-                request.addProperty("canpreparada", params.getPreparedQuantity());
-                request.addProperty("codvendedor", params.getVendorCode());
+                request.addProperty("unidades", params.getUnidades());
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                 envelope.dotNet = true;
                 envelope.implicitTypes = true;

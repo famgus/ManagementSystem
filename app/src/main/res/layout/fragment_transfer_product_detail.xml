@@ -112,6 +112,12 @@
             app:layout_constraintStart_toStartOf="@id/tv_transferproductdetail_request_date"
             app:layout_constraintTop_toBottomOf="@id/tv_productorigen">
 
+            <RadioButton
+                android:id="@+id/rb_transferproductdetail_completedbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Caja completa" />
 
             <RadioButton
                 android:id="@+id/rb_transferproductdetail_boxmaster"

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +25,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.ProductUbication;
 import com.ec.managementsystem.clases.TransferSubOrder;
-import com.ec.managementsystem.clases.request.UpdateQuantityPrepareTransferRequest;
+import com.ec.managementsystem.clases.request.SaveTransferPrepareRequest;
 import com.ec.managementsystem.clases.responses.GenericResponse;
+import com.ec.managementsystem.clases.responses.GetQuantityProductInMasterBoxResponse;
 import com.ec.managementsystem.dataAccess.WebServiceControl;
 import com.ec.managementsystem.interfaces.IDelegateResponseGeneric;
 import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.adapters.ProductUbicationsAdapter;
+import com.ec.managementsystem.task.GetQuantityProductInMasterBoxTaskController;
 import com.ec.managementsystem.task.UpdateQuantityPrepareTransferTaskController;
 import com.ec.managementsystem.task.ValidateBoxMasterCodeBar;
 import com.ec.managementsystem.util.Utils;
@@ -54,6 +57,8 @@ public class TransferProductDetailFragment extends Fragment {
     private EditText etQuantity, etBarCode;
     private RecyclerView rvUbications;
     private boolean isValidQuantity = false;
+    private int requiredQuantity = 0;
+    private String cart;
 
     public TransferProductDetailFragment() {
         // Required empty public constructor
@@ -64,8 +69,10 @@ public class TransferProductDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             productToPrepare = (TransferSubOrder) getArguments().getSerializable(PRODUCT_TO_PREPARE_SELECTED);
+            requiredQuantity = productToPrepare.getRequestedUnits();
             productToPrepareIndex = getArguments().getInt("index");
             vendorCode = getArguments().getInt("vendorCode");
+            cart = getArguments().getString("carrito");
             productPreparationViewModel = new ViewModelProvider(requireActivity()).get(ProductPreparationViewModel.class);
             scannerViewModel = new ViewModelProvider(requireActivity()).get(ScannerViewModel.class);
         }
@@ -115,8 +122,9 @@ public class TransferProductDetailFragment extends Fragment {
     }
 
     private void validateBoxMaster(final String codeBar) {
-        if(rgProductOrigin.getCheckedRadioButtonId() != -1){
+        if (rgProductOrigin.getCheckedRadioButtonId() != -1) {
 
+            boolean isCompletedBox = false;
             String methodName = "";
             switch (rgProductOrigin.getCheckedRadioButtonId()) {
                 case R.id.rb_transferproductdetail_boxmaster:
@@ -125,31 +133,24 @@ public class TransferProductDetailFragment extends Fragment {
                 case R.id.rb_transferproductdetail_ubication:
                     methodName = WebServiceControl.VALIDATE_EXIST_LOCATION;
                     break;
+                case R.id.rb_transferproductdetail_completedbox:
+                    isCompletedBox = true;
+                    break;
             }
-
-            ValidateBoxMasterCodeBar boxMasterCodeBar = new ValidateBoxMasterCodeBar(codeBar, -1, methodName,
-                    new IDelegateResponseGeneric<GenericResponse>() {
-                        @Override
-                        public void onResponse(GenericResponse response) {
-                            if (response != null) {
-                                if (response.getCode() == 200) {
-                                    etBarCode.setText(codeBar);
-                                } else if (response.getCode() == 201) {
-                                    Toast.makeText(getContext(), "El código de barras ingresado no existe", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Toast.makeText(getContext(), "Error al validar el código de barras", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-            boxMasterCodeBar.execute();
-        }else{
+            if (!isCompletedBox) {
+                ValidateBoxMasterCodeBar boxMasterCodeBar = new ValidateBoxMasterCodeBar(codeBar, -1, methodName, validateBoxMasterResponseListener(codeBar));
+                boxMasterCodeBar.execute();
+            } else {
+                GetQuantityProductInMasterBoxTaskController task = new GetQuantityProductInMasterBoxTaskController(productToPrepare.getProductCode(), productToPrepare.getSize(), productToPrepare.getColor(), codeBar, getQuantityBoxResponseListener(codeBar));
+                task.execute();
+            }
+        } else {
             Toast.makeText(getContext(), "Debe seleccionar una opción de traslado para validar el código", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void initializeUbicationsRV() {
-        if(productToPrepare.getUbications() != null && productToPrepare.getUbications().size()>0){
+        if (productToPrepare.getUbications() != null && productToPrepare.getUbications().size() > 0) {
             List<ProductUbication> productUbications = new ArrayList<>(productToPrepare.getUbications());
             productUbications.add(0, new ProductUbication(Utils.HEADER_TYPE));
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -164,7 +165,7 @@ public class TransferProductDetailFragment extends Fragment {
         etQuantity.addTextChangedListener(quantityTextListener());
         btnRegisterPreparedProduct.setOnClickListener(registerButtonListener());
         ivBarCode.setOnClickListener(iconsListener(false, TransferFlowActivity.CODE_INTENT_BAR_CODE_DETAIL, -1));
-        ivPreparedQuantity.setOnClickListener(iconsListener(true, TransferFlowActivity.CODE_INTENT_PREPARED_QUANTITY, (productToPrepare.getRequestedUnits())));
+        ivPreparedQuantity.setOnClickListener(iconsListener(true, TransferFlowActivity.CODE_INTENT_PREPARED_QUANTITY, requiredQuantity));
     }
 
     private View.OnClickListener iconsListener(final boolean scanMultiple, final int codeIntent, final int totalUnits) {
@@ -176,14 +177,62 @@ public class TransferProductDetailFragment extends Fragment {
         };
     }
 
-    private void updateQuantity(int preparedUnits) {
-        UpdateQuantityPrepareTransferRequest params = new UpdateQuantityPrepareTransferRequest(
-                productToPrepare.getSeriesNumber(), productToPrepare.getSize(),
-                productToPrepare.getColor(), productToPrepare.getOrderNumber(),
-                productToPrepare.getProductCode(), preparedUnits, vendorCode);
+    private void updateQuantity(int preparedUnits, String barcode, int type) {
+        SaveTransferPrepareRequest params = null;
+        if (type == 0) { // Caja completa
+            params = new SaveTransferPrepareRequest(
+                    productToPrepare.getSeriesNumber(), productToPrepare.getSize(), productToPrepare.getColor(), cart,
+                    barcode, "C", "0", "0",
+                    productToPrepare.getOrderNumber(), productToPrepare.getProductCode(), preparedUnits);
+        } else if (type == 1) { // Caja master
+            params = new SaveTransferPrepareRequest(
+                    productToPrepare.getSeriesNumber(), productToPrepare.getSize(), productToPrepare.getColor(), cart,
+                    "", "P", barcode, "0",
+                    productToPrepare.getOrderNumber(), productToPrepare.getProductCode(), preparedUnits);
+        } else if (type == 2) { // Ubicación
+            params = new SaveTransferPrepareRequest(
+                    productToPrepare.getSeriesNumber(), productToPrepare.getSize(), productToPrepare.getColor(), cart,
+                    "", "U", "0", barcode,
+                    productToPrepare.getOrderNumber(), productToPrepare.getProductCode(), preparedUnits);
+        }
         UpdateQuantityPrepareTransferTaskController prepareTransferTaskController = new UpdateQuantityPrepareTransferTaskController();
         prepareTransferTaskController.setListener(updateQuantityListener());
         prepareTransferTaskController.execute(params);
+    }
+
+    private IDelegateResponseGeneric<GenericResponse> validateBoxMasterResponseListener(final String codeBar) {
+        return new IDelegateResponseGeneric<GenericResponse>() {
+            @Override
+            public void onResponse(GenericResponse response) {
+                if (response != null) {
+                    if (response.getCode() == 200) {
+                        etBarCode.setText(codeBar);
+                    } else if (response.getCode() == 201) {
+                        Toast.makeText(getContext(), "El código de barras ingresado no existe", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Error al validar el código de barras", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
+
+    private IDelegateResponseGeneric<GetQuantityProductInMasterBoxResponse> getQuantityBoxResponseListener(final String codeBar) {
+        return new IDelegateResponseGeneric<GetQuantityProductInMasterBoxResponse>() {
+            @Override
+            public void onResponse(GetQuantityProductInMasterBoxResponse response) {
+                if (response != null && response.getCode() == 200) {
+                    etBarCode.setText(codeBar);
+                    etQuantity.setText(String.valueOf(response.getQuantity()));
+                    if (isValidQuantity) {
+                        updateQuantity(response.getQuantity(), etBarCode.getText().toString(), 0);
+                        Log.d("onResponse: ", "La cantidad es valida || " + response.getQuantity());
+                    } else {
+                        Log.d("onResponse: ", "ERROR La cantidad no es valida || " + response.getQuantity());
+                    }
+                }
+            }
+        };
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent, int totalUnits) {
@@ -202,7 +251,7 @@ public class TransferProductDetailFragment extends Fragment {
         tvColor.setText(getString(R.string.all_color, productToPrepare.getColor()));
         tvRequestedDate.setText(getString(R.string.productdetail_requested_date, productToPrepare.getAssignedDate()));
         tvPreparationDate.setText(getString(R.string.productdetail_preparation_date, productToPrepare.getPreparedDate()));
-        tvRequestedQuantity.setText(getString(R.string.productdetail_requested_quantity, productToPrepare.getRequestedUnits()));
+        tvRequestedQuantity.setText(getString(R.string.productdetail_requested_quantity, requiredQuantity));
     }
 
     private RadioGroup.OnCheckedChangeListener radioGroupListener() {
@@ -213,6 +262,11 @@ public class TransferProductDetailFragment extends Fragment {
                     case R.id.rb_transferproductdetail_boxmaster:
                     case R.id.rb_transferproductdetail_ubication:
                         etBarCode.setText("");
+                        etQuantity.setEnabled(true);
+                        break;
+                    case R.id.rb_transferproductdetail_completedbox:
+                        etBarCode.setText("");
+                        etQuantity.setEnabled(false);
                         break;
                 }
             }
@@ -225,8 +279,17 @@ public class TransferProductDetailFragment extends Fragment {
             public void onClick(View v) {
                 if (isValidQuantity && rgProductOrigin.getCheckedRadioButtonId() != -1 && etBarCode.getText().toString().length() > 0) {
                     int preparedUnits = Integer.parseInt(etQuantity.getText().toString());
-                    updateQuantity(preparedUnits);
-                }else{
+                    int type = -1;
+                    switch (rgProductOrigin.getCheckedRadioButtonId()) {
+                        case R.id.rb_transferproductdetail_boxmaster:
+                            type = 1;
+                            break;
+                        case R.id.rb_transferproductdetail_ubication:
+                            type = 2;
+                            break;
+                    }
+                    updateQuantity(preparedUnits, etBarCode.getText().toString(), type);
+                } else {
                     Toast.makeText(getContext(), "Debe llenar los campos de código de barras y los productos", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -245,7 +308,7 @@ public class TransferProductDetailFragment extends Fragment {
                 if (s.length() == 0) {
                     tilQuantity.setError("Requerido");
                     isValidQuantity = false;
-                } else if (Integer.parseInt(s.toString()) > productToPrepare.getRequestedUnits()) {
+                } else if (Integer.parseInt(s.toString()) > requiredQuantity) {
                     tilQuantity.setError("No puede ingresar más de lo solicitado");
                     isValidQuantity = false;
                 } else {
@@ -260,29 +323,37 @@ public class TransferProductDetailFragment extends Fragment {
             }
         };
     }
-
+    
     private IDelegateResponseGeneric<GenericResponse> updateQuantityListener() {
         return new IDelegateResponseGeneric<GenericResponse>() {
             @Override
             public void onResponse(GenericResponse response) {
                 if (response != null && response.getCode() == 200) {
-
+                    int registeredUnits = Integer.parseInt(etQuantity.getText().toString());
                     switch (rgProductOrigin.getCheckedRadioButtonId()) {
                         case R.id.rb_transferproductdetail_boxmaster:
-                            productToPrepare.setOriginType("C");
-                            break;
                         case R.id.rb_transferproductdetail_ubication:
-                            productToPrepare.setOriginType("U");
+                            productToPrepare.setPreparedUnits(registeredUnits + productToPrepare.getPreparedUnits());
+                            productToPrepare.setRegistered(true);
+                            NavHostFragment.findNavController(TransferProductDetailFragment.this).navigateUp();
+                            break;
+                        case R.id.rb_transferproductdetail_completedbox:
+                            etQuantity.setText("");
+                            etBarCode.setText("");
+                            productToPrepare.setRegistered(true);
+                            productToPrepare.setPreparedUnits(registeredUnits + productToPrepare.getPreparedUnits());
+                            requiredQuantity = productToPrepare.getRequestedUnits() - registeredUnits;
+                            tvRequestedQuantity.setText(getString(R.string.productdetail_requested_quantity, requiredQuantity));
                             break;
                     }
+                    productPreparationViewModel.addRegisteredProduct(productToPrepare);
+                    productPreparationViewModel.setLastProductInserted(productToPrepareIndex);
 
-                    int preparedUnits = Integer.parseInt(etQuantity.getText().toString());
-                    productToPrepare.setRegistered(true);
-                    productToPrepare.setOrigin(etBarCode.getText().toString());
+/*                    int preparedUnits = Integer.parseInt(etQuantity.getText().toString());
                     productToPrepare.setPreparedUnits(preparedUnits);
                     productPreparationViewModel.addRegisteredProduct(productToPrepare);
                     productPreparationViewModel.setLastProductInserted(productToPrepareIndex);
-                    NavHostFragment.findNavController(TransferProductDetailFragment.this).navigateUp();
+                    NavHostFragment.findNavController(TransferProductDetailFragment.this).navigateUp();*/
                 } else {
                     Toast.makeText(getContext(), "No se pudo registrar la información", Toast.LENGTH_SHORT).show();
                 }
