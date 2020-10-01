@@ -168,11 +168,11 @@ public class SensorActivity extends BaseActivity {
                             Utils.StopSound();
                             codeReader = etBarCode.getText().toString().replace("\n", "");
                             //etBarCode.setText(codeReader);
+                            tvCounter.setText(String.valueOf(++count));
                             if (!showDialog && totalUnit != -1 && count + 1 >= totalUnit) {
                                 showDialog = true;
                                 ShowDialog("Alerta", "El total de artículos contados supera el total de unidades de la orden de compra");
                             }else {
-                                tvCounter.setText(String.valueOf(++count));
                                 updateMap();
                             }
 
