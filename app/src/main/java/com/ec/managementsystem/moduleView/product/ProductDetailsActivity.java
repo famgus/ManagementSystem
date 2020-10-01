@@ -113,6 +113,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             String code = bundle.getString("code");
+            pathReception = bundle.getInt("path", 1);
             if (existCodeBar(code)) {
                 tvCode.setText(code);
                 updateView();
@@ -121,7 +122,6 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
                 Toast.makeText(this, "El código escaneado no corresponde a ningún producto en la orden de compra", Toast.LENGTH_LONG).show();
                 onBackPressed();
             }
-            pathReception = bundle.getInt("path", 1);
         }
 
         if (pathReception == 1) {  //Reception by Unit
@@ -442,7 +442,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
                 isNew = true;
             }
             if (productQuantity != null) {
-                if (totalUnidades < totalcontados && pathReception == 1) {
+                if (totalUnidades <= totalcontados && pathReception == 1) {
                     productQuantity.setComplete(true);
                     productQuantity.setTotalContado(totalcontados);
                 } else if (totalUnidades > totalcontados && pathReception == 1) {
