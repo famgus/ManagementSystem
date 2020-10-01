@@ -207,7 +207,7 @@ public class TransferProductDetailFragment extends Fragment {
                 if (response != null) {
                     if (response.getCode() == 200) {
                         etBarCode.setText(codeBar);
-                    } else if (response.getCode() == 201) {
+                    } else {
                         Toast.makeText(getContext(), "El código de barras ingresado no existe", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -226,10 +226,12 @@ public class TransferProductDetailFragment extends Fragment {
                     etQuantity.setText(String.valueOf(response.getQuantity()));
                     if (isValidQuantity) {
                         updateQuantity(response.getQuantity(), etBarCode.getText().toString().trim(), 0);
-                        Log.d("onResponse: ", "La cantidad es valida || " + response.getQuantity());
+                        Toast.makeText(getContext(), "Registrando caja completa", Toast.LENGTH_SHORT).show();
                     } else {
-                        Log.d("onResponse: ", "ERROR La cantidad no es valida || " + response.getQuantity());
+                        Toast.makeText(getContext(), "Error en el valor", Toast.LENGTH_SHORT).show();
                     }
+                }else{
+                    Toast.makeText(getContext(), "El código de barras ingresado es incorrecto", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -238,8 +240,8 @@ public class TransferProductDetailFragment extends Fragment {
     private void showDialogScanner(boolean scanMultiple, int codeIntent, int totalUnits) {
         Intent i = new Intent(getActivity(), SensorActivity.class);
         i.putExtra("scanMultiple", scanMultiple);
-        i.putExtra("permisoCamaraConcedido", true);
-        i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.putExtra("permisoCamaraConcedido", false);
+        i.putExtra("permisoSolicitadoDesdeBoton", false);
         i.putExtra("totalUnit", Double.valueOf(totalUnits));
         i.setAction(String.valueOf(codeIntent));
         startActivityForResult(i, codeIntent);

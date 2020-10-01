@@ -169,8 +169,8 @@ public class ReceiveTransferOrderDetailFragment extends Fragment {
     private void showDialogScanner(int totalUnits) {
         Intent i = new Intent(getActivity(), SensorActivity.class);
         i.putExtra("scanMultiple", true);
-        i.putExtra("permisoCamaraConcedido", true);
-        i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.putExtra("permisoCamaraConcedido", false);
+        i.putExtra("permisoSolicitadoDesdeBoton", false);
         i.putExtra("totalUnit", Double.valueOf(totalUnits));
         i.setAction(String.valueOf(CODE_INTENT_RECEIVED_QUANTITY));
         startActivityForResult(i, CODE_INTENT_RECEIVED_QUANTITY);

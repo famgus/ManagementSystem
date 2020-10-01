@@ -253,8 +253,8 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
     private void showDialogScanner() {
         Intent i = new Intent(getActivity(), SensorActivity.class);
         i.putExtra("scanMultiple", false);
-        i.putExtra("permisoCamaraConcedido", true);
-        i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.putExtra("permisoCamaraConcedido", false);
+        i.putExtra("permisoSolicitadoDesdeBoton", false);
         i.setAction(String.valueOf(TransferFlowActivity.CODE_INTENT_CONTAINER_BOX));
         startActivityForResult(i, TransferFlowActivity.CODE_INTENT_CONTAINER_BOX);
     }
