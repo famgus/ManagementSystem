@@ -123,13 +123,12 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
         // Obener código/texto leído
         Utils.StopSound();
         codeReader = resultado.getText();
+        etBarCode.setText(codeReader);
+        tvCounter.setText(String.valueOf(++count));
         if (!showDialog && totalUnit != -1 && count + 1 >= totalUnit) {
-            etBarCode.setText("");
             showDialog = true;
             ShowDialog(ScannerActivity.this, "Alerta", "El total de artículos contados supera el total de unidades de la orden de compra");
         }else {
-            etBarCode.setText(codeReader);
-            tvCounter.setText(String.valueOf(++count));
             updateMap();
         }
 
