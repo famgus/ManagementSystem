@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".moduleView.transfer.ReceiveTransferOrderDetailFragment">
+
+    <TextView
+        android:id="@+id/tv_receivetransferorderdetail_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/transferproductdetail_title"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_receivetransferorderdetail_product_code"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/all_loading_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_receivetransferorderdetail_title" />
+
+    <TextView
+        android:id="@+id/tv_receivetransferorderdetail_size"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/all_loading_text"
+        app:layout_constraintEnd_toEndOf="@id/tv_receivetransferorderdetail_product_code"
+        app:layout_constraintStart_toStartOf="@id/tv_receivetransferorderdetail_product_code"
+        app:layout_constraintTop_toBottomOf="@id/tv_receivetransferorderdetail_product_code" />
+
+    <TextView
+        android:id="@+id/tv_receivetransferorderdetail_color"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/all_loading_text"
+        app:layout_constraintEnd_toEndOf="@id/tv_receivetransferorderdetail_product_code"
+        app:layout_constraintStart_toStartOf="@id/tv_receivetransferorderdetail_product_code"
+        app:layout_constraintTop_toBottomOf="@id/tv_receivetransferorderdetail_size" />
+
+    <TextView
+        android:id="@+id/tv_receivetransferorderdetail_dispatched"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/all_loading_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_receivetransferorderdetail_color" />
+
+    <TextView
+        android:id="@+id/tv_receivetransferorderdetail_received"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/all_loading_text"
+        app:layout_constraintEnd_toEndOf="@id/tv_receivetransferorderdetail_product_code"
+        app:layout_constraintStart_toStartOf="@id/tv_receivetransferorderdetail_product_code"
+        app:layout_constraintTop_toBottomOf="@id/tv_receivetransferorderdetail_dispatched" />
+
+    <TextView
+        android:id="@+id/tv_receivetransferorderdetail_requested_quantity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Fecha de recepción:"
+        app:layout_constraintEnd_toEndOf="@id/tv_receivetransferorderdetail_product_code"
+        app:layout_constraintStart_toStartOf="@id/tv_receivetransferorderdetail_product_code"
+        app:layout_constraintTop_toBottomOf="@id/tv_receivetransferorderdetail_received" />
+
+    <LinearLayout
+        android:id="@+id/ly_receivedtransferorderdetail_prepared_quantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@id/tv_receivetransferorderdetail_product_code"
+        app:layout_constraintStart_toStartOf="@id/tv_receivetransferorderdetail_product_code"
+        app:layout_constraintTop_toBottomOf="@id/tv_receivetransferorderdetail_requested_quantity">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="start"
+            android:text="Cantidad Preparada" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_receivetransferorder_quantity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_weight="1">
+
+            <EditText
+                android:id="@+id/et_receivetransferorder_quantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="@string/text_hint_bar_code"
+                android:hint="@string/text_hint_quantity"
+                android:inputType="number"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/iv_receivetransferorder_scan_quantity"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/scannerbarcode" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_receivetransferorderdetail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="64dp"
+        android:background="@drawable/btn_generic"
+        android:text="@string/text_button_register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ly_receivedtransferorderdetail_prepared_quantity"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,6 +28,7 @@ import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
 import com.ec.managementsystem.interfaces.IListenerPackingDetail;
 import com.ec.managementsystem.moduleView.BaseActivity;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.adapters.PackingDetailAdapter;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.PickingUpdateTaskController;
@@ -41,7 +42,7 @@ public class PackingDetailActivity extends BaseActivity implements IListenerPack
     private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
     Toolbar toolbar;
     RecyclerView rvPedidoList;
-    EditText etIdPicking;
+    //EditText etIdPicking;
     LinearLayout llRegister;
     List<FacturasDetasilResponse> originalList;
     List<FacturasDetasilResponse> filterList;
@@ -89,7 +90,7 @@ public class PackingDetailActivity extends BaseActivity implements IListenerPack
             tvNumberPedido = findViewById(R.id.tvNumberPedido);
             tvState = findViewById(R.id.tvState);
             rvPedidoList = findViewById(R.id.rvPedidoList);
-            etIdPicking = findViewById(R.id.etIdPicking);
+            //etIdPicking = findViewById(R.id.etIdPicking);
             llRegister = findViewById(R.id.llRegister);
             verificarYPedirPermisosDeCamara();
             Bundle bundle = getIntent().getExtras();
@@ -223,18 +224,18 @@ public class PackingDetailActivity extends BaseActivity implements IListenerPack
         if (action == CODIGO_INTENT) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                etIdPicking.setText(String.valueOf(codeBar));
+                //etIdPicking.setText(String.valueOf(codeBar));
             }
         }
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        DialogScanner dialogScanner = new DialogScanner();
-        dialogScanner.setScanMultiple(scanMultiple);
-        dialogScanner.setCode_intent(codeIntent);
-        dialogScanner.setPermisoCamaraConcedido(permisoCamaraConcedido);
-        dialogScanner.setPermisoSolicitadoDesdeBoton(permisoSolicitadoDesdeBoton);
-        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+        Intent i = new Intent(this, SensorActivity.class);
+        i.putExtra("scanMultiple", scanMultiple);
+        i.putExtra("permisoCamaraConcedido", true);
+        i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.setAction(String.valueOf(codeIntent));
+        startActivityForResult(i, codeIntent);
     }
 
     @Override
@@ -245,7 +246,7 @@ public class PackingDetailActivity extends BaseActivity implements IListenerPack
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                     String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
-                    etIdPicking.setText(String.valueOf(codeBar));
+                    //etIdPicking.setText(String.valueOf(codeBar));
                 }
             }
         }

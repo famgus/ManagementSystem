@@ -35,6 +35,7 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.ec.managementsystem.R;
@@ -67,6 +68,15 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 @SuppressLint("Wakelock")
 @SuppressWarnings("deprecation")
 public class Utils {
+
+    public static final int HEADER_TYPE = 0;
+    public static final int ITEM_TYPE = 1;
+
+    public static void changeHeaderColor(View... views) {
+        for (View view : views) {
+            view.setBackgroundResource(R.drawable.bg_header_table);
+        }
+    }
 
 
     public static void SaveKey(String key, String value) {

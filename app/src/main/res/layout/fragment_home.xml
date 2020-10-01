@@ -159,10 +159,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cvTransfer"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
+                    android:onClick="toTransferFlow"
                     android:clickable="true">
 
                     <RelativeLayout
@@ -215,7 +217,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/icon_return_product"></RelativeLayout>
+                        android:background="@drawable/mnp_devoluciones"></RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- borrar -->

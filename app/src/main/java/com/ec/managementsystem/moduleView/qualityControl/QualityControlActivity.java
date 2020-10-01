@@ -23,6 +23,7 @@ import com.ec.managementsystem.clases.responses.MotivesResponse;
 import com.ec.managementsystem.interfaces.IDelegateInsertQualityTaskControl;
 import com.ec.managementsystem.interfaces.IDelegateMotivesControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.InsertQualityTaskController;
 import com.ec.managementsystem.task.MotivesTaskController;
@@ -144,12 +145,13 @@ public class QualityControlActivity extends BaseActivity implements IDelegateIns
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        DialogScanner dialogScanner = new DialogScanner();
-        dialogScanner.setScanMultiple(scanMultiple);
-        dialogScanner.setCode_intent(codeIntent);
-        dialogScanner.setPermisoCamaraConcedido(true);
-        dialogScanner.setPermisoSolicitadoDesdeBoton(true);
-        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+        Intent i = new Intent(this, SensorActivity.class);
+        i.putExtra("scanMultiple", scanMultiple);
+        i.putExtra("permisoCamaraConcedido", true);
+        i.putExtra("permisoSolicitadoDesdeBoton", true);
+        i.setAction(String.valueOf(codeIntent));
+        startActivityForResult(i, codeIntent);
+
 
     }
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/transfer_graph"
+    android:label="Traslado"
+    app:startDestination="@id/transferTypeFragment">
+    <fragment
+        android:id="@+id/transferTypeFragment"
+        android:name="com.ec.managementsystem.moduleView.transfer.TransferTypeFragment"
+        android:label="Opciones de Traslado"
+        tools:layout="@layout/fragment_transfer_type">
+        <action
+            android:id="@+id/action_transferTypeFragment_to_preparePendingOrderFragment"
+            app:destination="@id/preparePendingOrderFragment" />
+        <action
+            android:id="@+id/action_transferTypeFragment_to_searchTransferOrderFragment"
+            app:destination="@id/searchTransferOrderFragment" />
+        <action
+            android:id="@+id/action_transferTypeFragment_to_packOffTransferFragment"
+            app:destination="@id/packOffTransferFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/preparePendingOrderFragment"
+        android:name="com.ec.managementsystem.moduleView.transfer.PreparePendingOrderFragment"
+        android:label="Preparar Ordenes"
+        tools:layout="@layout/fragment_prepare_pending_order">
+        <action
+            android:id="@+id/action_preparePendingOrderFragment_to_pendingOrderDetailFragment"
+            app:destination="@id/pendingOrderDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pendingOrderDetailFragment"
+        android:name="com.ec.managementsystem.moduleView.transfer.PendingOrderDetailFragment"
+        android:label="Detalle de Orden Asignada"
+        tools:layout="@layout/fragment_pending_order_detail" >
+        <action
+            android:id="@+id/action_pendingOrderDetailFragment_to_transferProductDetailFragment"
+            app:destination="@id/transferProductDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/transferProductDetailFragment"
+        android:name="com.ec.managementsystem.moduleView.transfer.TransferProductDetailFragment"
+        android:label="Detalle de producto de traslado"
+        tools:layout="@layout/fragment_transfer_product_detail" />
+    <fragment
+        android:id="@+id/searchTransferOrderFragment"
+        android:name="com.ec.managementsystem.moduleView.transfer.ReceiveTransferOrderFragment"
+        android:label="Pedidos por recibir"
+        tools:layout="@layout/fragment_search_transfer_order" >
+        <action
+            android:id="@+id/action_searchTransferOrderFragment_to_receiveTransferOrderDetailFragment"
+            app:destination="@id/receiveTransferOrderDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/packOffTransferFragment"
+        android:name="com.ec.managementsystem.moduleView.transfer.PackOffTransferFragment"
+        android:label="Despachar Traslados"
+        tools:layout="@layout/fragment_pack_off_transfer" />
+    <fragment
+        android:id="@+id/receiveTransferOrderDetailFragment"
+        android:name="com.ec.managementsystem.moduleView.transfer.ReceiveTransferOrderDetailFragment"
+        android:label="Descripción de artículo por recibir"
+        tools:layout="@layout/fragment_receive_transfer_order_detail" />
+</navigation>

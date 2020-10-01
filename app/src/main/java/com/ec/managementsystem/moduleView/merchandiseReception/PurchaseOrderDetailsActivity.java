@@ -32,6 +32,7 @@ import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.BoxMaster;
 import com.ec.managementsystem.clases.PedidoDetail;
 import com.ec.managementsystem.clases.PedidoDetailSmall;
+import com.ec.managementsystem.clases.ProductQuantity;
 import com.ec.managementsystem.clases.request.BarCodeRequest;
 import com.ec.managementsystem.clases.request.BoxMasterRequest;
 import com.ec.managementsystem.clases.request.ProductoRequest;
@@ -45,6 +46,7 @@ import com.ec.managementsystem.interfaces.IDelegateInsertPurchaseTaskControl;
 import com.ec.managementsystem.interfaces.IDelegateProductTaskControl;
 import com.ec.managementsystem.interfaces.IListenerBoxMaster;
 import com.ec.managementsystem.moduleView.BaseActivity;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.adapters.BoxMasterAdapter;
 import com.ec.managementsystem.moduleView.login.User;
 import com.ec.managementsystem.moduleView.product.ProductDetailsActivity;
@@ -95,6 +97,7 @@ public class PurchaseOrderDetailsActivity extends BaseActivity implements Dialog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_purchase_order_details);
+        MySingleton.getInstance().setMapCountOfProducts(new HashMap<String, ProductQuantity>());
         MySingleton.getInstance().setRegisterPurchaseOrder(false);
         verificarYPedirPermisosDeCamara();
         tableLayoutinformation = findViewById(R.id.tlTable01D);
@@ -197,7 +200,7 @@ public class PurchaseOrderDetailsActivity extends BaseActivity implements Dialog
                     // purchaseOrderRequest.setBoxMasterList(boxMasterList);
                     List<PedidoDetail> pedidoDetailList = new ArrayList<>();
                     for (Map.Entry<String, Integer> item : mapCode.entrySet()) {
-                        String [] keys = item.getKey().split("-");
+                        String[] keys = item.getKey().split("-");
                         String barCodeProduct = keys[1];
                         PedidoDetail pedido = findProductDetail(barCodeProduct);
                         if (pedido != null) {
@@ -322,13 +325,14 @@ public class PurchaseOrderDetailsActivity extends BaseActivity implements Dialog
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent) {
-        DialogScanner dialogScanner = new DialogScanner();
-        dialogScanner.setScanMultiple(scanMultiple);
-        dialogScanner.setPathReception(pathReception);
-        dialogScanner.setCode_intent(codeIntent);
-        dialogScanner.setPermisoCamaraConcedido(permisoCamaraConcedido);
-        dialogScanner.setPermisoSolicitadoDesdeBoton(permisoSolicitadoDesdeBoton);
-        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+        Intent i = new Intent(this, SensorActivity.class);
+        i.putExtra("scanMultiple", scanMultiple);
+        i.putExtra("path", pathReception);
+        i.putExtra("totalUnit", -1);
+        i.putExtra("permisoCamaraConcedido", permisoCamaraConcedido);
+        i.putExtra("permisoSolicitadoDesdeBoton", permisoSolicitadoDesdeBoton);
+        i.setAction(String.valueOf(codeIntent));
+        startActivityForResult(i, codeIntent);
     }
 
 
@@ -456,14 +460,30 @@ public class PurchaseOrderDetailsActivity extends BaseActivity implements Dialog
     @Override
     public void onProductResponse(ProductoResponse response) {
         if (response != null && response.getCode() == 200 && response.getProductDetail() != null) {
-            MySingleton.getInstance().setProductoResponse(response);
-            Intent i = new Intent(this, ProductDetailsActivity.class);
-            i.putExtra("code", response.getProductDetail().getCodBarras());
-            i.putExtra("path", pathReception);
-            startActivity(i);
+            if(validateProductCount(response.getProductDetail().getCodBarras())) {
+                MySingleton.getInstance().setProductoResponse(response);
+                Intent i = new Intent(this, ProductDetailsActivity.class);
+                i.putExtra("code", response.getProductDetail().getCodBarras());
+                i.putExtra("path", pathReception);
+                startActivity(i);
+            }else {
+                Toast.makeText(getApplicationContext(), "Producto de la orden de compra ya se encuentra registrado en el sistema", Toast.LENGTH_LONG).show();
+            }
         } else {
             Toast.makeText(getApplicationContext(), "Producto no encontrada en el sistema", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private boolean validateProductCount(String codBarras) {
+       Map<String, ProductQuantity> map =  MySingleton.getInstance().getMapCountOfProducts();
+       if(map != null) {
+           if (!map.containsKey(codBarras)) {
+               return true;
+           } else if(map.containsKey(codBarras) && !map.get(codBarras).isComplete() && map.get(codBarras).getTotalContado() + 1 <= map.get(codBarras).getTotalPedido()){
+               return  true;
+           }
+       }
+        return false;
     }
 
     public void refreshViewTable() {

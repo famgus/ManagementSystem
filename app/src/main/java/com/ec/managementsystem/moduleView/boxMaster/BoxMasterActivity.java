@@ -1,10 +1,7 @@
 package com.ec.managementsystem.moduleView.boxMaster;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,14 +11,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import com.ec.managementsystem.R;
-import com.ec.managementsystem.clases.request.BoxMasterRequest;
 import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.interfaces.IDelegateBoxMasterTaskControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
 import com.ec.managementsystem.moduleView.ScannerActivity;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
-import com.ec.managementsystem.task.BoxMasterTaskController;
 
 public class BoxMasterActivity extends BaseActivity implements DialogScanner.DialogScanerFinished, IDelegateBoxMasterTaskControl {
     private static final int CODE_INTENT_BOX_MASTER = 1;

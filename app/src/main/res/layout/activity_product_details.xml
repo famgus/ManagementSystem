@@ -429,6 +429,7 @@
                         android:gravity="center"
                         android:padding="7dp"
                         android:text="1500" />
+
                     <TextView
                         android:id="@+id/tvRestScanner"
                         android:layout_marginLeft="1dp"

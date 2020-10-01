@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".moduleView.transfer.TransferProductDetailFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/tv_transferproductdetail_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/transferproductdetail_title"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_transferproductdetail_product_code"
+            android:layout_width="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_height="wrap_content"
+            android:text="@string/all_loading_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_transferproductdetail_title" />
+
+        <TextView
+            android:id="@+id/tv_transferproductdetail_size"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/all_loading_text"
+            app:layout_constraintEnd_toEndOf="@id/tv_transferproductdetail_product_code"
+            app:layout_constraintStart_toStartOf="@id/tv_transferproductdetail_product_code"
+            app:layout_constraintTop_toBottomOf="@id/tv_transferproductdetail_product_code" />
+
+        <TextView
+            android:id="@+id/tv_transferproductdetail_color"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/all_loading_text"
+            app:layout_constraintEnd_toEndOf="@id/tv_transferproductdetail_product_code"
+            app:layout_constraintStart_toStartOf="@id/tv_transferproductdetail_product_code"
+            app:layout_constraintTop_toBottomOf="@id/tv_transferproductdetail_size" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_transferproductdetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="250dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_transferproductdetail_color"
+            app:layout_constraintVertical_bias="0.0"
+            tools:listitem="@layout/item_product_to_prepare" />
+
+        <TextView
+            android:id="@+id/tv_transferproductdetail_request_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/all_loading_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_transferproductdetail" />
+
+        <TextView
+            android:id="@+id/tv_transferproductdetail_prepared_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/all_loading_text"
+            app:layout_constraintEnd_toEndOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintStart_toStartOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintTop_toBottomOf="@id/tv_transferproductdetail_request_date" />
+
+        <TextView
+            android:id="@+id/tv_transferproductdetail_requested_quantity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/all_loading_text"
+            app:layout_constraintEnd_toEndOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintStart_toStartOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintTop_toBottomOf="@id/tv_transferproductdetail_prepared_date" />
+
+        <TextView
+            android:id="@+id/tv_productorigen"
+            android:layout_width="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_height="wrap_content"
+            android:text="Origen del artículo"
+            app:layout_constraintEnd_toEndOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintStart_toStartOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintTop_toBottomOf="@id/tv_transferproductdetail_requested_quantity" />
+
+        <RadioGroup
+            android:id="@+id/rg_transferproductdetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintStart_toStartOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintTop_toBottomOf="@id/tv_productorigen">
+
+            <RadioButton
+                android:id="@+id/rb_transferproductdetail_completedbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Caja completa" />
+
+            <RadioButton
+                android:id="@+id/rb_transferproductdetail_boxmaster"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Caja master" />
+
+            <RadioButton
+                android:id="@+id/rb_transferproductdetail_ubication"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ubicación" />
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/ly_transferproductdetail_barcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintStart_toStartOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintTop_toBottomOf="@id/rg_transferproductdetail">
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Código de Barras" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/et_barcode"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/text_hint_bar_code"
+                    android:hint="@string/text_hint_bar_code"
+                    android:inputType="text"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/iv_transferproductdetail_scan_barcode"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                app:srcCompat="@drawable/scannerbarcode" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ly_transferproductdetail_prepared_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintStart_toStartOf="@id/tv_transferproductdetail_request_date"
+            app:layout_constraintTop_toBottomOf="@id/ly_transferproductdetail_barcode">
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:text="Cantidad Preparada" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_quantity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/et_quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/text_hint_bar_code"
+                    android:hint="@string/text_hint_quantity"
+                    android:inputType="number"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/iv_transferproductdetail_scan_quantity"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                app:srcCompat="@drawable/scannerbarcode" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_transferproductdetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="64dp"
+            android:text="@string/text_button_register"
+            android:background="@drawable/btnripple"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ly_transferproductdetail_prepared_quantity"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

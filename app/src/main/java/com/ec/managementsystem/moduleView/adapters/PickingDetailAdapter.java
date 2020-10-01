@@ -137,6 +137,7 @@ public class PickingDetailAdapter extends RecyclerView.Adapter<PickingDetailAdap
             ivAction = itemView.findViewById(R.id.ivAction);
             ivRemove = itemView.findViewById(R.id.ivRemove);
             item_container = itemView.findViewById(R.id.item_container);
+
         }
 
         void bind(final PickingPedidoDetailResponse item, final int position, final PickingDetailViewHolder holder) {
@@ -151,6 +152,8 @@ public class PickingDetailAdapter extends RecyclerView.Adapter<PickingDetailAdap
                 holder.ivRemove.setVisibility(View.GONE);
             }else {
                 if (item != null) {
+                    holder.ivAction.setEnabled(true); //recibirmercaderiasmall
+                    holder.ivAction.setImageResource(R.drawable.recibir_mercaderia);
                     holder.tvNumber.setText(String.valueOf(position));
                     holder.tvDetail.setText(item.getDescription());
                     holder.tvTalla.setText(item.getTalla());
@@ -190,8 +193,8 @@ public class PickingDetailAdapter extends RecyclerView.Adapter<PickingDetailAdap
                         }
                     });
                     if(item.isFinish()){
+                        holder.ivAction.setEnabled(false);
                         holder.ivAction.setImageResource(R.drawable.baseline_done_black_48);
-                        holder.ivAction.setForegroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.green)));
                         holder.ivRemove.setVisibility(View.GONE);
                     }
                 }

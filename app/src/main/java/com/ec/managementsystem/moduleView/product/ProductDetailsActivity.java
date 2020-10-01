@@ -27,12 +27,14 @@ import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.BoxMaster;
 import com.ec.managementsystem.clases.PedidoDetail;
 import com.ec.managementsystem.clases.ProductDetail;
+import com.ec.managementsystem.clases.ProductQuantity;
 import com.ec.managementsystem.clases.request.ProductoRequest;
 import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.ProductoResponse;
 import com.ec.managementsystem.interfaces.IDelegateProductTaskControl;
 import com.ec.managementsystem.moduleView.BaseActivity;
 import com.ec.managementsystem.moduleView.ScannerActivity;
+import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.ui.DialogLocationBoxMaster;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.ProductTaskController;
@@ -111,14 +113,15 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             String code = bundle.getString("code");
+            pathReception = bundle.getInt("path", 1);
             if (existCodeBar(code)) {
                 tvCode.setText(code);
                 updateView();
+                updateMapInSingleton();
             } else {
                 Toast.makeText(this, "El código escaneado no corresponde a ningún producto en la orden de compra", Toast.LENGTH_LONG).show();
                 onBackPressed();
             }
-            pathReception = bundle.getInt("path", 1);
         }
 
         if (pathReception == 1) {  //Reception by Unit
@@ -148,7 +151,11 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
         btnnextscanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                escanear();
+                if (totalcontados < totalUnidades) {
+                    escanear();
+                } else {
+                    Toast.makeText(ProductDetailsActivity.this, "Ya alcanzó la cantidad máxima de productos a recibir", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -205,7 +212,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
                 tvTotalBoxMaster.setText(String.valueOf(totalInBoxMaster));
                 codes.add(productDetailSelected.getCodBarras());
             }
-            tvProductNameTable.setText(productDetailSelected.getDescripcion());
+            tvProductNameTable.setText(productDetailSelected.getDescripcion().substring(0, 5));
             posBoxSelected = MySingleton.getInstance().getPosclicked();
             boxMasterSelected = MySingleton.getInstance().boxMasterList.get(posBoxSelected);
             boxMasterSelected.setCountProduct(codes.size());
@@ -268,7 +275,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
     }
 
     private void showDialogScanner(boolean scanMultiple, int codeIntent, double totalU, String codeReader) {
-        DialogScanner dialogScanner = new DialogScanner();
+        /*DialogScanner dialogScanner = new DialogScanner();
         dialogScanner.setScanMultiple(scanMultiple);
         dialogScanner.setPathReception(pathReception);
         dialogScanner.setCode_intent(codeIntent);
@@ -276,7 +283,17 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
         dialogScanner.setPermisoSolicitadoDesdeBoton(true);
         dialogScanner.setTotalUnit(totalU);
         dialogScanner.setCodeReader(codeReader);
-        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");
+        dialogScanner.show(getSupportFragmentManager(), "alert dialog generate codes");*/
+
+        Intent i = new Intent(this, SensorActivity.class);
+        i.putExtra("scanMultiple", scanMultiple);
+        i.putExtra("path", pathReception);
+        i.putExtra("totalUnit", totalU);
+        i.putExtra("permisoCamaraConcedido", permisoCamaraConcedido);
+        i.putExtra("permisoSolicitadoDesdeBoton", permisoSolicitadoDesdeBoton);
+        i.putExtra("codeReader", codeReader);
+        i.setAction(String.valueOf(codeIntent));
+        startActivityForResult(i, codeIntent);
     }
 
     @Override
@@ -291,7 +308,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
                         for (Map.Entry<String, Integer> item : bundleResponse.getMapCodes().entrySet()) {
                             if (!item.getKey().equals(productDetailSelected.getCodBarras())) {
                                 Toast.makeText(this, "Nuevo producto encontrado", Toast.LENGTH_LONG).show();
-                                totalcontados = 0;
+                                //totalcontados = 0;
                                 existDifferentProducts = item.getKey();
                             }
                             for (int i = 0; i < item.getValue(); i++) {
@@ -375,6 +392,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
                 totalcontados = 1;
                 totalInBoxMaster = totalInBoxMaster + 1;
                 updateView();
+                updateMapInSingleton();
             } else {
                 Toast.makeText(this, "El código escaneado no corresponde a ningún producto en la orden de compra", Toast.LENGTH_LONG).show();
             }
@@ -401,7 +419,46 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
             boxMasterSelected.setCodesProduct(codes);
             MySingleton.getInstance().getBoxMasterList().set(posBoxSelected, boxMasterSelected);
             MySingleton.getInstance().setStatusitenclicked(true);
+            updateMapInSingleton();
             onBackPressed();
+        }
+    }
+
+    private void updateMapInSingleton() {
+        try {
+            Map<String, ProductQuantity> quantityMap = MySingleton.getInstance().getMapCountOfProducts();
+            String key = productDetailSelected.getCodBarras();
+            ProductQuantity productQuantity;
+            boolean isNew = false;
+            if (quantityMap.containsKey(key)) {
+                productQuantity = quantityMap.get(key);
+            } else {
+                productQuantity = new ProductQuantity();
+                productQuantity.setBarCodeProduct(productDetailSelected.getCodBarras());
+                productQuantity.setBarCodeBoxMaster(boxMasterSelected.getBarCode());
+                productQuantity.setTotalContado(totalcontados);
+                productQuantity.setTotalPedido(totalUnidades);
+                productQuantity.setComplete(false);
+                isNew = true;
+            }
+            if (productQuantity != null) {
+                if (totalUnidades <= totalcontados && pathReception == 1) {
+                    productQuantity.setComplete(true);
+                    productQuantity.setTotalContado(totalcontados);
+                } else if (totalUnidades > totalcontados && pathReception == 1) {
+                   if(!isNew){
+                       int count = productQuantity.getTotalContado();
+                       if(count + totalcontados >= productQuantity.getTotalPedido()){
+                           productQuantity.setComplete(true);
+                           productQuantity.setTotalContado(count + totalcontados);
+                       }
+                   }
+                }
+                quantityMap.put(key, productQuantity);
+                MySingleton.getInstance().setMapCountOfProducts(quantityMap);
+            }
+        } catch (Exception e) {
+
         }
     }
 
@@ -447,14 +504,14 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
 
     @Override
     public void onScannerBarCode(BundleResponse bundleResponse, int action) {
-        if (action == CODIGO_INTENT){
+        if (action == CODIGO_INTENT) {
             if (!scannerkind) {
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                     String existDifferentProducts = "";
                     for (Map.Entry<String, Integer> item : bundleResponse.getMapCodes().entrySet()) {
                         if (!item.getKey().equals(productDetailSelected.getCodBarras())) {
                             Toast.makeText(this, "Nuevo producto encontrado", Toast.LENGTH_LONG).show();
-                            totalcontados = 0;
+                            //totalcontados = 0;
                             existDifferentProducts = item.getKey();
                         }
                         for (int i = 0; i < item.getValue(); i++) {
@@ -480,7 +537,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
                 }
             }
         }
-        if (action == NEW_CODIGO_PRODUCT_INTENT){
+        if (action == NEW_CODIGO_PRODUCT_INTENT) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
                 ProductoRequest productoRequest = new ProductoRequest();
@@ -491,7 +548,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
             }
         }
 
-        if(action == CODE_INTENT_LOCATION && dialogLocationBoxMaster != null){
+        if (action == CODE_INTENT_LOCATION && dialogLocationBoxMaster != null) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
                 dialogLocationBoxMaster.getEtLocation().setText(codeBar);

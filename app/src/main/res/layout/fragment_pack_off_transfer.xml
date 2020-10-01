@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".moduleView.transfer.PackOffTransferFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/iv_packoff"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/despachos"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_packoff_series_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_packoff">
+
+            <TextView
+                android:id="@+id/tv_series_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Número de serie"
+                app:layout_constraintBottom_toBottomOf="@id/et_packofftransfer_series"
+                app:layout_constraintEnd_toStartOf="@id/et_packofftransfer_series"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/et_packofftransfer_series" />
+
+            <EditText
+                android:id="@+id/et_packofftransfer_series"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:hint="Serie"
+                android:inputType="textCapCharacters"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_series_number"
+                app:layout_constraintTop_toTopOf="parent"
+                android:autofillHints="XXXXXX" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_packoff_order_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@id/cl_packoff_series_number"
+            app:layout_constraintStart_toStartOf="@id/cl_packoff_series_number"
+            app:layout_constraintTop_toBottomOf="@id/cl_packoff_series_number">
+
+            <TextView
+                android:id="@+id/tv_order_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Número de pedido"
+                app:layout_constraintBottom_toBottomOf="@id/et_packofftransfer_order_number"
+                app:layout_constraintEnd_toStartOf="@id/et_packofftransfer_order_number"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/et_packofftransfer_order_number" />
+
+            <EditText
+                android:id="@+id/et_packofftransfer_order_number"
+                android:layout_width="0dp"
+                android:inputType="number"
+                android:hint="Pedido"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_order_number"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/btn_packoff_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Buscar"
+            android:background="@drawable/btn_generic"
+            app:layout_constraintEnd_toEndOf="@id/cl_packoff_series_number"
+            app:layout_constraintStart_toStartOf="@id/cl_packoff_series_number"
+            app:layout_constraintTop_toBottomOf="@id/cl_packoff_order_number" />
+
+        <TextView
+            android:id="@+id/tv_packoff_title_table"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Lista de validación de despacho"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_packoff_search" />
+
+        <RelativeLayout
+            android:id="@+id/rl_rvwrapper"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/tv_packoff_transport"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="200dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_packoff_title_table"
+            app:layout_constraintVertical_bias="0.0">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_packofftransfer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                tools:listitem="@layout/item_transfer_order" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_packoff_transport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Id Transporte"
+            app:layout_constraintBottom_toTopOf="@+id/et_packoff_transport"
+            app:layout_constraintEnd_toEndOf="@id/cl_packoff_series_number"
+            app:layout_constraintStart_toStartOf="@id/cl_packoff_series_number"
+            app:layout_constraintTop_toBottomOf="@id/rl_rvwrapper" />
+
+        <EditText
+            android:id="@+id/et_packoff_transport"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="XXXXX"
+            app:layout_constraintBottom_toTopOf="@id/btn_packoff_register"
+            app:layout_constraintEnd_toEndOf="@id/cl_packoff_series_number"
+            app:layout_constraintStart_toStartOf="@id/cl_packoff_series_number"
+            app:layout_constraintTop_toBottomOf="@id/tv_packoff_transport"
+            app:layout_constraintVertical_bias="0.0"
+            android:autofillHints="0000" />
+
+        <Button
+            android:id="@+id/btn_packoff_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="8dp"
+            android:text="@string/text_button_register"
+            android:visibility="gone"
+            android:background="@drawable/btn_generic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/cl_packoff_series_number"
+            app:layout_constraintStart_toStartOf="@id/cl_packoff_series_number"
+            app:layout_constraintTop_toBottomOf="@id/et_packoff_transport" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>
