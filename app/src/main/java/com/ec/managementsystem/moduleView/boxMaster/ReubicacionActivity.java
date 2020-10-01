@@ -267,6 +267,12 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
                     //scanBarCode(CODE_INTENT_BOX_MASTER_ORIGEN);
                 }
             });
+            ivScanBarCodeBoxMasterOrigen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scanBarCode(CODE_INTENT_BOX_MASTER_ORIGEN);
+                }
+            });
 
             //BoxMaster de Ubicacion a ubicacion
             ivBarCodeUbicacionOrigen.setOnClickListener(new View.OnClickListener() {
@@ -346,6 +352,66 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
                 @Override
                 public void onClick(View view) {
                     //scanBarCode(CODE_INTENT_AUCM_ARTICLE);
+                }
+            });
+
+            //articulo de ubicacion por ubicacion
+            ivAUBarCodeUbicacionOrigen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scanBarCode(CODE_INTENT_AU_UBICACION_ORIGIN);
+                }
+            });
+            ivAUUbicacionDestino.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scanBarCode(CODE_INTENT_AU_UBICACION_DESTINY);
+                }
+            });
+            ivAUScanBarCodeArticle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scanBarCode(CODE_INTENT_AU_ARTICLE);
+                }
+            });
+
+            //articulo CajaMaster a ubicacion
+            ivACMUBarCodeMasterBoxOrigen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scanBarCode(CODE_INTENT_ACMU_BOX_MASTER_ORIGEN);
+                }
+            });
+            ivACMUBarCodeUbicacionDestino.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scanBarCode(CODE_INTENT_ACMU_UBICACION_DESTINY);
+                }
+            });
+            ivACMUBarCodeArticle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scanBarCode(CODE_INTENT_ACMU_ARTICLE);
+                }
+            });
+
+            //articulo ubicacion a cajamaster
+            ivAUCMBarCodeMasterBoxDestiny.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scanBarCode(CODE_INTENT_AUCM_BOX_MASTER_DESTINY);
+                }
+            });
+            ivAUCMBarCodeUbicacionOrigen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scanBarCode(CODE_INTENT_AUCM_UBICACION_ORIGEN);
+                }
+            });
+            ivAUCMBarCodeArticle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scanBarCode(CODE_INTENT_AUCM_ARTICLE);
                 }
             });
 

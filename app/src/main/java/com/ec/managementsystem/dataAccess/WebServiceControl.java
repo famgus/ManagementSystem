@@ -55,8 +55,8 @@ public class WebServiceControl {
     public static String GetURL() {
         int port = 9298;
         if (BuildConfig.DEBUG) {
-            String IP_DEBUG = "3.21.12.158";
-            //IP_DEBUG = "10.238.26.69";
+            //String IP_DEBUG = "3.21.12.158";
+            String IP_DEBUG = "10.238.26.69";
             port = 9298;
             return "http://" + IP_DEBUG + ":" + port + "/Service1.asmx";
         } else {
