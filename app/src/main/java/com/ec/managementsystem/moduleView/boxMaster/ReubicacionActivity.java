@@ -252,19 +252,19 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
            ivScanBarCodeArticle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_ARTICLE);
+                    //scanBarCode(CODE_INTENT_ARTICLE);
                 }
             });
             ivScanBarCodeBoxMasterDestiny.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_BOX_MASTER_DESTINY);
+                    //scanBarCode(CODE_INTENT_BOX_MASTER_DESTINY);
                 }
             });
             ivScanBarCodeBoxMasterOrigen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_BOX_MASTER_ORIGEN);
+                    //scanBarCode(CODE_INTENT_BOX_MASTER_ORIGEN);
                 }
             });
 
@@ -272,20 +272,20 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
             ivBarCodeUbicacionOrigen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_UBICACION_ORIGIN);
+                    //scanBarCode(CODE_INTENT_UBICACION_ORIGIN);
                 }
             });
             ivScanBarCodeCajaMaster.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode( CODE_INTENT_BOX_MASTER);
+                    //scanBarCode( CODE_INTENT_BOX_MASTER);
                 }
             });
 
             ivUbicacionDestino.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_UBICACION_DESTINY);
+                    //scanBarCode(CODE_INTENT_UBICACION_DESTINY);
                 }
             });
 
@@ -293,19 +293,19 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
             ivAUBarCodeUbicacionOrigen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_AU_UBICACION_ORIGIN);
+                    //scanBarCode(CODE_INTENT_AU_UBICACION_ORIGIN);
                 }
             });
             ivAUUbicacionDestino.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_AU_UBICACION_DESTINY);
+                    //scanBarCode(CODE_INTENT_AU_UBICACION_DESTINY);
                 }
             });
             ivAUScanBarCodeArticle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_AU_ARTICLE);
+                   // scanBarCode(CODE_INTENT_AU_ARTICLE);
                 }
             });
 
@@ -313,19 +313,19 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
             ivACMUBarCodeMasterBoxOrigen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_ACMU_BOX_MASTER_ORIGEN);
+                    //scanBarCode(CODE_INTENT_ACMU_BOX_MASTER_ORIGEN);
                 }
             });
             ivACMUBarCodeUbicacionDestino.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_ACMU_UBICACION_DESTINY);
+                    //scanBarCode(CODE_INTENT_ACMU_UBICACION_DESTINY);
                 }
             });
             ivACMUBarCodeArticle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_ACMU_ARTICLE);
+                    //scanBarCode(CODE_INTENT_ACMU_ARTICLE);
                 }
             });
 
@@ -333,19 +333,19 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
             ivAUCMBarCodeMasterBoxDestiny.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_AUCM_BOX_MASTER_DESTINY);
+                    //scanBarCode(CODE_INTENT_AUCM_BOX_MASTER_DESTINY);
                 }
             });
             ivAUCMBarCodeUbicacionOrigen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_AUCM_UBICACION_ORIGEN);
+                    //scanBarCode(CODE_INTENT_AUCM_UBICACION_ORIGEN);
                 }
             });
             ivAUCMBarCodeArticle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_AUCM_ARTICLE);
+                    //scanBarCode(CODE_INTENT_AUCM_ARTICLE);
                 }
             });
 
@@ -358,11 +358,11 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
 
     private void loadSpinner() {
         ArrayList<KeyValue> items2 = new ArrayList<>();
-        items2.add(new KeyValue(1, "Artículo De MasterBox a MasterBox"));
-        items2.add(new KeyValue(2, "MasterBox de Ubicación a Ubicación"));
+        items2.add(new KeyValue(1, "Artículo De Caja Master a Caja Master"));
+        items2.add(new KeyValue(2, "Caja Master de Ubicación a Ubicación"));
         items2.add(new KeyValue(3, "Artículo de Ubicación a  Ubicación"));
-        items2.add(new KeyValue(4, "Artículo de MasterBox a  Ubicación"));
-        items2.add(new KeyValue(5, "Artículo de Ubicación a  MasterBox"));
+        items2.add(new KeyValue(4, "Artículo de Caja Master a  Ubicación"));
+        items2.add(new KeyValue(5, "Artículo de Ubicación a  Caja Master"));
         KeyValueSpinner motiveAdapter = new KeyValueSpinner(this, items2);
         spAction.setAdapter(motiveAdapter);
         spAction.post(new Runnable() {
@@ -406,7 +406,6 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
                     llArticloXUbication.setVisibility(View.GONE);
                     llArticloCajaMasterUbicacion.setVisibility(View.GONE);
                     llArticloUbicacionCajaMaster.setVisibility(View.VISIBLE);
-
                 }
             }
 
@@ -414,7 +413,6 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
     }
 
     @Override
@@ -463,7 +461,6 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                     String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
                     etBarCodeBoxMasterOrigen.setText(codeBar);
-
                 }
             }
             //articulos ubicacion por ubicacion
@@ -510,7 +507,7 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
                     etACMUBarCodeArticle.setText(codeBar);
                 }
             }
-            //articulo ubicacion a masterbox
+            //articulo ubicacion a Caja Master
             if (data != null && data.getAction().equals(String.valueOf(CODE_INTENT_AUCM_BOX_MASTER_DESTINY))) {
                 BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
                 if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
@@ -628,7 +625,7 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
                 etAUBarCodeUbicacionOrigen.setText(codeBar);
             }
         }
-        //articulo MasterBox a ubicacion
+        //articulo Caja Master a ubicacion
         if (action == CODE_INTENT_ACMU_ARTICLE) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
@@ -647,7 +644,7 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
                 etACMUBarCodeMasterBoxOrigen.setText(codeBar);
             }
         }
-        // articulo ubicacion a MasterBox
+        // articulo ubicacion a Caja Master
         if (action == CODE_INTENT_AUCM_ARTICLE) {
             if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
                 String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();

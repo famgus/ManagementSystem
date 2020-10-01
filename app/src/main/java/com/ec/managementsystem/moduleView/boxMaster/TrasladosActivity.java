@@ -84,13 +84,13 @@ public class TrasladosActivity extends BaseActivity implements IDelegateBoxMaste
             ivScanBarCodeArticle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_ARTICLE);
+                    //scanBarCode(CODE_INTENT_ARTICLE);
                 }
             });
             ivScanBarCodeBoxMasterDestiny.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_BOX_MASTER_DESTINY);
+                    //scanBarCode(CODE_INTENT_BOX_MASTER_DESTINY);
                 }
             });
         } catch (Exception e) {
