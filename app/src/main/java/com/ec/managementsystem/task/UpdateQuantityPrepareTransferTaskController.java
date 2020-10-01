@@ -2,12 +2,12 @@ package com.ec.managementsystem.task;
 
 import android.os.AsyncTask;
 
-import com.ec.managementsystem.clases.request.UpdateQuantityPrepareTransferRequest;
+import com.ec.managementsystem.clases.request.SaveTransferPrepareRequest;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.dataAccess.WebServiceControl;
 import com.ec.managementsystem.interfaces.IDelegateResponseGeneric;
 
-public class UpdateQuantityPrepareTransferTaskController extends AsyncTask<UpdateQuantityPrepareTransferRequest, Void, GenericResponse> {
+public class UpdateQuantityPrepareTransferTaskController extends AsyncTask<SaveTransferPrepareRequest, Void, GenericResponse> {
 
     IDelegateResponseGeneric<GenericResponse> listener;
 
@@ -16,8 +16,8 @@ public class UpdateQuantityPrepareTransferTaskController extends AsyncTask<Updat
     }
 
     @Override
-    protected GenericResponse doInBackground(UpdateQuantityPrepareTransferRequest... updateQuantityPrepareTransferRequests) {
-        return WebServiceControl.updateQuantityPrepareTransfer(updateQuantityPrepareTransferRequests[0]);
+    protected GenericResponse doInBackground(SaveTransferPrepareRequest... updateQuantityPrepareTransferRequests) {
+        return WebServiceControl.SaveTransferPrepare(updateQuantityPrepareTransferRequests[0]);
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.ec.managementsystem.clases.BoxMaster;
+import com.ec.managementsystem.clases.ProductQuantity;
 import com.ec.managementsystem.clases.responses.FacturasClientResponse;
 import com.ec.managementsystem.clases.responses.PedidoPickingResponse;
 import com.ec.managementsystem.clases.responses.PedidoResponse;
@@ -14,7 +15,9 @@ import com.google.gson.Gson;
 import com.google.gson.internal.bind.JsonTreeReader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MySingleton {
     private static MySingleton ourInstance;
@@ -29,6 +32,12 @@ public class MySingleton {
     public FacturasClientResponse packingResponse;
     private boolean registerPurchaseOrder;
 
+    public Map<String, ProductQuantity> getMapCountOfProducts() {
+        return mapCountOfProducts;
+    }
+
+    Map<String, ProductQuantity> mapCountOfProducts; //The key is boxMaster Barcode and Porduct barcode
+
     public static MySingleton getInstance() {
         try {
             if (ourInstance == null) {
@@ -40,6 +49,7 @@ public class MySingleton {
                 ourInstance.productoResponse = null;
                 ourInstance.boxMasterList = new ArrayList<>();
                 ourInstance.registerPurchaseOrder = false;
+                ourInstance.mapCountOfProducts = new HashMap<>();
             }
         } catch (Exception e) {
         }
@@ -97,6 +107,14 @@ public class MySingleton {
     public void setPackingResponse(FacturasClientResponse packingResponse) {
         this.packingResponse = packingResponse;
     }
+
+    public void setMapCountOfProducts(Map<String, ProductQuantity> mapCountOfProducts) {
+        this.mapCountOfProducts = mapCountOfProducts;
+    }
+
+
+
+
 
     public PickingPedidoUserResponse getPickingUserResponse() {
         return pickingResponse;

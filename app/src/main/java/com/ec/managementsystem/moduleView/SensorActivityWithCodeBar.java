@@ -16,7 +16,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,6 +111,15 @@ public class SensorActivityWithCodeBar extends BaseActivity {
         } else {
             tvCounter.setVisibility(View.GONE);
         }
+        if (bundle != null && bundle.containsKey("quantity")) {
+            Log.i("onCreate", "Read Quantity");
+            count = bundle.getInt("quantity");
+            Log.i("onCreate", String.valueOf(count));
+            tvCounter.setText(String.valueOf(count));
+            for (int i = 1; i <= count; i++) {
+                updateMap();
+            }
+        }
 
         llFinish.setOnClickListener(
                 new View.OnClickListener() {
@@ -160,6 +168,7 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                 i.putExtra("path", pathReception);
                 i.putExtra("totalUnit", totalUnit);
                 i.putStringArrayListExtra("barCodes", barCodes);
+                i.putExtra("quantity", count);
                 i.setAction(String.valueOf(code_intent));
                 startActivityForResult(i, code_intent);
             }
@@ -179,6 +188,7 @@ public class SensorActivityWithCodeBar extends BaseActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 String code = editable.toString();
+                boolean isValid=true;
                 Log.i("afterTextChanged", String.valueOf(barCodes.size()));
                 Log.i("afterTextChanged", code);
 
@@ -187,17 +197,21 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                         {
                             Utils.StopSound();
                             codeReader = etBarCode.getText().toString().replaceAll("\n", "");
-                            codeReader=codeReader.trim();
+                            codeReader = codeReader.trim();
+
                             //etBarCode.setText(codeReader);
-                            if (!showDialog && totalUnit != -1 && count + 1 > totalUnit) {
+                            if (totalUnit != -1 && count + 1 > totalUnit) {
                                 showDialog = true;
+                                Log.i("afterTextChanged", "El total de artículos contados supera el total de unidades");
                                 ShowDialog("Alerta", "El total de artículos contados supera el total de unidades de la orden de compra");
+                                etBarCode.setText("");
+                                isValid=false;
                             } else {
 
                                 if (!barCodes.isEmpty()) {
                                     boolean valid = false;
                                     for (int i = 0; i < barCodes.size() - 1; i++) {
-                                        String barCode=barCodes.get(i).trim();
+                                        String barCode = barCodes.get(i).trim();
                                         Log.i("Compare 1", codeReader);
                                         Log.i("Compare 2", barCode);
                                         if (codeReader.equals(barCode)) {
@@ -217,19 +231,22 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                                     tvCounter.setText(String.valueOf(++count));
                                     updateMapCodeRead();
                                 }
+
                             }
 
-                            Utils.PlaySound(false);
-                            if (!showDialog) {
-                                if (!scanMultiple && etBarCode.getText().length() > 0) {
-                                    FinishActivity();
-                                } else {
-                                    if (scanMultiple) {
-                                        etBarCode.setText("");
+                            if (isValid) {
+                                Utils.PlaySound(false);
+                                if (!showDialog) {
+                                    if (!scanMultiple && etBarCode.getText().length() > 0) {
+                                        FinishActivity();
+                                    } else {
+                                        if (scanMultiple) {
+                                            etBarCode.setText("");
+                                        }
                                     }
+                                } else {
+                                    createDataResponse();
                                 }
-                            } else {
-                                createDataResponse();
                             }
                         }
                     }
@@ -239,7 +256,7 @@ public class SensorActivityWithCodeBar extends BaseActivity {
     }
 
     public void createDataResponse() {
-        Log.i("createDataResponse",String.valueOf(mapCodes.size()));
+        Log.i("createDataResponse", String.valueOf(mapCodes.size()));
         Utils.StopSound();
         Intent intentRegreso = new Intent();
         BundleResponse bundleResponse = new BundleResponse();
@@ -275,6 +292,7 @@ public class SensorActivityWithCodeBar extends BaseActivity {
                         i.putExtra("path", pathReception);
                         i.putExtra("totalUnit", totalUnit);
                         i.putStringArrayListExtra("barCodes", barCodes);
+                        i.putExtra("quantity", count);
                         startActivityForResult(i, code_intent);
                     }
                     permisoCamaraConcedido = true;
@@ -306,18 +324,19 @@ public class SensorActivityWithCodeBar extends BaseActivity {
     }
 
     private void updateMapCodeRead() {
-        int count= mapCodes.size();
-        Log.i("updateMapCodeRead",String.valueOf( count));
+        int count = mapCodes.size();
+        Log.i("updateMapCodeRead", String.valueOf(count));
         mapCodes.put(codeReader, count);
     }
 
     private void updateMap() {
-        int count= mapCodes.size();
-        Log.i("updateMap",String.valueOf( count));
-        mapCodes.put(String.valueOf( count), count);
+        int count = mapCodes.size();
+        Log.i("updateMap", String.valueOf(count));
+        mapCodes.put(String.valueOf(count), count);
     }
 
     public void ShowDialog(String subject, String body) {
+        Log.i("ShowDialog", "ShowDialog");
         try {
             android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(SensorActivityWithCodeBar.this);
             alertDialogBuilder

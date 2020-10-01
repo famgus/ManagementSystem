@@ -77,12 +77,20 @@ public class SendPickingActivity extends BaseActivity implements IDelegateUpdate
             tiedCodeToValidate = findViewById(R.id.tiet_sendpicking);
             tiedCodeToValidate.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    for(GuideModel guideModel : originalList){
+                        guideModel.setVerified(false);
+                        int index = originalList.indexOf(guideModel);
+                        filterList.set(index, guideModel);
+                        invoicesForSendAdapter.notifyItemChanged(index);
+                    }
+                }
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+
                     for(GuideModel guideModel : originalList){
-                        if(guideModel.getSeriesNumber().equals(s.toString())){
+                        if(guideModel.getIdPicking().equals(s.toString())){
                             guideModel.setVerified(true);
                             int index = originalList.indexOf(guideModel);
                             filterList.set(index, guideModel);

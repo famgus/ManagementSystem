@@ -26,6 +26,7 @@ import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.clases.responses.PickingPedidoDetailResponse;
 import com.ec.managementsystem.clases.responses.PickingPedidoUserResponse;
+import com.ec.managementsystem.interfaces.IDelegateResponseGeneric;
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
 import com.ec.managementsystem.interfaces.IListenerPickingDetail;
 import com.ec.managementsystem.moduleView.BaseActivity;
@@ -33,6 +34,7 @@ import com.ec.managementsystem.moduleView.SensorActivity;
 import com.ec.managementsystem.moduleView.adapters.PickingDetailAdapter;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.PickingUpdateTaskController;
+import com.ec.managementsystem.task.RegisterIdPickingTaskController;
 import com.ec.managementsystem.util.MySingleton;
 
 import java.util.ArrayList;
@@ -40,7 +42,7 @@ import java.util.List;
 
 public class PickingDetailActivity extends BaseActivity implements IListenerPickingDetail, IDelegateUpdatePickingControl {
     private static final int CODIGO_PERMISOS_CAMARA = 1, CODIGO_INTENT = 2;
-    public static final int REGISTERED_PICKING_INTENT = 10001;
+    public static final int REGISTERED_PICKING_INTENT = 10001, PICKING_ID_INTENT = 10002;
     private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
     Toolbar toolbar;
     RecyclerView rvPedidoList;
@@ -250,6 +252,27 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
                 }
             }
             llRegister.setVisibility((totalProducts == (originalList.size() - 1)) ? View.VISIBLE : View.GONE);
+        }else if(requestCode == PICKING_ID_INTENT){
+            if (resultCode == Activity.RESULT_OK) {
+                if(data != null){
+                    BundleResponse bundleResponse = (BundleResponse) data.getSerializableExtra("codigo");
+                    if (bundleResponse != null && bundleResponse.getMapCodes().size() > 0) {
+                        String codeBar = bundleResponse.getMapCodes().keySet().iterator().next();
+                        RegisterIdPickingTaskController registerIdPickingTaskController = new RegisterIdPickingTaskController(header.getNumberSerie(), codeBar,header.getNumberPedido(), new IDelegateResponseGeneric<GenericResponse>() {
+                            @Override
+                            public void onResponse(GenericResponse response) {
+                                if(response != null && response.getCode() == 200){
+                                    Toast.makeText(PickingDetailActivity.this, "Se registró el id correctamente", Toast.LENGTH_SHORT).show();
+                                    onBackPressed();
+                                }else{
+                                    Toast.makeText(PickingDetailActivity.this, "Error al registrar el id", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        registerIdPickingTaskController.execute();
+                    }
+                }
+            }
         }
     }
 
@@ -272,8 +295,8 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
             header.setComplete(true);
             MySingleton.getInstance().setPickingUserResponse(header);
             MySingleton.SavePedidoPicking();
-            Toast.makeText(PickingDetailActivity.this, "Picking resgistrado correctamente", Toast.LENGTH_LONG).show();
-            onBackPressed();
+            Toast.makeText(PickingDetailActivity.this, "Picking resgistrado correctamente, debe asignar un id", Toast.LENGTH_LONG).show();
+            showDialogScanner(false, PICKING_ID_INTENT);
         } else {
             Toast.makeText(PickingDetailActivity.this, "Error actualizando el estado del pedido", Toast.LENGTH_LONG).show();
         }

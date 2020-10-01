@@ -106,6 +106,7 @@
         android:layout_marginStart="64dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="64dp"
+        android:visibility="gone"
         android:text="@string/pendingorderdetail_add_box"
         android:background="@drawable/btnripple"
         app:layout_constraintEnd_toEndOf="parent"

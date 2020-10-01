@@ -27,6 +27,7 @@ import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.BoxMaster;
 import com.ec.managementsystem.clases.PedidoDetail;
 import com.ec.managementsystem.clases.ProductDetail;
+import com.ec.managementsystem.clases.ProductQuantity;
 import com.ec.managementsystem.clases.request.ProductoRequest;
 import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.ProductoResponse;
@@ -112,14 +113,15 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             String code = bundle.getString("code");
+            pathReception = bundle.getInt("path", 1);
             if (existCodeBar(code)) {
                 tvCode.setText(code);
                 updateView();
+                updateMapInSingleton();
             } else {
                 Toast.makeText(this, "El código escaneado no corresponde a ningún producto en la orden de compra", Toast.LENGTH_LONG).show();
                 onBackPressed();
             }
-            pathReception = bundle.getInt("path", 1);
         }
 
         if (pathReception == 1) {  //Reception by Unit
@@ -149,9 +151,9 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
         btnnextscanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(totalcontados < totalUnidades){
+                if (totalcontados < totalUnidades) {
                     escanear();
-                }else{
+                } else {
                     Toast.makeText(ProductDetailsActivity.this, "Ya alcanzó la cantidad máxima de productos a recibir", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -261,7 +263,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
         i.putExtra("codeReader", productDetailSelected.getCodBarras());
         i.putExtra("totalUnit", totalUnidades);
         startActivityForResult(i, CODIGO_INTENT);*/
-        showDialogScanner(true, CODIGO_INTENT, (totalUnidades - (totalcontados-1)), productDetailSelected.getCodBarras());
+        showDialogScanner(true, CODIGO_INTENT, totalUnidades, productDetailSelected.getCodBarras());
     }
 
     private void escanearNewProduct() {
@@ -390,6 +392,7 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
                 totalcontados = 1;
                 totalInBoxMaster = totalInBoxMaster + 1;
                 updateView();
+                updateMapInSingleton();
             } else {
                 Toast.makeText(this, "El código escaneado no corresponde a ningún producto en la orden de compra", Toast.LENGTH_LONG).show();
             }
@@ -416,7 +419,46 @@ public class ProductDetailsActivity extends BaseActivity implements IDelegatePro
             boxMasterSelected.setCodesProduct(codes);
             MySingleton.getInstance().getBoxMasterList().set(posBoxSelected, boxMasterSelected);
             MySingleton.getInstance().setStatusitenclicked(true);
+            updateMapInSingleton();
             onBackPressed();
+        }
+    }
+
+    private void updateMapInSingleton() {
+        try {
+            Map<String, ProductQuantity> quantityMap = MySingleton.getInstance().getMapCountOfProducts();
+            String key = productDetailSelected.getCodBarras();
+            ProductQuantity productQuantity;
+            boolean isNew = false;
+            if (quantityMap.containsKey(key)) {
+                productQuantity = quantityMap.get(key);
+            } else {
+                productQuantity = new ProductQuantity();
+                productQuantity.setBarCodeProduct(productDetailSelected.getCodBarras());
+                productQuantity.setBarCodeBoxMaster(boxMasterSelected.getBarCode());
+                productQuantity.setTotalContado(totalcontados);
+                productQuantity.setTotalPedido(totalUnidades);
+                productQuantity.setComplete(false);
+                isNew = true;
+            }
+            if (productQuantity != null) {
+                if (totalUnidades <= totalcontados && pathReception == 1) {
+                    productQuantity.setComplete(true);
+                    productQuantity.setTotalContado(totalcontados);
+                } else if (totalUnidades > totalcontados && pathReception == 1) {
+                   if(!isNew){
+                       int count = productQuantity.getTotalContado();
+                       if(count + totalcontados >= productQuantity.getTotalPedido()){
+                           productQuantity.setComplete(true);
+                           productQuantity.setTotalContado(count + totalcontados);
+                       }
+                   }
+                }
+                quantityMap.put(key, productQuantity);
+                MySingleton.getInstance().setMapCountOfProducts(quantityMap);
+            }
+        } catch (Exception e) {
+
         }
     }
 

@@ -22,6 +22,7 @@ public class TransferFlowActivity extends AppCompatActivity implements DialogSca
     public static final int CODE_INTENT_CONTAINER_BOX = 10001;
     public static final int CODE_INTENT_BAR_CODE_DETAIL = 10002;
     public static final int CODE_INTENT_PREPARED_QUANTITY = 10003;
+    public static final int CODE_INTENT_RECEIVED_QUANTITY = 10004;
 
     ScannerViewModel scannerViewModel;
     private AppBarConfiguration appBarConfiguration;

@@ -22,7 +22,7 @@ import com.ec.managementsystem.clases.responses.GetDispatchResponse;
 import com.ec.managementsystem.interfaces.IDelegateResponseGeneric;
 import com.ec.managementsystem.interfaces.OnItemClickListener;
 import com.ec.managementsystem.moduleView.adapters.PackOffTransferAdapter;
-import com.ec.managementsystem.task.DispatchTaskController;
+import com.ec.managementsystem.task.GetArticlesAndBoxMasterToDispatchTaskController;
 import com.ec.managementsystem.task.UpdateStateBoxDispatchTaskController;
 import com.ec.managementsystem.util.Utils;
 
@@ -98,7 +98,7 @@ public class PackOffTransferFragment extends Fragment implements OnItemClickList
                 if (!etSeriesNumber.getText().toString().isEmpty() && !etOrderNumber.getText().toString().isEmpty()) {
                     String seriesNumber = etSeriesNumber.getText().toString().trim();
                     int orderNumber = Integer.parseInt(etOrderNumber.getText().toString());
-                    DispatchTaskController dispatchTaskController = new DispatchTaskController(seriesNumber, orderNumber, dispatchResponseListener());
+                    GetArticlesAndBoxMasterToDispatchTaskController dispatchTaskController = new GetArticlesAndBoxMasterToDispatchTaskController(seriesNumber, orderNumber, dispatchResponseListener());
                     dispatchTaskController.execute();
                 } else {
                     Toast.makeText(getContext(), "Debe llenar los campos", Toast.LENGTH_SHORT).show();

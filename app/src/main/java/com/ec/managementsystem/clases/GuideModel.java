@@ -24,6 +24,9 @@ public class GuideModel implements Serializable {
     private Integer billNumber;
     @SerializedName("guia")
     private String guide;
+    @SerializedName("picking")
+    private String idPicking;
+
     private boolean isVerified;
 
     public GuideModel() {
@@ -92,5 +95,13 @@ public class GuideModel implements Serializable {
 
     public void setGuide(String guide) {
         this.guide = guide;
+    }
+
+    public String getIdPicking() {
+        return idPicking;
+    }
+
+    public void setIdPicking(String idPicking) {
+        this.idPicking = idPicking;
     }
 }

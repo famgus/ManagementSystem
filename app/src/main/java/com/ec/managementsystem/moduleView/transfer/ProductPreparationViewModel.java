@@ -46,6 +46,10 @@ public class ProductPreparationViewModel extends ViewModel {
     }
 
     public void setLastProductInserted(int lastProductInsertedIndex) {
-        this.lastProductInserted.setValue(lastProductInsertedIndex);
+        if(lastProductInsertedIndex == -1){
+            this.lastProductInserted.setValue(null);
+        }else{
+            this.lastProductInserted.setValue(lastProductInsertedIndex);
+        }
     }
 }
