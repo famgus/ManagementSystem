@@ -130,7 +130,7 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
             llBoxMaster.setVisibility(View.GONE);
             // Set Toolbar
             toolbar = findViewById(R.id.toolbarBar);
-            this.toolbar.setTitle("Reubicación de artículos");
+            this.toolbar.setTitle("Reubicación");
             this.setupToolBar(toolbar);
             this.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -252,13 +252,19 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
            ivScanBarCodeArticle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_ARTICLE);
+                    //scanBarCode(CODE_INTENT_ARTICLE);
                 }
             });
             ivScanBarCodeBoxMasterDestiny.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_BOX_MASTER_DESTINY);
+                    //scanBarCode(CODE_INTENT_BOX_MASTER_DESTINY);
+                }
+            });
+            ivScanBarCodeBoxMasterOrigen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //scanBarCode(CODE_INTENT_BOX_MASTER_ORIGEN);
                 }
             });
             ivScanBarCodeBoxMasterOrigen.setOnClickListener(new View.OnClickListener() {
@@ -272,20 +278,80 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
             ivBarCodeUbicacionOrigen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_UBICACION_ORIGIN);
+                    //scanBarCode(CODE_INTENT_UBICACION_ORIGIN);
                 }
             });
             ivScanBarCodeCajaMaster.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode( CODE_INTENT_BOX_MASTER);
+                    //scanBarCode( CODE_INTENT_BOX_MASTER);
                 }
             });
 
             ivUbicacionDestino.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_UBICACION_DESTINY);
+                    //scanBarCode(CODE_INTENT_UBICACION_DESTINY);
+                }
+            });
+
+            //articulo de ubicacion por ubicacion
+            ivAUBarCodeUbicacionOrigen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //scanBarCode(CODE_INTENT_AU_UBICACION_ORIGIN);
+                }
+            });
+            ivAUUbicacionDestino.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //scanBarCode(CODE_INTENT_AU_UBICACION_DESTINY);
+                }
+            });
+            ivAUScanBarCodeArticle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //scanBarCode(CODE_INTENT_AU_ARTICLE);
+                }
+            });
+
+            //articulo CajaMaster a ubicacion
+            ivACMUBarCodeMasterBoxOrigen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //scanBarCode(CODE_INTENT_ACMU_BOX_MASTER_ORIGEN);
+                }
+            });
+            ivACMUBarCodeUbicacionDestino.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //scanBarCode(CODE_INTENT_ACMU_UBICACION_DESTINY);
+                }
+            });
+            ivACMUBarCodeArticle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //scanBarCode(CODE_INTENT_ACMU_ARTICLE);
+                }
+            });
+
+            //articulo ubicacion a cajamaster
+            ivAUCMBarCodeMasterBoxDestiny.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //scanBarCode(CODE_INTENT_AUCM_BOX_MASTER_DESTINY);
+                }
+            });
+            ivAUCMBarCodeUbicacionOrigen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //scanBarCode(CODE_INTENT_AUCM_UBICACION_ORIGEN);
+                }
+            });
+            ivAUCMBarCodeArticle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //scanBarCode(CODE_INTENT_AUCM_ARTICLE);
                 }
             });
 
@@ -358,11 +424,11 @@ public class ReubicacionActivity extends BaseActivity implements IDelegateBoxMas
 
     private void loadSpinner() {
         ArrayList<KeyValue> items2 = new ArrayList<>();
-        items2.add(new KeyValue(1, "Artículo De MasterBox a MasterBox"));
-        items2.add(new KeyValue(2, "MasterBox de Ubicación a Ubicación"));
+        items2.add(new KeyValue(1, "Artículo De Caja Master a Caja Master"));
+        items2.add(new KeyValue(2, "Caja Master de Ubicación a Ubicación"));
         items2.add(new KeyValue(3, "Artículo de Ubicación a  Ubicación"));
-        items2.add(new KeyValue(4, "Artículo de MasterBox a  Ubicación"));
-        items2.add(new KeyValue(5, "Artículo de Ubicación a  MasterBox"));
+        items2.add(new KeyValue(4, "Artículo de Caja Master a  Ubicación"));
+        items2.add(new KeyValue(5, "Artículo de Ubicación a  Caja Master"));
         KeyValueSpinner motiveAdapter = new KeyValueSpinner(this, items2);
         spAction.setAdapter(motiveAdapter);
         spAction.post(new Runnable() {
