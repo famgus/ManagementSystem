@@ -39,8 +39,8 @@
 
             <ImageView
                 android:id="@+id/ivIngresos"
-                android:layout_width="180dp"
-                android:layout_height="150dp"
+                android:layout_width="130dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/packing"
                 android:paddingLeft="8dp"/>
@@ -51,11 +51,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
-                android:text="Ingrese el código del Cliente:"
+                android:text="Seleccione la opción para la búsqueda::"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="30dp"/>
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -98,7 +98,71 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="6dp"
                     android:tint="@color/colorPrimary"/>
-            </LinearLayout>
+            </LinearLayout>-->
+
+            <RadioGroup
+                android:padding="8dp"
+                android:id="@+id/rg_packing_search"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/rb_packing_cliente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Código Cliente "/>
+
+                <RadioButton
+                    android:id="@+id/rb_packing_idpicking"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ID Picking"/>
+
+            </RadioGroup>
+            <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_marginRight="30dp"
+          android:layout_marginLeft="30dp"
+          android:layout_marginTop="5dp"
+          android:layout_marginBottom="10dp">
+
+          <com.google.android.material.textfield.TextInputLayout
+              android:layout_width="0dp"
+              android:layout_weight="2"
+              android:layout_height="wrap_content">
+
+              <EditText
+                  android:id="@+id/etCodeClient"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:autofillHints="@string/text_hint_bar_code"
+                  android:hint="Parametro de busqueda"
+                  android:inputType="text"
+                  android:singleLine="true"
+                  android:drawableTintMode="src_in"
+                  android:drawableTint="@color/darkest_gray"/>
+
+          </com.google.android.material.textfield.TextInputLayout>
+
+          <ImageView
+              android:id="@+id/ivSearchClient"
+              android:layout_width="40dp"
+              android:layout_height="40dp"
+              app:srcCompat="@drawable/ic_search_white_48dp"
+              android:layout_gravity="center_vertical"
+              android:layout_marginLeft="6dp"
+              android:tint="@color/colorPrimary"/>
+      </LinearLayout>
+
 
             <ImageView
                 android:layout_marginTop="10dp"
