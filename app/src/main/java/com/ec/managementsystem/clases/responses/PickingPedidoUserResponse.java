@@ -26,6 +26,8 @@ public class PickingPedidoUserResponse implements Serializable {
     private Integer numberPedido;
     @SerializedName("stateReservation")
     private Integer stateReservation;
+    @SerializedName("ubicacionPed")
+    private String ubicacionPed;
     @SerializedName("detailsResponse")
     ListPickingPedidoDetailResponse detailsResponse;
     private  boolean complete;
@@ -33,6 +35,10 @@ public class PickingPedidoUserResponse implements Serializable {
     public PickingPedidoUserResponse() {
     }
 
+
+    public String getUbicacionPed() {return ubicacionPed;}
+
+    public void setUbicacionPed(String ubicacionPed) {this.ubicacionPed = ubicacionPed;}
 
     public Integer getCode() {
         return code;

@@ -177,11 +177,32 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                             if (quantity > pedidoDetailSelected.getUnidadesTotales())
                                 Toast.makeText(PickingDetailItemActivity.this, "La cantidad supera al maximo", Toast.LENGTH_LONG).show();
                             else
-                                Toast.makeText(PickingDetailItemActivity.this, "Si no exite cartel para hacer picking colocar cantidad en 0", Toast.LENGTH_LONG).show();
+                                Toast.makeText(PickingDetailItemActivity.this, "Si no existe productos para hacer picking colocar cantidad en 0", Toast.LENGTH_LONG).show();
                         }
 
                     } else {
-                        Toast.makeText(PickingDetailItemActivity.this, "Debe ingresar todos los campos", Toast.LENGTH_LONG).show();
+                        int quantity = Integer.parseInt(etQuantityPicking.getText().toString().trim());
+                        if (quantity == 0) {
+                            PickingUpdateTaskController task = new PickingUpdateTaskController();
+                            task.setListener(PickingDetailItemActivity.this);
+                            PickingRequest request = new PickingRequest();
+                            request.setNumberSerie(pedidoUserResponse.getNumberSerie());
+                            request.setNumberPedido(pedidoUserResponse.getNumberPedido());
+                            request.setCodeArticle(pedidoDetailSelected.getCodeArticle());
+                            request.setQuantity(0);
+                            if (rbBoxmaster.isChecked()) {
+                                request.setBarCodeLocation("");
+                                request.setBarCodeBoxMaster("");
+                            } else if (rbUbicacion.isChecked()) {
+                                request.setBarCodeLocation("");
+                                request.setBarCodeBoxMaster("");
+                            }
+                            request.setPath(2);
+                            task.execute(request);
+                        }else{
+                            Toast.makeText(PickingDetailItemActivity.this, "Debe ingresar todos los campos", Toast.LENGTH_LONG).show();
+                        }
+
                     }
                 }
             });
