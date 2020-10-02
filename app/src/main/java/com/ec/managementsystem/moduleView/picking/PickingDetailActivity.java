@@ -100,7 +100,11 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
                 }else{
                     tvObservation.setText("Sin comentario");
                 }
-
+                if (header.getUbicacionPed()!= null){
+                    txtNumberPedidor.setText(String.valueOf(header.getUbicacionPed()));
+                }else{
+                    txtNumberPedidor.setText("No asignado");
+                }
             }
             llRegister.setVisibility(View.GONE);
             llRegister.setOnClickListener(new View.OnClickListener() {
