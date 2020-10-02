@@ -164,8 +164,10 @@ public class PendingOrderDetailFragment extends Fragment implements IDelegateRes
                             if(!lastBoxRegistered.getRegisteredProducts().contains(registeredProduct)){
                                 lastBoxRegistered.getRegisteredProducts().add(registeredProduct);
                             }
-                            int previousTotal = lastBoxRegistered.getTotalRegisteredProducts();
-                            int newTotal = registeredProduct.getPreparedUnits() + previousTotal;
+                            int newTotal = 0;
+                            for(TransferSubOrder transferSubOrder : lastBoxRegistered.getRegisteredProducts()){
+                                newTotal = newTotal + transferSubOrder.getPreparedUnits();
+                            }
                             lastBoxRegistered.setTotalRegisteredProducts(newTotal);
                             boxTransferPendingOrdersAdapter.notifyItemChanged(lastIndexBox);
 

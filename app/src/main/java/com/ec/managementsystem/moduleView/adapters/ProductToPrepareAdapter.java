@@ -103,14 +103,18 @@ public class ProductToPrepareAdapter extends RecyclerView.Adapter<ProductToPrepa
                     clickListener.onClick(productToPrepare);
                 }
             });
-            if (productToPrepare.isRegistered()) {
+            if (productToPrepare.isRegistered() && productToPrepare.isCompleted()) {
                 ivAction.setImageResource(R.drawable.baseline_check_circle_outline_white_48);
+                int color = Color.parseColor("#000000");
+                ivAction.setColorFilter(color);
+            } else if(productToPrepare.isRegistered()){
+                ivAction.setImageResource(R.drawable.baseline_query_builder_white_48);
                 int color = Color.parseColor("#000000");
                 ivAction.setColorFilter(color);
             } else {
                 ivAction.setImageResource(R.drawable.recibir_mercaderia);
             }
-            ivAction.setEnabled(!productToPrepare.isRegistered());
+            ivAction.setEnabled(!(productToPrepare.isRegistered() && productToPrepare.isCompleted()));
         }
     }
 }

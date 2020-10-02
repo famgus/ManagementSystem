@@ -38,6 +38,7 @@ public class TransferSubOrder implements Serializable {
     private List<ProductUbication> ubications;
     private int rvItem;
     private boolean isRegistered;
+    private boolean isCompleted = false;
     private String originType;
     private String origin;
 
@@ -48,6 +49,14 @@ public class TransferSubOrder implements Serializable {
 
     public TransferSubOrder(int rvItem) {
         this.rvItem = rvItem;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
     }
 
     public String getOriginType() {
