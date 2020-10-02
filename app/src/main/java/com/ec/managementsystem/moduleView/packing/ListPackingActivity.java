@@ -8,10 +8,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.FacturaModel;
 import com.ec.managementsystem.clases.request.FacturaDetailRequest;
+import com.ec.managementsystem.clases.request.FacturaRequest;
+import com.ec.managementsystem.clases.request.PickingRequest;
 import com.ec.managementsystem.clases.responses.FacturasClientResponse;
 import com.ec.managementsystem.clases.responses.ListFacturasDetasilResponse;
 import com.ec.managementsystem.interfaces.IDelegateSearchClientTaskControl;
@@ -26,6 +30,8 @@ import com.ec.managementsystem.interfaces.IFacturaDetailTaskControl;
 import com.ec.managementsystem.interfaces.IListenerPacking;
 import com.ec.managementsystem.moduleView.BaseActivity;
 import com.ec.managementsystem.moduleView.adapters.PackingAdapter;
+import com.ec.managementsystem.moduleView.send.SendPickingActivity;
+import com.ec.managementsystem.task.CustomerInvoicesForSendTaskController;
 import com.ec.managementsystem.task.FacturaDetailTaskController;
 import com.ec.managementsystem.task.SearchClientTaskController;
 import com.ec.managementsystem.util.MySingleton;
@@ -37,10 +43,11 @@ public class ListPackingActivity extends BaseActivity implements IListenerPackin
 
     Toolbar toolbar;
     RecyclerView rvPedidoList;
+    CardView cvInformationClient;
     EditText etFacturasSearch, etCodeClient;
     ImageView ivFacturaSearch, ivSearchClient;
     TextView tvNumberClient, tvNameClient, tvMunicipio, tvAddress;
-
+    RadioGroup rgSearchOption;
     LinearLayout item_container, llListFacturas;
     List<FacturaModel> originalList;
     List<FacturaModel> filterList;
@@ -52,6 +59,7 @@ public class ListPackingActivity extends BaseActivity implements IListenerPackin
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_packing_activity);
+
         setupView();
         initCollection();
         initRecyclerView();
@@ -79,23 +87,38 @@ public class ListPackingActivity extends BaseActivity implements IListenerPackin
             tvMunicipio = findViewById(R.id.tvMunicipio);
             tvAddress = findViewById(R.id.tvAddress);
             llListFacturas = findViewById(R.id.llListFacturas);
-
-
+            rgSearchOption = findViewById(R.id.rg_packing_search);
+            //cvInformationClient = findViewById(R.id.item_draft_instance_layout);
             etFacturasSearch = findViewById(R.id.etFacturasSearch);
             ivFacturaSearch = findViewById(R.id.ivFacturaSearch);
             rvPedidoList = findViewById(R.id.rvPedidoList);
-
-            item_container.setVisibility(View.GONE);
             llListFacturas.setVisibility(View.GONE);
-
-
             ivSearchClient.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (etCodeClient.getText() != null && etCodeClient.getText().length() > 0) {
+
+                    if(rgSearchOption.getCheckedRadioButtonId() != -1){
+                        int opcion = -1;
+                        switch (rgSearchOption.getCheckedRadioButtonId()) {
+                            case R.id.rb_packing_cliente:
+                                opcion = 1;
+
+                                break;
+                            case R.id.rb_packing_idpicking:
+                                opcion = 0;
+
+                                break;
+                        }
                         SearchClientTaskController task = new SearchClientTaskController();
                         task.setListener(ListPackingActivity.this);
-                        task.execute(etCodeClient.getText().toString());
+                        FacturaRequest request = new FacturaRequest();
+                        request.setParametro(etCodeClient.getText().toString());
+                        request.setOpcion(opcion);
+                        task.execute(request);
+                    }else {
+                        Toast.makeText(ListPackingActivity.this, "Debe seleccionar una opción de búsqueda", Toast.LENGTH_LONG).show();
+                    }
                     }
                 }
             });
@@ -212,10 +235,30 @@ public class ListPackingActivity extends BaseActivity implements IListenerPackin
     public void onSearchClientResponse(FacturasClientResponse response) {
         if (response != null && response.getCode() == 200) {
             MySingleton.getInstance().setPackingResponse(response);
-            tvNumberClient.setText(String.valueOf(response.getNumberClient()));
-            tvNameClient.setText(String.valueOf(response.getNameClient()));
-            tvMunicipio.setText(String.valueOf(response.getMunicipio()));
-            tvAddress.setText(String.valueOf(response.getAddress()));
+            if(response.getNumberClient() !=null){
+                tvNumberClient.setText(String.valueOf(response.getNumberClient()));
+            }else{
+                tvNumberClient.setText("");
+            }
+
+            if(response.getNameClient() !=null){
+                tvNameClient.setText(String.valueOf(response.getNameClient()));
+            }else{
+                tvNameClient.setText("");
+            }
+
+            if(response.getMunicipio() !=null){
+                tvMunicipio.setText(String.valueOf(response.getMunicipio()));
+            }else{
+                tvMunicipio.setText("");
+            }
+
+            if(response.getAddress() !=null){
+                tvAddress.setText(String.valueOf(response.getAddress()));
+            }else{
+                tvAddress.setText("");
+            }
+
             originalList = response.getFacturaModels();
             filterList.clear();
             filterList.addAll(originalList);
