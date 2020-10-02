@@ -127,6 +127,7 @@ public class PackingAdapter extends RecyclerView.Adapter<PackingAdapter.FacturaV
         private Context context;
         private TextView tvNumberFactura;
         private TextView tvDateFactura;
+        private TextView tvIdPicking;
         private LinearLayout item_container;
         private CheckBox chChecked;
 
@@ -135,6 +136,7 @@ public class PackingAdapter extends RecyclerView.Adapter<PackingAdapter.FacturaV
             context = itemView.getContext();
             tvNumberFactura = itemView.findViewById(R.id.tvNumberFactura);
             tvDateFactura = itemView.findViewById(R.id.tvNumberSerie);
+            tvIdPicking = itemView.findViewById(R.id.tvIdPicking);
             item_container = itemView.findViewById(R.id.item_container);
             chChecked = itemView.findViewById(R.id.chChecked);
             if (isSendView) {
@@ -148,6 +150,7 @@ public class PackingAdapter extends RecyclerView.Adapter<PackingAdapter.FacturaV
             if (item != null) {
                 holder.tvNumberFactura.setText(String.valueOf(item.getNumberFactura()));
                 holder.tvDateFactura.setText(String.valueOf(item.getNumberSerie()));
+                holder.tvIdPicking.setText(String.valueOf(item.getIdPicking()));
                 holder.item_container.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

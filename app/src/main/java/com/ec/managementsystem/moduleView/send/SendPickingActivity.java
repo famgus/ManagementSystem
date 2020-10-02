@@ -119,6 +119,7 @@ public class SendPickingActivity extends BaseActivity implements IDelegateUpdate
             rvFacturasList = findViewById(R.id.rvFacturasList);
             llFacturasContainer = findViewById(R.id.llFacturasContainer);
             llFacturasContainer.setVisibility(View.GONE);
+            //tiedCodeToValidate.setEnabled(false);
             this.etFacturasSearch.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

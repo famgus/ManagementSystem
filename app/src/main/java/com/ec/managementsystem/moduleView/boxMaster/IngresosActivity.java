@@ -85,13 +85,13 @@ public class IngresosActivity extends BaseActivity implements IDelegateBoxMaster
             ivScanBarCodeArticle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_ARTICLE);
+                   // scanBarCode(CODE_INTENT_ARTICLE);
                 }
             });
             ivScanBarCode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    scanBarCode(CODE_INTENT_BOX_MASTER);
+                   // scanBarCode(CODE_INTENT_BOX_MASTER);
                 }
             });
         } catch (Exception e) {

@@ -95,7 +95,12 @@ public class PickingDetailActivity extends BaseActivity implements IListenerPick
                 txtNameClient.setText(String.valueOf(header.getNameClient()));
                 tvDatePedido.setText(String.valueOf(header.getFechaPedido()));
                 tvDatePicking.setText(String.valueOf(header.getFechaPedido()));
-                tvObservation.setText(String.valueOf(header.getObservation()));
+                if (header.getObservation()!= null){
+                    tvObservation.setText(String.valueOf(header.getObservation()));
+                }else{
+                    tvObservation.setText("Sin comentario");
+                }
+
             }
             llRegister.setVisibility(View.GONE);
             llRegister.setOnClickListener(new View.OnClickListener() {

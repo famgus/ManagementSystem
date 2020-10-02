@@ -26,6 +26,8 @@ public class FacturaModel implements Serializable {
     private Integer numberAlbaran;
     @SerializedName("numberSerieFac")
     private String numberSerieFac;
+    @SerializedName("idPicking")
+    private String idPicking;
     private boolean complete = false;
     private List<FacturasDetasilResponse> facturasDetasilResponses;
     private  boolean ckecked = false;
@@ -33,6 +35,10 @@ public class FacturaModel implements Serializable {
 
     public FacturaModel() {
     }
+
+    public String getIdPicking() {return idPicking;}
+
+    public void setIdPicking(String idPicking) {this.idPicking = idPicking; }
 
     public Integer getNumberFactura() {
         return numberFactura;
