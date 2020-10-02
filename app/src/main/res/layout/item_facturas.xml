@@ -60,16 +60,17 @@
                 android:text="Numero de Factura:"
                 android:textSize="12sp"
                 android:layout_gravity="center_vertical"/>
+
                 <TextView
                     android:id="@+id/tvNumberFactura"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:text="4353453453"
-                    android:textSize="12sp"
-                    android:layout_gravity="center_vertical"/>
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
@@ -132,14 +133,14 @@
 
                 <TextView
                     android:id="@+id/tvIdPicking"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"
                     android:lines="1"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textSize="12sp"
-                    android:layout_gravity="center_vertical"/>
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
