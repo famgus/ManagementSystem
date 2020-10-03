@@ -171,6 +171,8 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                                 request.setBarCodeLocation(etBarCode.getText().toString());
                                 request.setBarCodeBoxMaster("");
                             }
+                            request.setTalla(pedidoDetailSelected.getTalla());
+                            request.setColor(pedidoDetailSelected.getCodcolor());
                             request.setPath(2);
                             task.execute(request);
                         } else {

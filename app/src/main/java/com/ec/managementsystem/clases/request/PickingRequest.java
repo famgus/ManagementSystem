@@ -11,11 +11,22 @@ public class PickingRequest implements Serializable {
     private Integer path;
     private String  barCodeLocation;
     private String barCodeBoxMaster;
+    private String  talla;
+    private String color;
+
 
 
     public PickingRequest() {
     }
 
+
+    public String getTalla() {return talla;}
+
+    public void setTalla(String talla) {this.talla = talla;}
+
+    public String getColor() {return color;}
+
+    public void setColor(String color) {this.color = color;}
 
     public String getNumberSerie() {
         return numberSerie;
