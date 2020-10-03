@@ -69,7 +69,7 @@ public class TransferProductDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             productToPrepare = (TransferSubOrder) getArguments().getSerializable(PRODUCT_TO_PREPARE_SELECTED);
-            requiredQuantity = productToPrepare.getRequestedUnits();
+            requiredQuantity = productToPrepare.getRequestedUnits() - productToPrepare.getPreparedUnits();
             productToPrepareIndex = getArguments().getInt("index");
             vendorCode = getArguments().getInt("vendorCode");
             cart = getArguments().getString("carrito");
@@ -336,6 +336,7 @@ public class TransferProductDetailFragment extends Fragment {
                         case R.id.rb_transferproductdetail_boxmaster:
                         case R.id.rb_transferproductdetail_ubication:
                             productToPrepare.setPreparedUnits(registeredUnits + productToPrepare.getPreparedUnits());
+                            productToPrepare.setCompleted(productToPrepare.getPreparedUnits().equals(productToPrepare.getRequestedUnits()));
                             productToPrepare.setRegistered(true);
                             NavHostFragment.findNavController(TransferProductDetailFragment.this).navigateUp();
                             break;
@@ -344,6 +345,7 @@ public class TransferProductDetailFragment extends Fragment {
                             etBarCode.setText("");
                             productToPrepare.setRegistered(true);
                             productToPrepare.setPreparedUnits(registeredUnits + productToPrepare.getPreparedUnits());
+                            productToPrepare.setCompleted(productToPrepare.getPreparedUnits().equals(productToPrepare.getRequestedUnits()));
                             requiredQuantity = productToPrepare.getRequestedUnits() - registeredUnits;
                             tvRequestedQuantity.setText(getString(R.string.productdetail_requested_quantity, requiredQuantity));
                             break;

@@ -537,7 +537,7 @@ public class WebServiceControl {
         return response;
     }
 
-    static public FacturasClientResponse GetClientFacturasPacking(String numberClient) {
+    static public FacturasClientResponse GetClientFacturasPacking(String numberClient,Integer opcion) {
         String message = "";
         FacturasClientResponse response = new FacturasClientResponse();
         try {
@@ -547,7 +547,8 @@ public class WebServiceControl {
                 final String METHOD_NAME = "GetClientFacturasPacking";
                 final String SOAP_ACTION = NAMESPACE + METHOD_NAME;
                 SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-                request.addProperty("numberClient", numberClient);
+                request.addProperty("parametro", numberClient);
+                request.addProperty("opcion", opcion);
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                 envelope.dotNet = true;
                 envelope.implicitTypes = true;
@@ -647,7 +648,7 @@ public class WebServiceControl {
         return response;
     }
 
-    static public GenericResponse UpdatePicking(String numberSerie, Integer numberPedido, Integer codeArticle, Integer quantity, String barCodeMaster, String barCodeLocation) {
+    static public GenericResponse UpdatePicking(String numberSerie, Integer numberPedido, Integer codeArticle, Integer quantity, String barCodeMaster, String barCodeLocation, String talla, String color) {
         String message = "";
         GenericResponse response = new GenericResponse();
         try {
@@ -663,6 +664,8 @@ public class WebServiceControl {
                 request.addProperty("quantity", quantity);
                 request.addProperty("barCodeMaster", barCodeMaster);
                 request.addProperty("barCodeLocation", barCodeLocation);
+                request.addProperty("talla", talla);
+                request.addProperty("color", color);
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                 envelope.dotNet = true;
                 envelope.implicitTypes = true;

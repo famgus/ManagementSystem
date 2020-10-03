@@ -63,7 +63,7 @@ public class ProductToPrepareAdapter extends RecyclerView.Adapter<ProductToPrepa
 
     class ProductToPrepareVH extends RecyclerView.ViewHolder {
 
-        private TextView tvPosition, tvReference, tvUnits;
+        private TextView tvPosition, tvReference, tvUnits, tvSize, tvColor, tvUbication;
         private ImageView ivAction;
         private ConstraintLayout clIcon;
 
@@ -74,7 +74,14 @@ public class ProductToPrepareAdapter extends RecyclerView.Adapter<ProductToPrepa
             tvUnits = itemView.findViewById(R.id.tv_producttoprepare_units);
             ivAction = itemView.findViewById(R.id.iv_producttoprepare);
             clIcon = itemView.findViewById(R.id.cl_producttoprepare);
+            tvColor = itemView.findViewById(R.id.tv_producttoprepare_fourth);
+            tvSize = itemView.findViewById(R.id.tv_producttoprepare_fifth);
+            tvUbication = itemView.findViewById(R.id.tv_producttoprepare_sixth);
+            tvColor.setVisibility(View.VISIBLE);
+            tvSize.setVisibility(View.VISIBLE);
+            tvUbication.setVisibility(View.VISIBLE);
         }
+
 
         private void changeHeaderColor(View... views) {
             for (View view : views) {
@@ -83,11 +90,14 @@ public class ProductToPrepareAdapter extends RecyclerView.Adapter<ProductToPrepa
         }
 
         private void bindHeader() {
-            changeHeaderColor(tvPosition, tvReference, tvUnits, ivAction);
+            changeHeaderColor(tvPosition, tvReference, tvUnits, ivAction, tvColor, tvSize, tvUbication);
             tvPosition.setGravity(Gravity.CENTER);
             tvReference.setGravity(Gravity.CENTER);
             tvUnits.setGravity(Gravity.CENTER);
             ivAction.setVisibility(View.GONE);
+            tvColor.setText(R.string.header_color);
+            tvSize.setText(R.string.header_size);
+            tvUbication.setText(R.string.header_ubication);
             clIcon.setVisibility(isEditable ? View.VISIBLE : View.GONE);
         }
 
@@ -95,6 +105,13 @@ public class ProductToPrepareAdapter extends RecyclerView.Adapter<ProductToPrepa
             tvPosition.setText(position);
             tvReference.setText(productToPrepare.getReference());
             tvUnits.setText(String.valueOf(productToPrepare.getRequestedUnits()));
+            if(productToPrepare.getUbications().size() > 0 && productToPrepare.getUbications().get(0) != null){
+                tvUbication.setText(productToPrepare.getUbications().get(0).getUbicationCode());
+            }else {
+                tvUbication.setText("-");
+            }
+            tvColor.setText(productToPrepare.getColor());
+            tvSize.setText(productToPrepare.getSize());
             ivAction.setVisibility(isEditable ? View.VISIBLE : View.GONE);
             clIcon.setVisibility(isEditable ? View.VISIBLE : View.GONE);
             ivAction.setOnClickListener(new View.OnClickListener() {
@@ -103,14 +120,18 @@ public class ProductToPrepareAdapter extends RecyclerView.Adapter<ProductToPrepa
                     clickListener.onClick(productToPrepare);
                 }
             });
-            if (productToPrepare.isRegistered()) {
+            if (productToPrepare.isRegistered() && productToPrepare.isCompleted()) {
                 ivAction.setImageResource(R.drawable.baseline_check_circle_outline_white_48);
+                int color = Color.parseColor("#000000");
+                ivAction.setColorFilter(color);
+            } else if (productToPrepare.isRegistered()) {
+                ivAction.setImageResource(R.drawable.baseline_query_builder_white_48);
                 int color = Color.parseColor("#000000");
                 ivAction.setColorFilter(color);
             } else {
                 ivAction.setImageResource(R.drawable.recibir_mercaderia);
             }
-            ivAction.setEnabled(!productToPrepare.isRegistered());
+            ivAction.setEnabled(!(productToPrepare.isRegistered() && productToPrepare.isCompleted()));
         }
     }
 }

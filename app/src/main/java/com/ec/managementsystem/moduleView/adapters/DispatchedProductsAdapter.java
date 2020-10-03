@@ -82,13 +82,14 @@ public class DispatchedProductsAdapter extends RecyclerView.Adapter<DispatchedPr
             tvFourth.setVisibility(View.VISIBLE);
             tvFifth.setVisibility(View.VISIBLE);
             tvSixth.setVisibility(View.VISIBLE);
+            tvPosition.setVisibility(View.GONE);
         }
 
         private void bindHeader() {
             changeHeaderColor(tvPosition, tvReference, tvUnits, clIcon, tvFourth, tvFifth, tvSixth);
-            tvReference.setText(R.string.header_product_code);
-            tvUnits.setText(R.string.header_size);
-            tvFourth.setText(R.string.header_color);
+            tvReference.setText(R.string.header_reference);
+            tvUnits.setText(R.string.header_model);
+            tvFourth.setText("Caja traslado");
             tvFifth.setText(R.string.header_total_dispatched);
             tvSixth.setText(R.string.header_total_received);
             clIcon.setVisibility(isEditable ? View.VISIBLE : View.GONE);
@@ -96,10 +97,9 @@ public class DispatchedProductsAdapter extends RecyclerView.Adapter<DispatchedPr
         }
 
         private void bind(final DispatchedProduct dispatchedProduct, String position) {
-            tvPosition.setText(position);
             tvReference.setText(String.valueOf(dispatchedProduct.getProductCode()));
-            tvUnits.setText(dispatchedProduct.getSize());
-            tvFourth.setText(dispatchedProduct.getColor());
+            tvUnits.setText(itemView.getContext().getString(R.string.all_model, dispatchedProduct.getSize(), dispatchedProduct.getColor()));
+            tvFourth.setText(dispatchedProduct.getCajaTraslado());
             tvFifth.setText(String.valueOf(dispatchedProduct.getTotalDispatched()));
             tvSixth.setText(String.valueOf(dispatchedProduct.getTotalReceived()));
             ivAction.setVisibility(isEditable ? View.VISIBLE : View.GONE);
