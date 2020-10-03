@@ -102,13 +102,18 @@
     <string name="all_order_number">Número Pedido: %d</string>
     <string name="all_vendor_code">Vendedor: %d</string>
     <string name="all_product_code">Código articulo: %d</string>
+    <string name="all_model">%s-%s</string>
     <string name="all_received_quantity">Cantidad a recibir: %d</string>
     <string name="all_dispatched_quantity">Cantidad despachada: %d</string>
 
     <!--Header traspasos recibidos-->
     <string name="header_product_code">Cod. Artículo</string>
+    <string name="header_reference">Referencia</string>
     <string name="header_size">Talla</string>
+    <string name="header_model">Modelo</string>
     <string name="header_color">Color</string>
+
+    <string name="header_ubication">Ubicación</string>
     <string name="header_total_dispatched">Cant. Despachada</string>
     <string name="header_total_received">Cant. Recibida</string>
 

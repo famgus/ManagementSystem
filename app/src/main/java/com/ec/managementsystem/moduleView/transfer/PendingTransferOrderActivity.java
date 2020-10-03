@@ -46,7 +46,7 @@ public class PendingTransferOrderActivity extends AppCompatActivity implements V
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }
@@ -88,8 +88,12 @@ public class PendingTransferOrderActivity extends AppCompatActivity implements V
             @Override
             public void onResponse(PendingTransferOrderResponse response) {
                 if (response != null && response.getCode() == 200) {
-                    pendingTransferOrders = response.getTrasladoList();
-                    initializeRV();
+                    if (response.getTrasladoList().size() > 0) {
+                        pendingTransferOrders = response.getTrasladoList();
+                        initializeRV();
+                    } else {
+                        Toast.makeText(PendingTransferOrderActivity.this, "No existen traslados ", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(PendingTransferOrderActivity.this, "No se pudo obtener la lista de traslados pendientes", Toast.LENGTH_SHORT).show();
                 }

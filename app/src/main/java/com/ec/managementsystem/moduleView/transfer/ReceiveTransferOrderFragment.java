@@ -61,6 +61,7 @@ public class ReceiveTransferOrderFragment extends Fragment {
             initializeViews(view);
             btnSearch.setOnClickListener(btnSearchListener());
             btnRegister.setOnClickListener(btnRegisterListener());
+            btnRegister.setVisibility(View.GONE);
             initializeRV();
         }
         receivedProductViewModel.getDispatchedProductMutableLiveData().observe(getViewLifecycleOwner(), new Observer<DispatchedProduct>() {
@@ -146,6 +147,7 @@ public class ReceiveTransferOrderFragment extends Fragment {
                         dispatchedProducts.add(0, new DispatchedProduct(Utils.HEADER_TYPE));
                         dispatchedProductsAdapter.notifyDataSetChanged();
                         btnRegister.setEnabled(true);
+                        btnRegister.setVisibility(View.VISIBLE);
                     } else {
                         Toast.makeText(getContext(), "No hay productos despachados", Toast.LENGTH_SHORT).show();
                     }
