@@ -1389,6 +1389,7 @@ public class WebServiceControl {
                 request.addProperty("talla", params.getSize());
                 request.addProperty("color", params.getColor());
                 request.addProperty("unidades", params.getUnidades());
+                request.addProperty("vendorCode", params.getVendorCode());
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                 envelope.dotNet = true;
                 envelope.implicitTypes = true;

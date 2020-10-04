@@ -183,17 +183,17 @@ public class TransferProductDetailFragment extends Fragment {
             params = new SaveTransferPrepareRequest(
                     productToPrepare.getSeriesNumber(), productToPrepare.getSize(), productToPrepare.getColor(), cart,
                     barcode, "C", "0", "0",
-                    productToPrepare.getOrderNumber(), productToPrepare.getProductCode(), 1);
+                    productToPrepare.getOrderNumber(), productToPrepare.getProductCode(), 1, vendorCode);
         } else if (type == 1) { // Caja master
             params = new SaveTransferPrepareRequest(
                     productToPrepare.getSeriesNumber(), productToPrepare.getSize(), productToPrepare.getColor(), cart,
                     "", "P", barcode, "0",
-                    productToPrepare.getOrderNumber(), productToPrepare.getProductCode(), preparedUnits);
+                    productToPrepare.getOrderNumber(), productToPrepare.getProductCode(), preparedUnits, vendorCode);
         } else if (type == 2) { // Ubicación
             params = new SaveTransferPrepareRequest(
                     productToPrepare.getSeriesNumber(), productToPrepare.getSize(), productToPrepare.getColor(), cart,
                     "", "U", "0", barcode,
-                    productToPrepare.getOrderNumber(), productToPrepare.getProductCode(), preparedUnits);
+                    productToPrepare.getOrderNumber(), productToPrepare.getProductCode(), preparedUnits, vendorCode);
         }
         UpdateQuantityPrepareTransferTaskController prepareTransferTaskController = new UpdateQuantityPrepareTransferTaskController();
         prepareTransferTaskController.setListener(updateQuantityListener());

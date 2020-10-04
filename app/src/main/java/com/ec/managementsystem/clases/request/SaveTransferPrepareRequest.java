@@ -3,9 +3,9 @@ package com.ec.managementsystem.clases.request;
 public class SaveTransferPrepareRequest {
 
     private String seriesNumber, size, color, cart, cajamastertraslado, formatotraslado, cajamasterorigen, ubicacionorigen;
-    private int orderNumber, productCode, unidades;
+    private int orderNumber, productCode, unidades, vendorCode;
 
-    public SaveTransferPrepareRequest(String seriesNumber, String size, String color, String cart, String cajamastertraslado, String formatotraslado, String cajamasterorigen, String ubicacionorigen, int orderNumber, int productCode, int unidades) {
+    public SaveTransferPrepareRequest(String seriesNumber, String size, String color, String cart, String cajamastertraslado, String formatotraslado, String cajamasterorigen, String ubicacionorigen, int orderNumber, int productCode, int unidades, int vendorCode) {
         this.seriesNumber = seriesNumber;
         this.size = size;
         this.color = color;
@@ -17,6 +17,11 @@ public class SaveTransferPrepareRequest {
         this.orderNumber = orderNumber;
         this.productCode = productCode;
         this.unidades = unidades;
+        this.vendorCode = vendorCode;
+    }
+
+    public int getVendorCode() {
+        return vendorCode;
     }
 
     public String getCart() {
