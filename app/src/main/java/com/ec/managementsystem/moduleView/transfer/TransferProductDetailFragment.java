@@ -223,13 +223,14 @@ public class TransferProductDetailFragment extends Fragment {
             public void onResponse(GetQuantityProductInMasterBoxResponse response) {
                 if (response != null && response.getCode() == 200) {
                     etBarCode.setText(codeBar);
+                    Log.d( "onResponse: ", response.getQuantity()+ "");
                     etQuantity.setText(String.valueOf(response.getQuantity()));
-                    if (isValidQuantity) {
+/*                    if (isValidQuantity) {
                         updateQuantity(response.getQuantity(), etBarCode.getText().toString().trim(), 0);
                         Toast.makeText(getContext(), "Registrando caja completa", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), "Error en el valor", Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
                 }else{
                     Toast.makeText(getContext(), "El código de barras ingresado es incorrecto", Toast.LENGTH_SHORT).show();
                 }
@@ -264,10 +265,12 @@ public class TransferProductDetailFragment extends Fragment {
                     case R.id.rb_transferproductdetail_boxmaster:
                     case R.id.rb_transferproductdetail_ubication:
                         etBarCode.setText("");
+                        etQuantity.setText("");
                         etQuantity.setEnabled(true);
                         break;
                     case R.id.rb_transferproductdetail_completedbox:
                         etBarCode.setText("");
+                        etQuantity.setText("");
                         etQuantity.setEnabled(false);
                         break;
                 }
@@ -283,6 +286,9 @@ public class TransferProductDetailFragment extends Fragment {
                     int preparedUnits = Integer.parseInt(etQuantity.getText().toString());
                     int type = -1;
                     switch (rgProductOrigin.getCheckedRadioButtonId()) {
+                        case R.id.rb_transferproductdetail_completedbox:
+                            type = 0;
+                            break;
                         case R.id.rb_transferproductdetail_boxmaster:
                             type = 1;
                             break;
@@ -310,8 +316,8 @@ public class TransferProductDetailFragment extends Fragment {
                 if (s.length() == 0) {
                     tilQuantity.setError("Requerido");
                     isValidQuantity = false;
-                } else if (Integer.parseInt(s.toString()) > requiredQuantity) {
-                    tilQuantity.setError("No puede ingresar más de lo solicitado");
+                } else if (Integer.parseInt(s.toString()) > requiredQuantity || Integer.parseInt(s.toString()) <= 0) {
+                    tilQuantity.setError("La cantidad ingresada es incorrecta");
                     isValidQuantity = false;
                 } else {
                     isValidQuantity = true;
