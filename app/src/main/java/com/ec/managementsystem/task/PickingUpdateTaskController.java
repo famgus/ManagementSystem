@@ -21,7 +21,7 @@ public class PickingUpdateTaskController extends AsyncTask<PickingRequest, Void,
         if (request.getPath() == 1) {
             return WebServiceControl.UpdatePickingPedidoState(request.getNumberSerie(), request.getNumberPedido(), request.getState());
         } else if (request.getPath() == 2) {
-            return WebServiceControl.UpdatePicking(request.getNumberSerie(), request.getNumberPedido(), request.getCodeArticle(), request.getQuantity(), request.getBarCodeBoxMaster(), request.getBarCodeLocation(),request.getTalla(), request.getColor());
+            return WebServiceControl.UpdatePicking(request.getNumberSerie(), request.getNumberPedido(), request.getCodeArticle(), request.getQuantity(), request.getBarCodeBoxMaster(), request.getBarCodeLocation(),request.getTalla(), request.getColor(), request.getOrigen());
         }
         return null;
     }

@@ -113,6 +113,7 @@ public class PackingDetailItemActivity extends BaseActivity implements DialogSca
                             request.setNumberPedido(facturaModelSelected.getNumberPedido());
                             request.setCodeArticle(pedidoDetailSelected.getCodeArticle());
                             request.setQuantity(Integer.valueOf(etQuantityPicking.getText().toString()));
+                            request.setOrigen(2);
                             request.setPath(2);
                             task.execute(request);
 
