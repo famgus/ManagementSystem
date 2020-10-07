@@ -10,6 +10,11 @@ public class BoxMasterRequest {
     private String ubicacionOrigen;
     private String ubicacionDestiny;
 
+    private Integer codigoArticulo;
+    private String talla;
+    private String codColor;
+
+
     public BoxMasterRequest() {
     }
 
@@ -75,5 +80,29 @@ public class BoxMasterRequest {
 
     public void setUbicacionDestiny(String ubicacionDestiny) {
         this.ubicacionDestiny = ubicacionDestiny;
+    }
+
+    public Integer getCodigoArticulo() {
+        return codigoArticulo;
+    }
+
+    public void setCodigoArticulo(Integer codigoArticulo) {
+        this.codigoArticulo = codigoArticulo;
+    }
+
+    public String getTalla() {
+        return talla;
+    }
+
+    public void setTalla(String talla) {
+        this.talla = talla;
+    }
+
+    public String getCodColor() {
+        return codColor;
+    }
+
+    public void setCodColor(String codColor) {
+        this.codColor = codColor;
     }
 }

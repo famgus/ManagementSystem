@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ec.managementsystem.R;
+import com.ec.managementsystem.clases.request.BoxMasterRequest;
 import com.ec.managementsystem.clases.request.PickingRequest;
 import com.ec.managementsystem.clases.request.RequestGetProductDetailBySomeParameters;
 import com.ec.managementsystem.clases.request.ReturnProductValidationRequest;
@@ -36,6 +37,7 @@ import com.ec.managementsystem.clases.responses.PickingPedidoDetailResponse;
 import com.ec.managementsystem.clases.responses.PickingPedidoUserResponse;
 import com.ec.managementsystem.clases.responses.ResponseGetProductDetailBySomeParameters;
 import com.ec.managementsystem.clases.responses.ReturnProductValidationResponse;
+import com.ec.managementsystem.interfaces.IDelegateBoxMasterTaskControl;
 import com.ec.managementsystem.interfaces.IDelegateGetProductDetailBySomeParameters;
 import com.ec.managementsystem.interfaces.IDelegateReturnProductValidationControl;
 import com.ec.managementsystem.interfaces.IDelegateUpdatePickingControl;
@@ -43,7 +45,9 @@ import com.ec.managementsystem.interfaces.IListenerUbicaciones;
 import com.ec.managementsystem.moduleView.BaseActivity;
 import com.ec.managementsystem.moduleView.SensorActivityWithCodeBar;
 import com.ec.managementsystem.moduleView.adapters.UbicacionesListAdapter;
+import com.ec.managementsystem.moduleView.boxMaster.ReubicacionActivity;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
+import com.ec.managementsystem.task.BoxMasterTaskController;
 import com.ec.managementsystem.task.GetProductDetailBySomeParametersTaskController;
 import com.ec.managementsystem.task.PickingUpdateTaskController;
 import com.ec.managementsystem.task.ReturnProductValidationTaskController;
@@ -53,7 +57,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PickingDetailItemActivity extends BaseActivity implements DialogScanner.DialogScanerFinished, IDelegateUpdatePickingControl, IListenerUbicaciones
-        , IDelegateGetProductDetailBySomeParameters, IDelegateReturnProductValidationControl {
+        , IDelegateGetProductDetailBySomeParameters, IDelegateReturnProductValidationControl, IDelegateBoxMasterTaskControl {
     public static final int CODE_FLOW_MASTER_BOX = 99, CODE_FLOW_QUANTITY = 100;
     public static final int CODE_FLOW_UBICATION = 101;
     private static final int CODIGO_PERMISOS_CAMARA = 1, CODIGO_INTENT = 2, CODIGO_BAR = 3;
@@ -307,9 +311,23 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     private void sendValidation(String data, int typeValidation) {
         Log.i("Send Validation", String.valueOf(typeValidation));
         Log.i("Send Validation", String.valueOf(data));
-        ReturnProductValidationRequest request = new ReturnProductValidationRequest(data, typeValidation);
+        /*ReturnProductValidationRequest request = new ReturnProductValidationRequest(data, typeValidation);
         ReturnProductValidationTaskController task = new ReturnProductValidationTaskController();
         task.setListener(PickingDetailItemActivity.this);
+        task.execute(request);*/
+        //Call Service
+        BoxMasterRequest request = new BoxMasterRequest();
+        if(rbBoxmaster.isChecked()){
+            request.setActionPath(12);
+        }else {
+            request.setActionPath(13);
+        }
+        request.setBarCodeBoxMasterOrigin(data);
+        request.setCodigoArticulo(pedidoDetailSelected.getCodeArticle());
+        request.setTalla(pedidoDetailSelected.getTalla());
+        request.setCodColor(pedidoDetailSelected.getCodcolor());
+        BoxMasterTaskController task = new BoxMasterTaskController();
+        task.setListener(this);
         task.execute(request);
     }
 
@@ -505,5 +523,17 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
             }
         }
         return response;
+    }
+
+    @Override
+    public void onBoxMasterResponse(GenericResponse response) {
+        if (response != null && response.getCode() == 201) {
+            if (rbBoxmaster.isChecked()) {
+                Toast.makeText(PickingDetailItemActivity.this, "Caja maestra inválida", Toast.LENGTH_LONG).show();
+            }
+            if (rbUbicacion.isChecked()) {
+                Toast.makeText(PickingDetailItemActivity.this, "Ubicación inválida", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

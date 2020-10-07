@@ -57,6 +57,12 @@ public class BoxMasterTaskController extends AsyncTask<BoxMasterRequest, Void, G
                 case 11://Reubicacion de articulo ubicacion a CajaMaster
                     response = WebServiceControl.CreateReubicacionArticleACajaMaster(request);
                     break;
+                case 12:
+                    response = WebServiceControl.ValidateExistProductInBoxMaster(request);
+                    break;
+                case 13:
+                    response = WebServiceControl.ValidateExistProductInLocation(request);
+                    break;
             }
             return response;
         }
