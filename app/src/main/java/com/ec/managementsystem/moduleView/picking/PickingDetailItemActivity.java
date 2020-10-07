@@ -173,7 +173,8 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                             }
                             request.setTalla(pedidoDetailSelected.getTalla());
                             request.setColor(pedidoDetailSelected.getCodcolor());
-                            request.setOrigen(1);
+                            int origen = 1;
+                            request.setOrigen(origen);
                             request.setPath(2);
                             task.execute(request);
                         } else {
