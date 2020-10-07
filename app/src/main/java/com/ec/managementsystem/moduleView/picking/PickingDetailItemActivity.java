@@ -28,7 +28,6 @@ import com.ec.managementsystem.R;
 import com.ec.managementsystem.clases.request.BoxMasterRequest;
 import com.ec.managementsystem.clases.request.PickingRequest;
 import com.ec.managementsystem.clases.request.RequestGetProductDetailBySomeParameters;
-import com.ec.managementsystem.clases.request.ReturnProductValidationRequest;
 import com.ec.managementsystem.clases.responses.BundleResponse;
 import com.ec.managementsystem.clases.responses.GenericResponse;
 import com.ec.managementsystem.clases.responses.GetProductDetailBySomeParameters;
@@ -45,12 +44,10 @@ import com.ec.managementsystem.interfaces.IListenerUbicaciones;
 import com.ec.managementsystem.moduleView.BaseActivity;
 import com.ec.managementsystem.moduleView.SensorActivityWithCodeBar;
 import com.ec.managementsystem.moduleView.adapters.UbicacionesListAdapter;
-import com.ec.managementsystem.moduleView.boxMaster.ReubicacionActivity;
 import com.ec.managementsystem.moduleView.ui.DialogScanner;
 import com.ec.managementsystem.task.BoxMasterTaskController;
 import com.ec.managementsystem.task.GetProductDetailBySomeParametersTaskController;
 import com.ec.managementsystem.task.PickingUpdateTaskController;
-import com.ec.managementsystem.task.ReturnProductValidationTaskController;
 import com.ec.managementsystem.util.MySingleton;
 
 import java.util.ArrayList;
@@ -79,6 +76,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
     private boolean permisoCamaraConcedido = false, permisoSolicitadoDesdeBoton = false;
     private GetProductDetailBySomeParameters productOtherDetails;
     private int lastCode = 1;
+    private String codeBarBox = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,7 +205,7 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
                             }
                             request.setPath(2);
                             task.execute(request);
-                        }else{
+                        } else {
                             Toast.makeText(PickingDetailItemActivity.this, "Debe ingresar todos los campos", Toast.LENGTH_LONG).show();
                         }
 
@@ -317,9 +315,10 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
         task.execute(request);*/
         //Call Service
         BoxMasterRequest request = new BoxMasterRequest();
-        if(rbBoxmaster.isChecked()){
+        codeBarBox = data;
+        if (rbBoxmaster.isChecked()) {
             request.setActionPath(12);
-        }else {
+        } else {
             request.setActionPath(13);
         }
         request.setBarCodeBoxMasterOrigin(data);
@@ -534,6 +533,10 @@ public class PickingDetailItemActivity extends BaseActivity implements DialogSca
             if (rbUbicacion.isChecked()) {
                 Toast.makeText(PickingDetailItemActivity.this, "Ubicación inválida", Toast.LENGTH_LONG).show();
             }
+        } else {
+            codes = new ArrayList<>();
+            codes.add(codeBarBox);
+            etBarCode.setText(codeBarBox);
         }
     }
 }
