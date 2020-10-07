@@ -13,12 +13,16 @@ public class PickingRequest implements Serializable {
     private String barCodeBoxMaster;
     private String  talla;
     private String color;
+    private Integer origen;
 
 
 
     public PickingRequest() {
     }
 
+    public Integer getOrigen() {return origen;}
+
+    public void setOrigen(Integer origen) {this.origen = origen;}
 
     public String getTalla() {return talla;}
 

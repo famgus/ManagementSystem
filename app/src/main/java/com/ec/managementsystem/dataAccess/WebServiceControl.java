@@ -648,7 +648,7 @@ public class WebServiceControl {
         return response;
     }
 
-    static public GenericResponse UpdatePicking(String numberSerie, Integer numberPedido, Integer codeArticle, Integer quantity, String barCodeMaster, String barCodeLocation, String talla, String color) {
+    static public GenericResponse UpdatePicking(String numberSerie, Integer numberPedido, Integer codeArticle, Integer quantity, String barCodeMaster, String barCodeLocation, String talla, String color, Integer origen) {
         String message = "";
         GenericResponse response = new GenericResponse();
         try {
@@ -666,6 +666,7 @@ public class WebServiceControl {
                 request.addProperty("barCodeLocation", barCodeLocation);
                 request.addProperty("talla", talla);
                 request.addProperty("color", color);
+                request.addProperty("origen", origen);
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                 envelope.dotNet = true;
                 envelope.implicitTypes = true;
