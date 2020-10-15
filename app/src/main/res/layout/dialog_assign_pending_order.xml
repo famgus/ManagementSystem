@@ -19,6 +19,7 @@
         android:paddingHorizontal="16dp"
         android:id="@+id/rvDialogAssingPendingOrder"
         android:layout_marginTop="16dp"
+        app:layout_constraintHeight_max="450dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:listitem="@layout/item_user_assign_pending_order"
